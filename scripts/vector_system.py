@@ -23,7 +23,7 @@ class VectorSystem(System):
 
         self.pu = Physics2dManager.pixel2meter(self.u)
         self.pv = Physics2dManager.pixel2meter(self.v)
-        self.result = Physics2dManager.meter2pixel(self.pu * p2Vec2.dot(self.pu, self.pv)/p2Vec2.dot(self.pv, self.pv))
+        # self.result = Physics2dManager.meter2pixel(self.pu * p2Vec2.dot(self.pu, self.pv)/p2Vec2.dot(self.pv, self.pv))
 
     def on_draw(self):
         # rotating vector
