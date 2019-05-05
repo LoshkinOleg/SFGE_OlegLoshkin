@@ -73,6 +73,8 @@ PYBIND11_EMBEDDED_MODULE(SFGE, m)
 	py::class_<Configuration, std::unique_ptr<Configuration, py::nodelete>> config(m, "Configuration");
 	config
 		.def_property_readonly("screen_size", [](Configuration* config) {return Vec2f(config->screenResolution.x, config->screenResolution.y); });
+	config
+		.def_property_readonly("fixed_dt", [](Configuration* config) { return config->fixedDeltaTime; });
 	py::class_<System, PySystem> system(m, "System");
 	system
 		.def(py::init<Engine&>(), py::return_value_policy::reference)

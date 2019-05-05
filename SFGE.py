@@ -114,7 +114,6 @@ class p2Vec3:
     def normalized_self(self):
         pass
 
-
 class Sprite:
     def set_texture(self, texture):
         pass
@@ -241,6 +240,9 @@ class EntityManager(System):
     def get_entities_with_type(self, componentType):
         pass
 
+    def get_entity(self, entity_name):
+        pass
+
 
 class Body2dManager(System, ComponentManager):
     pass
@@ -253,18 +255,11 @@ class Physics2dManager(System):
 class Configuration:
     def __init__(self):
         self.screen_size = Vec2f()
+        self.fixed_dt = 0.0;
 
 class Engine:
     def __init__(self):
         self.config = Configuration()
-
-
-class Component:
-    Sprite = 0
-    Shape = 0
-    Body = 0
-    Sound = 0
-    Transform2d = 0
 
 
 class Transform2d():
@@ -318,6 +313,14 @@ class MouseManager:
 class InputManager:
     keyboard = KeyboardManager()
     mouse = MouseManager()
+
+# = 0 means the type is an integer.
+class Component:
+    Sprite = 0
+    Shape = 0
+    Body2d = 0
+    Sound = 0
+    Transform2d = 0
 
 engine = Engine()
 input_manager = InputManager()

@@ -18,7 +18,7 @@ class PlanetSystem(System):
         self.entity_nmb = 256
         self.screen_size = engine.config.screen_size
         entity_manager.resize(self.entity_nmb)
-
+        
         for i in range(self.entity_nmb):
             new_entity = entity_manager.create_entity(i+1)
 
