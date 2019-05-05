@@ -121,3 +121,27 @@ TEST(OlegLoshkin, MovingShapes)
 	sceneManager->LoadSceneFromJson(sceneJson);
 	engine.Start();
 }
+
+TEST(OlegLoshkin, Lerping)
+{
+	// Init engine.
+	sfge::Engine engine;
+	auto config = std::make_unique<sfge::Configuration>();
+	config->devMode = false;
+	engine.Init(std::move(config));
+	auto* sceneManager = engine.GetSceneManager();
+
+	// Create entities.
+	json sceneJson;
+	sceneJson["name"] = "Lerping";
+
+	// Create systems.
+	json lerpingSystem = {
+		{ "systemClassName", "LerpingSystem" }
+	};
+	sceneJson["systems"] = json::array({lerpingSystem});
+
+	// Start engine.
+	sceneManager->LoadSceneFromJson(sceneJson);
+	engine.Start();
+}

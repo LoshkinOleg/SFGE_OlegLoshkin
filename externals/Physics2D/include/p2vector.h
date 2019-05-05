@@ -54,7 +54,7 @@ struct p2Vec2
 	/**
 	* \brief Calculate the magnitude of the p2Vec2
 	*/
-	float GetMagnitude();
+	float GetMagnitude() const;
 	/**
 	* \brief Calculate a normalized version of the p2Vec2
 	*/
@@ -67,6 +67,8 @@ struct p2Vec2
 	p2Vec2 Rotate(float angle) const;
 	static p2Vec2 Lerp(const p2Vec2& v1, const p2Vec2& v2, float t);
 	static float AngleBetween(const p2Vec2& v1, const p2Vec2& v2);
+	static p2Vec2 FindNormal(const p2Vec2& v1);
+	static p2Vec2 StaticNormalized(const p2Vec2& v1);
 
 	/**
 	* \brief 

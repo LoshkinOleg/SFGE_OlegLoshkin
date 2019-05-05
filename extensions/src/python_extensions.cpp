@@ -30,6 +30,7 @@ SOFTWARE.
 
 #include <extensions/python_extensions.h>
 #include <extensions/planet_system.h>
+#include <extensions\lerping_system.h>
 
 #include <tools/tools_pch.h>
 
@@ -40,10 +41,15 @@ static std::vector<std::function<void(py::module&)>> m_OtherPythonExtensions;
 
 void ExtendPython(py::module& m)
 {
+	// Elias'es planet system.
 	py::class_<PlanetSystem, System> planetSystem(m, "PlanetSystem");
 	planetSystem
 		.def(py::init<Engine&>());
-	
+
+	// Oleg's lerping system.
+	py::class_<LerpingSystem, System> lerpingSystem(m, "LerpingSystem");
+	lerpingSystem
+		.def(py::init<Engine&>());
 
 	tools::ExtendPythonTools(m);
 }

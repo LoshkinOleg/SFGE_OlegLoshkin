@@ -27,6 +27,8 @@ SOFTWARE.
 
 p2Vec2::p2Vec2()
 {
+	x = 0;
+	y = 0;
 }
 
 p2Vec2::p2Vec2(float x, float y)
@@ -72,28 +74,27 @@ p2Vec2 p2Vec2::operator*(float f)
 
 float p2Vec2::Dot(p2Vec2 v1, p2Vec2 v2)
 {
-	//TODO
-	return 0.0f;
+	return ((v1.x * v2.x) + (v1.y * v2.y));
 }
 p2Vec3 p2Vec2::Cross(p2Vec2 v1, p2Vec2 v2)
 {
-	return p2Vec3();
+	return p2Vec3(0,0, (v1.x*v2.y) - (v1.y*v2.x));
 }
-float p2Vec2::GetMagnitude()
+float p2Vec2::GetMagnitude() const
 {
-	//TODO
-	return 0.0f;
+	return _CMATH_::sqrt((x*x) + (y*y));
 }
 
 p2Vec2 p2Vec2::Normalized()
 {
-	//TODO
-	return p2Vec2();
+	return p2Vec2::StaticNormalized(*this);
 }
 
 void p2Vec2::NormalizeSelf()
 {
-	//TODO
+	const float magnitude = GetMagnitude();
+	x = 1 / magnitude;
+	y = 1 / magnitude;
 }
 
 p2Vec2 p2Vec2::Rotate(float angle) const
@@ -103,12 +104,25 @@ p2Vec2 p2Vec2::Rotate(float angle) const
 
 p2Vec2 p2Vec2::Lerp(const p2Vec2& v1, const p2Vec2& v2, float t)
 {
-	return p2Vec2();
+	p2Vec2 v = v1;
+	p2Vec2 u = v2;
+	return (v * (1 - t)) + (u * t);
 }
 
 float p2Vec2::AngleBetween(const p2Vec2& v1, const p2Vec2& v2)
 {
-	return 0.0f;
+	return _CMATH_::acos( (p2Vec2::Dot(v1,v2)) / (v1.GetMagnitude() * v2.GetMagnitude()) );
+}
+
+p2Vec2 p2Vec2::FindNormal(const p2Vec2& v1)
+{
+	return p2Vec2(-v1.y,v1.x);
+}
+
+p2Vec2 p2Vec2::StaticNormalized(const p2Vec2 & v1)
+{
+	const float magnitude = v1.GetMagnitude();
+	return p2Vec2(1 / magnitude, 1 / magnitude);
 }
 
 p2Vec3 p2Vec2::to3()
