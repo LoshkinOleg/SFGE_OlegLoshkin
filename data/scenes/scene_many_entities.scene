@@ -1,9 +1,0 @@
-{
-  "name": "SceneManyEntities",
-  "systems": [
-    {
-      "name": "Test Planet System" ,
-      "script_path": "scripts/switch_scene_system.py"
-    }
-  ]
-}
