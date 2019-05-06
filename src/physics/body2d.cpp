@@ -29,6 +29,7 @@ SOFTWARE.
 #include <imgui.h>
 #include <imgui-SFML.h>
 #include <engine/engine.h>
+#include <iostream>
 namespace sfge
 {
 Body2d::Body2d() : Offsetable(sf::Vector2f())
@@ -216,8 +217,9 @@ void Body2dManager::CreateComponent(json& componentJson, Entity entity)
 		auto* transform = m_Transform2dManager->GetComponentPtr(entity);
 		const auto pos = transform->Position + offset;
 		bodyDef.position = pixel2meter(pos);
-		
+
 		auto* body = world->CreateBody(&bodyDef);
+
 		body->SetLinearVelocity(pixel2meter(velocity));
 		m_Components[entity - 1] = Body2d(transform, offset);
 		m_Components[entity - 1].SetBody(body);

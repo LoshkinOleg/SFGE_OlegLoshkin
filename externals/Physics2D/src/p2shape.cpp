@@ -24,10 +24,30 @@ SOFTWARE.
 
 #include <p2shape.h>
 
+p2CircleShape::p2CircleShape() : p2Shape(p2ShapeType::CIRCLE){}
+
 void p2CircleShape::SetRadius(float radius)
 {
 }
 
+p2RectShape::p2RectShape() : p2Shape(p2ShapeType::RECTANGLE)
+{}
+
 void p2RectShape::SetSize(p2Vec2 size)
 {
+}
+
+p2Shape::p2Shape()
+{
+	m_type = p2ShapeType::NONE;
+}
+
+p2Shape::p2Shape(const p2ShapeType& type)
+{
+	m_type = type;
+}
+
+p2ShapeType p2Shape::GetType() const
+{
+	return m_type;
 }

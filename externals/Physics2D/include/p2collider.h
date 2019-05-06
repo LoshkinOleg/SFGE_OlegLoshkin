@@ -34,8 +34,8 @@ SOFTWARE.
 */
 struct p2ColliderDef
 {
-	void* userData;
-	p2Shape* shape;
+	void* userData; // Hell is that?
+	p2Shape shape;
 	float restitution;
 	bool isSensor;
 };
@@ -44,9 +44,10 @@ struct p2ColliderDef
 * \brief Representation of a Collider attached to a p2Body
 */
 
-class p2Collider
+class p2Collider // Note: doesn't have a constructor because collider creation is managed internally by p2Body.
 {
 public:
+	p2Collider();
 	/**
 	* \brief Check if the p2Collider is a sensor
 	*/
@@ -55,10 +56,16 @@ public:
 	* \brief Return the userData
 	*/
 	void* GetUserData();
-	void GetShape();
+	p2Shape* GetShape();
 	void SetUserData(void* colliderData);
+	void SetShape(const p2Shape& shape);
+	void SetIsSensor(const bool& isSensor);
+	void SetRestitution(const float& restitution);
 private:
-	void* userData = nullptr;
+	void* m_UserData = nullptr;
+	p2Shape m_Shape;
+	bool m_IsSensor;
+	float m_Restitution;
 };
 
 

@@ -27,6 +27,7 @@ SOFTWARE.
 #include <engine/component.h>
 #include <physics/physics2d.h>
 #include <engine/engine.h>
+#include <p2shape.h>
 namespace sfge
 {
 void editor::ColliderInfo::DrawOnInspector()
@@ -37,25 +38,23 @@ void editor::ColliderInfo::DrawOnInspector()
   {
     if(data->fixture != nullptr)
     {
-		/*
-      switch (data->fixture->GetShape()->m_type)
+      switch (data->fixture->GetShape()->GetType())
       {
-      	case b2Shape::e_circle:
+		case p2ShapeType::CIRCLE:
       		ImGui::LabelText("Shape", "Circle");
       		break;
-        case b2Shape::e_polygon:
+        case p2ShapeType::POLYGON:
         	ImGui::LabelText("Shape", "Polygon");
         	break;
-      	case b2Shape::e_chain:
-      		ImGui::LabelText("Shape", "Chain");
+      	case p2ShapeType::RECTANGLE:
+      		ImGui::LabelText("Shape", "Rectangle");
 			break;
-		case b2Shape::e_edge:
-			ImGui::LabelText("Shape", "Edge");
+		case p2ShapeType::NONE:
+			ImGui::LabelText("Shape", "NONE");
 		  	break;
-		  default:
+		default:
 		  	break;
       }
-		*/
     }
   }
 }
@@ -126,7 +125,7 @@ void ColliderManager::CreateComponent(json& componentJson, Entity entity)
 		}
 		if (shape != nullptr)
 		{
-			fixtureDef.shape = shape.get();
+			fixtureDef.shape = *shape.get();
 
 			auto index = GetFreeComponentIndex();
 			if(index != -1)
@@ -154,7 +153,7 @@ int ColliderManager::GetFreeComponentIndex()
 	}
 	return -1;
 }
-ColliderData *ColliderManager::AddComponent(Entity entity)
+ColliderData* ColliderManager::AddComponent(Entity entity)
 {
 	(void) entity;
 	return nullptr;

@@ -72,15 +72,17 @@ public:
 	* \param colliderDef p2ColliderDef definition of the collider
 	* \return p2Collider collider attached to the p2Body
 	*/
-	p2Collider* CreateCollider(p2ColliderDef* colliderDef);
+	p2Collider* CreateCollider(const p2ColliderDef* colliderDef);
 	void ApplyForceToCenter(const p2Vec2& force);
 	p2BodyType GetType() const;
 	float GetMass() const;
 private:
 	p2AABB aabb;
+	p2BodyType type;
 	p2Vec2 position;
 	p2Vec2 linearVelocity;
 	float angularVelocity;
+	float gravityScale;
 
 	int m_ColliderIndex = 0;
 	std::vector<p2Collider> m_Colliders;

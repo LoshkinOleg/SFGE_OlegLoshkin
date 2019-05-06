@@ -171,3 +171,137 @@ TEST(OlegLoshkin, LerpingShapes)
 	sceneManager->LoadSceneFromJson(sceneJson);
 	engine.Start();
 }
+
+TEST(OlegLoshkin, SeparatingAxisTheorem)
+{
+	// Init engine.
+	sfge::Engine engine;
+	auto config = std::make_unique<sfge::Configuration>();
+	config->devMode = false;
+	engine.Init(std::move(config));
+	auto* sceneManager = engine.GetSceneManager();
+
+	// Create scene.
+	json sceneJson;
+	sceneJson["name"] = "SAT Demo";
+
+	// Creating entities.
+	// Cleate empty entity since the engine needs at least two.
+	json emptyEntity;
+	emptyEntity["name"] = "EmptyEntity";
+	json empty_0;
+	json empty_1;
+	empty_0["type"] = sfge::ComponentType::TRANSFORM2D;
+	empty_1["type"] = sfge::ComponentType::TRANSFORM2D;
+	emptyEntity["components"] = { empty_0, empty_1 };
+	// Create rect.
+	json rect;
+	rect["name"] = "Rect_0";
+	json rectTransform;
+	rectTransform["type"] = sfge::ComponentType::TRANSFORM2D;
+	rectTransform["position"] = {426,240};
+	rectTransform["scale"] = {5.0,5.0};
+	rectTransform["angle"] = 0.0;
+	json rectShape;
+	rectShape["type"] = sfge::ComponentType::SHAPE2D;
+	rectShape["shape_type"] = sfge::ShapeType::RECTANGLE;
+	rectShape["size"] = {20.0,20.0};
+	json rectBody;
+	rectBody["type"] = sfge::ComponentType::BODY2D;
+	rectBody["body_type"] = p2BodyType::KINEMATIC;
+	rectBody["gravity_scale"] = 0;
+	rectBody["offset"] = { 0, 0 };
+	rectBody["velocity"] = { 0, 0 };
+	json rectCollider;
+	rectCollider["name"] = "Rect's Collider!";
+	rectCollider["type"] = sfge::ComponentType::COLLIDER2D;
+	rectCollider["collider_type"] = sfge::ColliderType::BOX;
+	rectCollider["size"] = {20.0,20.0};
+	rectCollider["sensor"] = true;
+	rect["components"] = { rectTransform, rectShape, rectBody, rectCollider };
+
+	// Add entities to scene.
+	sceneJson["entities"] = {rect, emptyEntity};
+
+	// Create systems.
+	json satDemoSystem = {
+		{ "script_path", "scripts/sat_demo_system.py" }
+	};
+	// sceneJson["systems"] = json::array({satDemoSystem});
+
+	// Start engine.
+	sceneManager->LoadSceneFromJson(sceneJson);
+	engine.Start();
+}
+
+TEST(OlegLoshkin, ContactRectsVsRectsCirclesVsCircles)
+{
+	// Init engine.
+	sfge::Engine engine;
+	auto config = std::make_unique<sfge::Configuration>();
+	config->devMode = false;
+	engine.Init(std::move(config));
+	auto* sceneManager = engine.GetSceneManager();
+
+	// Create scene.
+	json sceneJson;
+	sceneJson["name"] = "Lerping Shapes";
+
+	// Creating entities.
+	// Rects.
+	json rect_0;
+	json rect_1;
+	rect_0["name"] = "Rect_0";
+	rect_1["name"] = "Rect_1";
+	json rectTransform_0;
+	json rectTransform_1;
+	rectTransform_0["type"] = sfge::ComponentType::TRANSFORM2D;
+	rectTransform_1["type"] = sfge::ComponentType::TRANSFORM2D;
+	rectTransform_0["position"] = {426,240};
+	rectTransform_1["position"] = {853,240};
+	rectTransform_0["scale"] = {5.0,5.0};
+	rectTransform_1["scale"] = {5.0,5.0};
+	rectTransform_0["angle"] = 0.0;
+	rectTransform_1["angle"] = 0.0;
+	json rectShape;
+	rectShape["type"] = sfge::ComponentType::SHAPE2D;
+	rectShape["shape_type"] = sfge::ShapeType::RECTANGLE;
+	rectShape["size"] = {20.0,20.0};
+	rect_0["components"] = {rectTransform_0, rectShape};
+	rect_1["components"] = {rectTransform_1, rectShape};
+
+	// Circles.
+	json circle_0;
+	json circle_1;
+	circle_0["name"] = "Circle_0";
+	circle_1["name"] = "Circle_1";
+	json circleTransform_0;
+	json circleTransform_1;
+	circleTransform_0["type"] = sfge::ComponentType::TRANSFORM2D;
+	circleTransform_1["type"] = sfge::ComponentType::TRANSFORM2D;
+	circleTransform_0["position"] = {426,480};
+	circleTransform_1["position"] = {853,480};
+	circleTransform_0["scale"] = {5.0,5.0};
+	circleTransform_1["scale"] = {5.0,5.0};
+	circleTransform_0["angle"] = 0.0;
+	circleTransform_1["angle"] = 0.0;
+	json circleShape;
+	circleShape["type"] = sfge::ComponentType::SHAPE2D;
+	circleShape["shape_type"] = sfge::ShapeType::CIRCLE;
+	circleShape["size"] = {1.0};
+	circle_0["components"] = {circleTransform_0, circleShape};
+	circle_1["components"] = {circleTransform_1, circleShape};
+
+	// Add entities to scene.
+	sceneJson["entities"] = {rect_0, rect_1, circle_0, circle_1};
+
+	// Create systems.
+	json contactRectsVsRectsCirclesVsCircles = {
+		{ "script_path", "scripts/contact_rects_vs_rects_circles_vs_circles_system.py" }
+	};
+	sceneJson["systems"] = json::array({contactRectsVsRectsCirclesVsCircles});
+
+	// Start engine.
+	sceneManager->LoadSceneFromJson(sceneJson);
+	engine.Start();
+};

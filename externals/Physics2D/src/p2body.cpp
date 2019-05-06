@@ -26,6 +26,10 @@ SOFTWARE.
 void p2Body::Init(p2BodyDef* bodyDef)
 {
 	m_Colliders.resize(MAX_COLLIDER_LEN);
+	type = bodyDef->type;
+	position = bodyDef->position;
+	linearVelocity = bodyDef->linearVelocity;
+	gravityScale = bodyDef->gravityScale;
 }
 
 p2Vec2 p2Body::GetLinearVelocity() const
@@ -47,9 +51,13 @@ p2Vec2 p2Body::GetPosition()
 	return position;
 }
 
-p2Collider * p2Body::CreateCollider(p2ColliderDef * colliderDef)
+p2Collider * p2Body::CreateCollider(const p2ColliderDef* colliderDef)
 {
 	p2Collider& collider = m_Colliders[m_ColliderIndex];
+	collider.SetUserData(colliderDef->userData);
+	collider.SetShape(colliderDef->shape);
+	collider.SetRestitution(colliderDef->restitution);
+	collider.SetIsSensor(colliderDef->isSensor);
 	m_ColliderIndex++;
 	return &collider;
 }
