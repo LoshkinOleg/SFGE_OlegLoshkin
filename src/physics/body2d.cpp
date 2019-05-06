@@ -56,7 +56,7 @@ void Body2d::SetLinearVelocity(p2Vec2 velocity)
 
 }
 
-void Body2d::ApplyForce(p2Vec2 force)
+void Body2d::ApplyForce(const p2Vec2& force)
 {
 	if (m_Body != nullptr)
 		m_Body->ApplyForceToCenter(force);
@@ -211,6 +211,7 @@ void Body2dManager::CreateComponent(json& componentJson, Entity entity)
 			bodyDef.gravityScale = componentJson["gravity_scale"];
 		}
 
+		bodyDef.dt = m_Engine.GetConfig()->fixedDeltaTime;
 		const auto offset = GetVectorFromJson(componentJson, "offset");
 		const auto velocity = GetVectorFromJson(componentJson, "velocity");
 

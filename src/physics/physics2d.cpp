@@ -43,6 +43,8 @@ void Physics2dManager::OnEngineInit()
 
 	m_BodyManager.OnEngineInit();
 	m_ColliderManager.OnEngineInit();
+	m_Gravity = m_Engine.GetConfig()->gravity;
+	m_P2PhysicsManager = P2PhysicsManager(m_Gravity, this);
 }
 
 void Physics2dManager::OnUpdate(float dt)
@@ -58,6 +60,8 @@ void Physics2dManager::OnFixedUpdate()
 	{
 		m_World->Step(config->fixedDeltaTime);
 		m_BodyManager.OnFixedUpdate();
+		m_P2PhysicsManager.ApplyGravity(m_World->GetThisBodies());
+		m_P2PhysicsManager.FixedUpdate(m_World->GetThisBodies());
 	}
 }
 

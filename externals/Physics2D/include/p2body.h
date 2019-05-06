@@ -48,7 +48,7 @@ struct p2BodyDef
 	p2Vec2 position;
 	p2Vec2 linearVelocity;
 	float gravityScale;
-	
+	float dt;
 };
 
 const size_t MAX_COLLIDER_LEN = 8;
@@ -73,16 +73,18 @@ public:
 	* \return p2Collider collider attached to the p2Body
 	*/
 	p2Collider* CreateCollider(const p2ColliderDef* colliderDef);
+	void UpdatePosition();
 	void ApplyForceToCenter(const p2Vec2& force);
 	p2BodyType GetType() const;
 	float GetMass() const;
 private:
-	p2AABB aabb;
-	p2BodyType type;
-	p2Vec2 position;
-	p2Vec2 linearVelocity;
-	float angularVelocity;
-	float gravityScale;
+	p2AABB m_Aabb;
+	p2BodyType m_Type;
+	p2Vec2 m_Position;
+	p2Vec2 m_LinearVelocity;
+	float m_AngularVelocity;
+	float m_GravityScale;
+	float m_Dt;
 
 	int m_ColliderIndex = 0;
 	std::vector<p2Collider> m_Colliders;

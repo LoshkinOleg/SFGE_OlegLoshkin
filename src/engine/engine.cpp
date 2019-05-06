@@ -43,6 +43,7 @@ SOFTWARE.
 #include <editor/editor.h>
 #include <engine/entity.h>
 #include <engine/transform2d.h>
+#include <p2physics.h>
 
 
 namespace sfge
@@ -71,6 +72,7 @@ public:
 	SceneManager sceneManager;
 	InputManager inputManager;
 	PythonEngine pythonEngine;
+	P2PhysicsManager p2PhysicsManager;
 	Physics2dManager physicsManager;
 	Editor editor;
 	EntityManager entityManager;

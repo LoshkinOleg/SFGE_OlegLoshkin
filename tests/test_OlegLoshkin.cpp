@@ -172,6 +172,62 @@ TEST(OlegLoshkin, LerpingShapes)
 	engine.Start();
 }
 
+TEST(OlegLoshkin, FallingRectangle)
+{
+	// Init engine.
+	sfge::Engine engine;
+	auto config = std::make_unique<sfge::Configuration>();
+	config->devMode = false;
+	engine.Init(std::move(config));
+	auto* sceneManager = engine.GetSceneManager();
+
+	// Create scene.
+	json sceneJson;
+	sceneJson["name"] = "Falling Rectangle";
+
+	// Creating entities.
+	// Cleate empty entity since the engine needs at least two.
+	json emptyEntity;
+	emptyEntity["name"] = "EmptyEntity";
+	json empty_0;
+	json empty_1;
+	empty_0["type"] = sfge::ComponentType::TRANSFORM2D;
+	empty_1["type"] = sfge::ComponentType::TRANSFORM2D;
+	emptyEntity["components"] = {empty_0, empty_1};
+	// Create rect.
+	json rect;
+	rect["name"] = "Rect_0";
+	json rectTransform;
+	rectTransform["type"] = sfge::ComponentType::TRANSFORM2D;
+	rectTransform["position"] = {426,240};
+	rectTransform["scale"] = {5.0,5.0};
+	rectTransform["angle"] = 0.0;
+	json rectShape;
+	rectShape["type"] = sfge::ComponentType::SHAPE2D;
+	rectShape["shape_type"] = sfge::ShapeType::RECTANGLE;
+	rectShape["size"] = {20.0,20.0};
+	json rectBody;
+	rectBody["type"] = sfge::ComponentType::BODY2D;
+	rectBody["body_type"] = p2BodyType::DYNAMIC;
+	rectBody["gravity_scale"] = 1;
+	rectBody["offset"] = {0, 0};
+	rectBody["velocity"] = {0, 0};
+	json rectCollider;
+	rectCollider["name"] = "Rect's Collider!";
+	rectCollider["type"] = sfge::ComponentType::COLLIDER2D;
+	rectCollider["collider_type"] = sfge::ColliderType::BOX;
+	rectCollider["size"] = {20.0,20.0};
+	rectCollider["sensor"] = true;
+	rect["components"] = {rectTransform, rectShape, rectBody, rectCollider};
+
+	// Add entities to scene.
+	sceneJson["entities"] = {rect, emptyEntity};
+
+	// Start engine.
+	sceneManager->LoadSceneFromJson(sceneJson);
+	engine.Start();
+}
+
 TEST(OlegLoshkin, SeparatingAxisTheorem)
 {
 	// Init engine.

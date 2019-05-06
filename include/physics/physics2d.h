@@ -32,6 +32,7 @@ SOFTWARE.
 #include <physics/body2d.h>
 #include "p2contact.h"
 #include "p2world.h"
+#include <p2physics.h>
 
 namespace sfge
 {
@@ -109,11 +110,12 @@ public:
 private:
 	friend class Body2d;
 	std::shared_ptr<p2World> m_World = nullptr;
+	p2Vec2 m_Gravity;
 
 	std::unique_ptr<ContactListener> m_ContactListener = nullptr;
 	Body2dManager m_BodyManager{m_Engine};
 	ColliderManager m_ColliderManager{m_Engine};
-
+	P2PhysicsManager m_P2PhysicsManager;
 };
 
 

@@ -29,13 +29,12 @@ SOFTWARE.
 
 #include <memory>
 #include <string>
-#include <ctpl_stl.h>
-
+#include <..\utilities\ctpl_stl.h>
 #include <engine/config.h>
 #include <utility/json_utility.h>
 
 #include <editor/profiler.h>
-#include <Remotery.h>
+#include <..\Remotery\Remotery.h>
 
 #include <SFML/System/Clock.hpp>
 namespace sf
@@ -119,7 +118,6 @@ protected:
 	float m_DeltaTime = 0.0f;
 	sf::Clock m_EngineClock;
 	Remotery* rmt;
-	//
 	std::unique_ptr<SystemsContainer> m_SystemsContainer;
 
   	ProfilerFrameData m_FrameData;

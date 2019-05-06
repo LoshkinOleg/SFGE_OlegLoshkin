@@ -42,7 +42,7 @@ public:
 
 	p2Vec2 GetLinearVelocity() const;
 	void SetLinearVelocity(p2Vec2 velocity);
-	void ApplyForce(p2Vec2 force);
+	void ApplyForce(const p2Vec2& force);
 	p2BodyType GetType();
 	float GetMass();
 	void SetBody(p2Body* body);

@@ -44,3 +44,8 @@ p2Body * p2World::CreateBody(p2BodyDef* bodyDef)
 void p2World::SetContactListener(p2ContactListener * contactListener)
 {
 }
+
+std::vector<p2Body>& p2World::GetThisBodies()
+{
+	return m_Bodies;
+}
