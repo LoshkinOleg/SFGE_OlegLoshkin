@@ -26,6 +26,7 @@ SOFTWARE.
 #define SFGE_P2SHAPE_H
 
 #include <p2vector.h>
+#include <vector>
 
 enum p2ShapeType
 {
@@ -44,6 +45,9 @@ public:
 	p2Shape();
 	p2Shape(const p2ShapeType& type);
 	p2ShapeType GetType() const;
+
+	// Properties.
+	virtual std::vector<float> GetSize() const;
 private:
 	p2ShapeType m_type;
 };
@@ -55,6 +59,8 @@ class p2CircleShape : public p2Shape
 {
 public:
 	p2CircleShape();
+
+	std::vector<float> GetSize() const override;
 	/**
 	* \brief Setter for the radius
 	*/
@@ -70,6 +76,7 @@ class p2RectShape : public p2Shape
 {
 public:
 	p2RectShape();
+	std::vector<float> GetSize() const override;
 	void SetSize(p2Vec2 size);
 private:
 	p2Vec2 m_Size;

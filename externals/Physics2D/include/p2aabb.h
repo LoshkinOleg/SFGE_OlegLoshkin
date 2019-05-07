@@ -26,22 +26,42 @@ SOFTWARE.
 #define SFGE_P2AABB_H
 
 #include <p2vector.h>
+#include <..\externals\SFML\include\SFML\System\Vector2.hpp>
+#include <vector>
 
 /**
 * \brief Struct representing a Axis Aligned Bounding Box
 */
 struct p2AABB
 {
-	p2Vec2 bottomLeft;
-	p2Vec2 topRight;
+public:
+	// Constructors
+	p2AABB();
+	p2AABB(const p2Vec2& bottomLeft, const p2Vec2& topRight);
+	p2AABB(const p2Vec2& size);
+	p2AABB(const sf::Vector2f& size);
 
-	/**
-	* \brief Calculate the center and return it
-	*/
-	p2Vec2 GetCenter();
-	/**
-	* \brief Calculate the extends and return it
-	*/
-	p2Vec2 GetExtends();
+	// Properties.
+	// Getters.
+	p2Vec2 Center();
+	p2Vec2 Extends();
+	p2Vec2 BottomLeft() const;
+	p2Vec2 TopRight() const;
+	// Setters.
+	float XMin() const;
+	float XMax() const;
+	float YMin() const;
+	float YMax() const;
+	void BottomLeft(const p2Vec2& newBottomLeft);
+	void TopRight(const p2Vec2& newBottomLeft);
+
+private:
+	// Attributes.
+	p2Vec2 m_BottomLeft;
+	p2Vec2 m_TopRight;
+	float m_XMin;
+	float m_XMax;
+	float m_YMin;
+	float m_YMax;
 };
-#endif // !SFGE_P2AABB:H
+#endif

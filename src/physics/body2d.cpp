@@ -86,6 +86,11 @@ p2Body * Body2d::GetBody() const
 	return m_Body;
 }
 
+p2AABB* Body2d::GetAabb() const
+{
+	return m_Body->GetAabb();
+}
+
 void editor::Body2dInfo::DrawOnInspector()
 {
 	const auto& body = bodyManager->GetComponentRef(m_Entity);
@@ -214,6 +219,7 @@ void Body2dManager::CreateComponent(json& componentJson, Entity entity)
 		bodyDef.dt = m_Engine.GetConfig()->fixedDeltaTime;
 		const auto offset = GetVectorFromJson(componentJson, "offset");
 		const auto velocity = GetVectorFromJson(componentJson, "velocity");
+		bodyDef.aabb = p2AABB(GetVectorFromJson(componentJson, "aabb"));
 
 		auto* transform = m_Transform2dManager->GetComponentPtr(entity);
 		const auto pos = transform->Position + offset;

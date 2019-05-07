@@ -29,6 +29,7 @@
 #include <cmath>
 #include <engine/vector.h>
 #include <SFML/Audio.hpp>
+#include <iostream>
 
 namespace sfge
 {

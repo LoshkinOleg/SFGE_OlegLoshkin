@@ -277,6 +277,16 @@ class Sound:
     def stop(self):
         pass
 
+class Aabb2d:
+    def __init__(self):
+        self.bottom_left = p2Vec2()
+        self.top_right = p2Vec2()
+
+    def get_center(self):
+        pass
+
+    def get_extends(self):
+        pass
 
 class Body2d:
     def __init__(self):
@@ -284,6 +294,8 @@ class Body2d:
         self.magnitude = 0.0
 
     def apply_force(self, force:p2Vec2):
+        pass
+    def get_aabb(self):
         pass
 
 class Collider:
@@ -328,6 +340,6 @@ scene_manager = SceneManager()
 transform2d_manager = Transform2dManager()
 entity_manager = EntityManager()
 physics2d_manager = Physics2dManager()
-body2d_manager = Body2dManager()
+# body2d_manager = Body2dManager() # use physics2d_manager.body2d_manager instead.
 graphics2d_manager = Graphics2dManager()
 python_engine = PythonEngine()

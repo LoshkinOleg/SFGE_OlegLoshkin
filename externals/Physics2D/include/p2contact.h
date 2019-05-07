@@ -24,34 +24,45 @@ SOFTWARE.
 
 #ifndef SFGE_P2CONTACT_H
 #define SFGE_P2CONTACT_H
+#include <p2vector.h>
+#include <vector>
 
-#include <p2collider.h>
-
-/**
-* \brief Representation of a contact given as argument in a p2ContactListener
-*/
-class p2Contact
+namespace sfge
 {
-public:
-	p2Collider* GetColliderA();
-	p2Collider* GetColliderB();
-};
+	class p2Collider;
 
-/**
-* \brief Listener of contacts happening in an attached p2World
-*/
-class p2ContactListener
-{
-public:
-	virtual void BeginContact(p2Contact* contact) = 0;
-	virtual void EndContact(p2Contact* contact) = 0;
-};
+	/**
+	* \brief Representation of a contact given as argument in a p2ContactListener
+	*/
+	struct p2Contact
+	{
+		// Constructor.
+		p2Contact();
+		p2Contact(const std::vector<p2Vec2>& contacts, const bool& triggered, const p2Collider* collider, const p2Collider* collidee);
+		// Attributes.
+		std::vector<p2Vec2> contacts;
+		bool triggered;
+		const p2Collider* collider;
+		const p2Collider* collidee;
+	};
 
-/**
-* \brief Managing the creation and destruction of contact between colliders
-*/
-class p2ContactManager
-{
+	/**
+	* \brief Listener of contacts happening in an attached p2World
+	*/
+	class p2ContactListener
+	{
+	public:
+		virtual void BeginContact(p2Contact* contact) = 0;
+		virtual void EndContact(p2Contact* contact) = 0;
+	};
 
-};
+	/**
+	* \brief Managing the creation and destruction of contact between colliders
+	*/
+	class p2ContactManager
+	{
+
+	};
+}
+
 #endif

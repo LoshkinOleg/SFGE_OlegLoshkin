@@ -23,13 +23,22 @@ SOFTWARE.
 */
 
 #include <p2contact.h>
+#include <p2collider.h>
 
-p2Collider * p2Contact::GetColliderA()
+namespace sfge
 {
-	return nullptr;
-}
-
-p2Collider * p2Contact::GetColliderB()
-{
-	return nullptr;
+	p2Contact::p2Contact()
+	{
+		contacts = std::vector<p2Vec2>();
+		triggered = false;
+		collider = nullptr;
+		collidee = nullptr;
+	}
+	p2Contact::p2Contact(const std::vector<p2Vec2>& contacts, const bool & triggered, const p2Collider * collider, const p2Collider * collidee)
+	{
+		this->contacts = contacts;
+		this->triggered = triggered;
+		this->collider = collider;
+		this->collidee = collidee;
+	}
 }

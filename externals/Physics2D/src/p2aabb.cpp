@@ -24,12 +24,52 @@ SOFTWARE.
 
 #include <p2aabb.h>
 
-p2Vec2 p2AABB::GetCenter()
+p2AABB::p2AABB()
 {
-	return p2Vec2();
+	m_BottomLeft = p2Vec2(0,0);
+	m_TopRight = p2Vec2(0, 0);
+	m_XMin = 0;
+	m_XMax = 0;
+	m_YMin = 0;
+	m_YMax = 0;
 }
 
-p2Vec2 p2AABB::GetExtends()
+p2AABB::p2AABB(const p2Vec2 & bottomLeft, const p2Vec2 & topRight)
 {
-	return p2Vec2();
+	m_BottomLeft = bottomLeft;
+	m_TopRight = topRight;
+	m_XMin = m_BottomLeft.x;
+	m_XMax = m_TopRight.x;
+	m_YMin = m_TopRight.y;
+	m_YMax = m_BottomLeft.y;
+}
+
+p2AABB::p2AABB(const p2Vec2& size)
+{
+	m_BottomLeft = p2Vec2(0, size.y);
+	m_TopRight = p2Vec2(size.x, 0);
+	m_XMin = m_BottomLeft.x;
+	m_XMax = m_TopRight.x;
+	m_YMin = m_TopRight.y;
+	m_YMax = m_BottomLeft.y;
+}
+
+p2AABB::p2AABB(const sf::Vector2f& size)
+{
+	m_BottomLeft = p2Vec2(0, size.y);
+	m_TopRight = p2Vec2(size.x, 0);
+	m_XMin = m_BottomLeft.x;
+	m_XMax = m_TopRight.x;
+	m_YMin = m_TopRight.y;
+	m_YMax = m_BottomLeft.y;
+}
+
+p2Vec2 p2AABB::Center()
+{
+	return p2Vec2(m_BottomLeft.x + Extends().x, m_TopRight.y + Extends().y);
+}
+
+p2Vec2 p2AABB::Extends()
+{
+	return p2Vec2((m_TopRight.x - m_BottomLeft.x) / 2.0f, (m_BottomLeft.y - m_TopRight.y) / 2.0f);
 }

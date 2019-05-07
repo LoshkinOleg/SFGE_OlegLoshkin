@@ -26,12 +26,22 @@ SOFTWARE.
 
 p2CircleShape::p2CircleShape() : p2Shape(p2ShapeType::CIRCLE){}
 
+std::vector<float> p2CircleShape::GetSize() const
+{
+	return std::vector<float>{ m_Radius };
+}
+
 void p2CircleShape::SetRadius(float radius)
 {
 }
 
 p2RectShape::p2RectShape() : p2Shape(p2ShapeType::RECTANGLE)
 {}
+
+std::vector<float> p2RectShape::GetSize() const
+{
+	return std::vector<float>{ m_Size.x, m_Size.y };
+}
 
 void p2RectShape::SetSize(p2Vec2 size)
 {

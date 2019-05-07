@@ -3,6 +3,7 @@
 #include <gtest/gtest.h>
 #include "graphics/shape2d.h"
 #include "physics/collider2d.h"
+#include <SFML/System/Vector2.hpp>
 
 // Display resolution: 1280[px] x 720[px]
 
@@ -65,7 +66,7 @@ TEST(OlegLoshkin, FloatingShapes)
 	json circleShape;
 	circleShape["type"] = sfge::ComponentType::SHAPE2D;
 	circleShape["shape_type"] = sfge::ShapeType::CIRCLE;
-	circleShape["size"] = {1.0};
+	circleShape["size"] = 50.0;
 	circle["components"] = {circleTransform, circleShape};
 
 	// Add entities to scene.
@@ -232,8 +233,10 @@ TEST(OlegLoshkin, SeparatingAxisTheorem)
 {
 	// Init engine.
 	sfge::Engine engine;
+	sf::Vector2i resolution = sf::Vector2i(1280,720);
 	auto config = std::make_unique<sfge::Configuration>();
 	config->devMode = false;
+	config->screenResolution = resolution;
 	engine.Init(std::move(config));
 	auto* sceneManager = engine.GetSceneManager();
 
@@ -242,48 +245,65 @@ TEST(OlegLoshkin, SeparatingAxisTheorem)
 	sceneJson["name"] = "SAT Demo";
 
 	// Creating entities.
-	// Cleate empty entity since the engine needs at least two.
-	json emptyEntity;
-	emptyEntity["name"] = "EmptyEntity";
-	json empty_0;
-	json empty_1;
-	empty_0["type"] = sfge::ComponentType::TRANSFORM2D;
-	empty_1["type"] = sfge::ComponentType::TRANSFORM2D;
-	emptyEntity["components"] = { empty_0, empty_1 };
 	// Create rect.
-	json rect;
-	rect["name"] = "Rect_0";
-	json rectTransform;
-	rectTransform["type"] = sfge::ComponentType::TRANSFORM2D;
-	rectTransform["position"] = {426,240};
-	rectTransform["scale"] = {5.0,5.0};
-	rectTransform["angle"] = 0.0;
-	json rectShape;
-	rectShape["type"] = sfge::ComponentType::SHAPE2D;
-	rectShape["shape_type"] = sfge::ShapeType::RECTANGLE;
-	rectShape["size"] = {20.0,20.0};
-	json rectBody;
-	rectBody["type"] = sfge::ComponentType::BODY2D;
-	rectBody["body_type"] = p2BodyType::KINEMATIC;
-	rectBody["gravity_scale"] = 0;
-	rectBody["offset"] = { 0, 0 };
-	rectBody["velocity"] = { 0, 0 };
-	json rectCollider;
-	rectCollider["name"] = "Rect's Collider!";
-	rectCollider["type"] = sfge::ComponentType::COLLIDER2D;
-	rectCollider["collider_type"] = sfge::ColliderType::BOX;
-	rectCollider["size"] = {20.0,20.0};
-	rectCollider["sensor"] = true;
-	rect["components"] = { rectTransform, rectShape, rectBody, rectCollider };
+	json rect_0;
+	rect_0["name"] = "Rect_0";
+	json rectTransform_0;
+	rectTransform_0["type"] = sfge::ComponentType::TRANSFORM2D;
+	rectTransform_0["position"] = {resolution.x / 2, resolution.y / 2};
+	rectTransform_0["scale"] = {5.0,5.0};
+	rectTransform_0["angle"] = 0.0;
+	json rectShape_0;
+	rectShape_0["type"] = sfge::ComponentType::SHAPE2D;
+	rectShape_0["shape_type"] = sfge::ShapeType::RECTANGLE;
+	rectShape_0["size"] = {20.0,20.0};
+	json rectBody_0;
+	rectBody_0["type"] = sfge::ComponentType::BODY2D;
+	rectBody_0["body_type"] = p2BodyType::DYNAMIC;
+	rectBody_0["aabb"] = {100,100};
+	rectBody_0["gravity_scale"] = 0;
+	rectBody_0["offset"] = { 0, 0 };
+	rectBody_0["velocity"] = { 0, 0 };
+	json rectCollider_0;
+	rectCollider_0["type"] = sfge::ComponentType::COLLIDER2D;
+	rectCollider_0["collider_type"] = sfge::ColliderType::BOX;
+	rectCollider_0["size"] = {20.0,20.0};
+	rectCollider_0["sensor"] = true;
+	rect_0["components"] = { rectTransform_0, rectShape_0, rectBody_0, rectCollider_0 };
+
+	json rect_1;
+	rect_1["name"] = "Rect_1";
+	json rectTransform_1;
+	rectTransform_1["type"] = sfge::ComponentType::TRANSFORM2D;
+	rectTransform_1["position"] = {resolution.x / 3, resolution.y / 3};
+	rectTransform_1["scale"] = {5.0,5.0};
+	rectTransform_1["angle"] = 0.0;
+	json rectShape_1;
+	rectShape_1["type"] = sfge::ComponentType::SHAPE2D;
+	rectShape_1["shape_type"] = sfge::ShapeType::RECTANGLE;
+	rectShape_1["size"] = {20.0,20.0};
+	json rectBody_1;
+	rectBody_1["type"] = sfge::ComponentType::BODY2D;
+	rectBody_1["body_type"] = p2BodyType::DYNAMIC;
+	rectBody_1["aabb"] = {100,100};
+	rectBody_1["gravity_scale"] = 0;
+	rectBody_1["offset"] = {0, 0};
+	rectBody_1["velocity"] = {0, 0};
+	json rectCollider_1;
+	rectCollider_1["type"] = sfge::ComponentType::COLLIDER2D;
+	rectCollider_1["collider_type"] = sfge::ColliderType::BOX;
+	rectCollider_1["size"] = {20.0,20.0};
+	rectCollider_1["sensor"] = true;
+	rect_1["components"] = {rectTransform_1, rectShape_1, rectBody_1, rectCollider_1};
 
 	// Add entities to scene.
-	sceneJson["entities"] = {rect, emptyEntity};
+	sceneJson["entities"] = {rect_0, rect_1};
 
 	// Create systems.
 	json satDemoSystem = {
 		{ "script_path", "scripts/sat_demo_system.py" }
 	};
-	// sceneJson["systems"] = json::array({satDemoSystem});
+	sceneJson["systems"] = json::array({satDemoSystem});
 
 	// Start engine.
 	sceneManager->LoadSceneFromJson(sceneJson);

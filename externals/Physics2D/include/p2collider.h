@@ -28,45 +28,59 @@ SOFTWARE.
 
 #include <p2shape.h>
 #include "engine/entity.h"
+#include <p2contact.h>
 
-/**
-* \brief Struct defining a p2Collider when creating one
-*/
-struct p2ColliderDef
+namespace sfge
 {
-	void* userData; // Hell is that?
-	p2Shape shape;
-	float restitution;
-	bool isSensor;
-};
+	class Transform2d;
+	class p2Body;
 
-/**
-* \brief Representation of a Collider attached to a p2Body
-*/
+	/**
+	* \brief Struct defining a p2Collider when creating one
+	*/
+	struct p2ColliderDef
+	{
+		void* userData; // Hell is that?
+		p2Shape shape;
+		float restitution;
+		bool isSensor;
+	};
 
-class p2Collider // Note: doesn't have a constructor because collider creation is managed internally by p2Body.
-{
-public:
-	p2Collider();
 	/**
-	* \brief Check if the p2Collider is a sensor
+	* \brief Representation of a Collider attached to a p2Body
 	*/
-	bool IsSensor();
-	/**
-	* \brief Return the userData
-	*/
-	void* GetUserData();
-	p2Shape* GetShape();
-	void SetUserData(void* colliderData);
-	void SetShape(const p2Shape& shape);
-	void SetIsSensor(const bool& isSensor);
-	void SetRestitution(const float& restitution);
-private:
-	void* m_UserData = nullptr;
-	p2Shape m_Shape;
-	bool m_IsSensor;
-	float m_Restitution;
-};
+
+	class p2Collider // Note: doesn't have a constructor because collider creation is managed internally by p2Body.
+	{
+	public:
+		p2Collider();
+
+		bool IsSensor();
+		const p2Body* Body() const;
+		void* GetUserData();
+		const p2Shape* GetShape() const;
+		const Transform2d* GetTransform() const;
+		void SetUserData(void* colliderData);
+		void SetShape(const p2Shape& shape);
+		void SetIsSensor(const bool& isSensor);
+		void SetRestitution(const float& restitution);
+		p2Contact GetContacts(const p2Collider& other) const;
+	private:
+		// Methods.
+		p2Contact SeparatingAxisTheorem(const p2Collider& other, const unsigned __int8& flag) const;
+		p2Contact RectVsRect(const p2Collider& other) const;
+		p2Contact CircleVsCircle(const p2Collider& other) const;
+		// Attributes.
+		void* m_UserData = nullptr;
+		p2Shape m_Shape;
+		bool m_IsSensor;
+		float m_Restitution;
+		// References.
+		Transform2d* m_transform;
+		p2Body* m_Body;
+	};
+}
+
 
 
 #endif

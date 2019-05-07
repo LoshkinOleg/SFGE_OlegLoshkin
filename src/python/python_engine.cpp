@@ -50,6 +50,7 @@
 #include <physics/physics2d.h>
 #include <physics/collider2d.h>
 #include <python/pysystem.h>
+#include <p2aabb.h>
 
 #include <SFML/Graphics/Texture.hpp>
 
@@ -221,10 +222,18 @@ PYBIND11_EMBEDDED_MODULE(SFGE, m)
 		.def_readonly("body", &ColliderData::body)
 		.def_readonly("entity", &ColliderData::entity);
 	
+	py::class_<p2AABB> p2aabb(m, "Aabb2d");
+	p2aabb
+		.def_readwrite("bottom_left", &p2AABB::BottomLeft)
+		.def_readwrite("top_right", &p2AABB::TopRight)
+		.def("get_center", &p2AABB::Center, py::return_value_policy::copy)
+		.def("get_extends", &p2AABB::Extends, py::return_value_policy::copy);
+
 	py::class_<Body2d> body2d(m, "Body2d");
 	body2d
 		.def_property("velocity", &Body2d::GetLinearVelocity, &Body2d::SetLinearVelocity)
 		.def("apply_force", &Body2d::ApplyForce)
+		.def("get_aabb", &Body2d::GetAabb, py::return_value_policy::reference)
 		.def_property_readonly("body_type", &Body2d::GetType)
 		.def_property_readonly("mass", &Body2d::GetMass);
 

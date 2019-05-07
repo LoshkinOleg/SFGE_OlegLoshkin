@@ -26,6 +26,7 @@ SOFTWARE.
 #define SFGE_P2PHYSICS_H
 #include <p2vector.h>
 #include <p2body.h>
+#include <p2contact.h>
 
 namespace sfge
 {
@@ -38,10 +39,13 @@ class Physics2dManager;
 		P2PhysicsManager(const p2Vec2& gravity, Physics2dManager* ptr);
 
 		// Public methods.
-		void ApplyGravity(std::vector<p2Body>& bodies);
-		void FixedUpdate(std::vector<p2Body>& bodies);
+		void FixedUpdate(std::vector<p2Body>& bodies) const;
 
 	private:
+		// Methods.
+		void ApplyGravity(std::vector<p2Body>& bodies) const;
+		void HandleContacts(std::vector<p2Body>& bodies) const;
+		// Attributes.
 		friend class p2Body;
 		p2Vec2 m_Gravity;
 		Physics2dManager* m_Manager;
