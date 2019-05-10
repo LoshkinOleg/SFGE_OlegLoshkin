@@ -34,65 +34,56 @@ SOFTWARE.
 namespace sfge
 {
 
-enum Body2dType
-{
-	DYNAMIC,
-	KINETIC,
-	STATIC
-};
+	class Body2d : public Offsetable
+	{
+	public:
+		Body2d();
+		Body2d(Transform2d *transform, Vec2f offset);
 
-// Can access p2Body but cannot modify it.
-class Body2d: public Offsetable
-{
-public:
-	Body2d();
-	Body2d(Transform2d *transform, Vec2f offset, const p2Body& p2Body);
+		p2Vec2 GetLinearVelocity() const;
+		void SetLinearVelocity(p2Vec2 velocity);
+		void ApplyForce(p2Vec2 force);
+		p2BodyType GetType();
+		float GetMass();
+		void SetBody(p2Body* body);
+		p2Body* GetBody() const;
+	private:
+		p2Body * m_Body = nullptr;
+	};
 
-	p2Vec2 GetLinearVelocity() const;
-	void SetLinearVelocity(p2Vec2 velocity);
-	void ApplyForce(const p2Vec2& force);
-	Body2dType GetType();
-	float GetMass();
-	// void SetBody(p2Body* body);
-	const p2Body* Getp2Body() const;
-	// p2AABB* GetAabb() const;
-private:
-	const p2Body& m_Body;
-};
+	class BodyManager;
 
-class BodyManager;
+	namespace editor
+	{
+		struct Body2dInfo : ComponentInfo
+		{
+			void DrawOnInspector() override;
+			void AddVelocity(p2Vec2 velocity);
+			std::deque<p2Vec2>& GetVelocities();
 
-namespace editor
-{
-struct Body2dInfo : ComponentInfo
-{
-	void DrawOnInspector() override;
-	void AddVelocity(p2Vec2 velocity);
-	std::deque<p2Vec2>& GetVelocities();
+			Body2dManager* bodyManager = nullptr;
+		private:
+			std::deque<p2Vec2> m_Velocities;
+			const size_t m_VelocitiesMaxSize = 120;
+		};
+	}
 
-	Body2dManager* bodyManager = nullptr;
-private:
-	std::deque<p2Vec2> m_Velocities;
-	const size_t m_VelocitiesMaxSize = 120;
-};
-}
+	class Body2dManager : public SingleComponentManager<Body2d, editor::Body2dInfo, ComponentType::BODY2D>
+	{
+	public:
+		using SingleComponentManager::SingleComponentManager;
+		void OnEngineInit() override;
+		void OnFixedUpdate() override;
+		Body2d* AddComponent(Entity entity) override;
+		void CreateComponent(json& componentJson, Entity entity) override;
+		void DestroyComponent(Entity entity) override;
 
-class Body2dManager : public SingleComponentManager<Body2d, editor::Body2dInfo, ComponentType::BODY2D>
-{
-public:
-	using SingleComponentManager::SingleComponentManager;
-	void OnEngineInit() override;
-	void OnFixedUpdate() override;
-	Body2d* AddComponent(Entity entity) override;
-	void CreateComponent(json& componentJson, Entity entity) override;
-	void DestroyComponent(Entity entity) override;
+		void OnResize(size_t new_size) override;
 
-	void OnResize(size_t new_size) override;
-
-private:
-	Transform2dManager* m_Transform2dManager;
-	std::weak_ptr<p2World> m_WorldPtr;
-};
+	private:
+		Transform2dManager* m_Transform2dManager;
+		std::weak_ptr<p2World> m_WorldPtr;
+	};
 
 
 

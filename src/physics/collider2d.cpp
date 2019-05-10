@@ -27,144 +27,145 @@ SOFTWARE.
 #include <engine/component.h>
 #include <physics/physics2d.h>
 #include <engine/engine.h>
-#include <p2shape.h>
 namespace sfge
 {
-void editor::ColliderInfo::DrawOnInspector()
-{
-  ImGui::Separator();
-  ImGui::Text("Collider");
-  if(data != nullptr)
-  {
-    if(data->fixture != nullptr)
-    {
-      switch (data->fixture->GetShape()->GetType())
-      {
-		case p2ShapeType::CIRCLE:
-      		ImGui::LabelText("Shape", "Circle");
-      		break;
-        case p2ShapeType::POLYGON:
-        	ImGui::LabelText("Shape", "Polygon");
-        	break;
-      	case p2ShapeType::RECTANGLE:
-      		ImGui::LabelText("Shape", "Rectangle");
-			break;
-		case p2ShapeType::NONE:
-			ImGui::LabelText("Shape", "NONE");
-		  	break;
-		default:
-		  	break;
-      }
-    }
-  }
-}
-
-
-void ColliderManager::OnEngineInit()
-{
-	MultipleComponentManager::OnEngineInit();
-	m_BodyManager = m_Engine.GetPhysicsManager()->GetBodyManager();
-}
-
-void ColliderManager::CreateComponent(json& componentJson, Entity entity)
-{
-	Log::GetInstance()->Msg("Create component Collider");
-	if (m_EntityManager->HasComponent(entity, ComponentType::BODY2D))
+	void editor::ColliderInfo::DrawOnInspector()
 	{
-		auto & body = m_BodyManager->GetComponentRef(entity);
-
-		p2ColliderDef fixtureDef;
-
-		if (CheckJsonExists(componentJson, "sensor"))
+		ImGui::Separator();
+		ImGui::Text("Collider");
+		if (data != nullptr)
 		{
-			fixtureDef.isSensor = componentJson["sensor"];
+			if (data->fixture != nullptr)
+			{
+				/*
+			  switch (data->fixture->GetShape()->m_type)
+			  {
+				case b2Shape::e_circle:
+					ImGui::LabelText("Shape", "Circle");
+					break;
+				case b2Shape::e_polygon:
+					ImGui::LabelText("Shape", "Polygon");
+					break;
+				case b2Shape::e_chain:
+					ImGui::LabelText("Shape", "Chain");
+					break;
+				case b2Shape::e_edge:
+					ImGui::LabelText("Shape", "Edge");
+					break;
+				  default:
+					break;
+			  }
+				*/
+			}
 		}
+	}
 
-		std::unique_ptr<p2Shape> shape = nullptr;
 
-		if (CheckJsonExists(componentJson, "collider_type"))
+	void ColliderManager::OnEngineInit()
+	{
+		MultipleComponentManager::OnEngineInit();
+		m_BodyManager = m_Engine.GetPhysicsManager()->GetBodyManager();
+	}
+
+	void ColliderManager::CreateComponent(json& componentJson, Entity entity)
+	{
+		Log::GetInstance()->Msg("Create component Collider");
+		if (m_EntityManager->HasComponent(entity, ComponentType::BODY2D))
 		{
-			ColliderType colliderType = static_cast<ColliderType>(componentJson["collider_type"]);
-			switch (colliderType)
+			auto & body = m_BodyManager->GetComponentRef(entity);
+
+			p2ColliderDef fixtureDef;
+
+			if (CheckJsonExists(componentJson, "sensor"))
 			{
-			case ColliderType::CIRCLE:
-				shape = std::make_unique<p2CircleShape>();
-				if (CheckJsonNumber(componentJson, "radius"))
-				{
-					//shape->m_radius = pixel2meter(static_cast<float>(componentJson["radius"]));
-				}
-				break;
-			case ColliderType::BOX:
+				fixtureDef.isSensor = componentJson["sensor"];
+			}
+
+			std::unique_ptr<p2Shape> shape = nullptr;
+
+			if (CheckJsonExists(componentJson, "collider_type"))
 			{
-				auto boxShape = std::make_unique<p2RectShape>();
-				if (CheckJsonExists(componentJson, "size"))
+				ColliderType colliderType = static_cast<ColliderType>(componentJson["collider_type"]);
+				switch (colliderType)
 				{
-					auto size = pixel2meter(GetVectorFromJson(componentJson, "size"));
+					case ColliderType::CIRCLE:
+						shape = std::make_unique<p2CircleShape>();
+						if (CheckJsonNumber(componentJson, "radius"))
+						{
+							//shape->m_radius = pixel2meter(static_cast<float>(componentJson["radius"]));
+						}
+						break;
+					case ColliderType::BOX:
+					{
+						auto boxShape = std::make_unique<p2RectShape>();
+						if (CheckJsonExists(componentJson, "size"))
+						{
+							auto size = pixel2meter(GetVectorFromJson(componentJson, "size"));
+							{
+								std::ostringstream oss;
+								oss << "Box physics size: " << size.x << ", " << size.y;
+								Log::GetInstance()->Msg(oss.str());
+							}
+							//boxShape->SetAsBox(size.x / 2.0f, size.y / 2.0f);
+						}
+						shape = std::move(boxShape);
+					}
+					break;
+					default:
 					{
 						std::ostringstream oss;
-						oss << "Box physics size: " << size.x << ", " << size.y;
-						Log::GetInstance()->Msg(oss.str());
+						oss << "[Error] Collider of type: " << static_cast<int>(colliderType) << " could not be loaded from json: " << componentJson;
+						Log::GetInstance()->Error(oss.str());
 					}
-					//boxShape->SetAsBox(size.x / 2.0f, size.y / 2.0f);
+					break;
 				}
-				shape = std::move(boxShape);
-			}	
-			break;
-			default:
-			{
-				std::ostringstream oss;
-				oss << "[Error] Collider of type: " << static_cast<int>(colliderType) << " could not be loaded from json: " << componentJson;
-				Log::GetInstance()->Error(oss.str());
 			}
-				break;
-			}
-		}
-		if(CheckJsonNumber(componentJson, "bouncing"))
-		{
-			fixtureDef.restitution = componentJson["bouncing"];
-		}
-		if (shape != nullptr)
-		{
-			fixtureDef.shape = *shape.get();
-
-			auto index = GetFreeComponentIndex();
-			if(index != -1)
+			if (CheckJsonNumber(componentJson, "bouncing"))
 			{
-				auto* fixture = body.GetBody()->CreateCollider(&fixtureDef);
+				fixtureDef.restitution = componentJson["bouncing"];
+			}
+			if (shape != nullptr)
+			{
+				fixtureDef.shape = shape.get();
+
+				auto index = GetFreeComponentIndex();
+				if (index != -1)
+				{
+					auto* fixture = body.GetBody()->CreateCollider(&fixtureDef);
 
 
-				ColliderData& colliderData = m_Components[index];
-				colliderData.entity = entity;
-				colliderData.fixture = fixture;
-				colliderData.body = body.GetBody();
-				m_ComponentsInfo[index].data = &colliderData;
-				m_ComponentsInfo[index].SetEntity(entity);
-				fixture->SetUserData(&colliderData);
+					ColliderData& colliderData = m_Components[index];
+					colliderData.entity = entity;
+					colliderData.fixture = fixture;
+					colliderData.body = body.GetBody();
+					m_ComponentsInfo[index].data = &colliderData;
+					m_ComponentsInfo[index].SetEntity(entity);
+					fixture->SetUserData(&colliderData);
+				}
 			}
 		}
 	}
-}
-int ColliderManager::GetFreeComponentIndex()
-{
-	for(auto i = 0u; i < m_Components.size();i++)
+	int ColliderManager::GetFreeComponentIndex()
 	{
-		if(m_Components[i].entity == INVALID_ENTITY)
-			return i;
+		for (auto i = 0u; i < m_Components.size(); i++)
+		{
+			if (m_Components[i].entity == INVALID_ENTITY)
+				return i;
+		}
+		return -1;
 	}
-	return -1;
-}
-ColliderData* ColliderManager::AddComponent(Entity entity)
-{
-	(void) entity;
-	return nullptr;
-}
-void ColliderManager::DestroyComponent(Entity entity)
-{
-	(void) entity;
-}
-ColliderData *ColliderManager::GetComponentPtr(Entity entity)
-{
-	(void)entity;
-	return nullptr;
-}
+	ColliderData *ColliderManager::AddComponent(Entity entity)
+	{
+		(void)entity;
+		return nullptr;
+	}
+	void ColliderManager::DestroyComponent(Entity entity)
+	{
+		(void)entity;
+	}
+	ColliderData *ColliderManager::GetComponentPtr(Entity entity)
+	{
+		(void)entity;
+		return nullptr;
+	}
 }

@@ -30,91 +30,93 @@ SOFTWARE.
 #include <engine/system.h>
 #include <physics/collider2d.h>
 #include <physics/body2d.h>
-// #include "p2contact.h"
-// #include "p2world.h"
-#include <p2physics.h>
+#include "p2contact.h"
+#include "p2world.h"
 
 namespace sfge
 {
-	
-
-float pixel2meter(float pixel);
-float pixel2meter(int pixel);
-p2Vec2 pixel2meter(sf::Vector2f pixel);
-p2Vec2 pixel2meter(Vec2f pixel);
-p2Vec2 pixel2meter(sf::Vector2i pixel);
-
-float meter2pixel(float meter);
-Vec2f meter2pixel(p2Vec2 meter);
-
-class ContactListener : public p2ContactListener
-{
-public:
-	ContactListener(Engine& engine);
-	void BeginContact(p2Contact* contact) override;
-
-	void EndContact(p2Contact* contact) override;
-protected:
-	Engine & m_Engine;
-};
-/*
-class RaycastCallback : public p2RayCastCallback
-{
-public:
-	float fraction;
-	p2Collider* touchedFixture = nullptr;
-	float ReportCollider(p2Collider* fixture, const p2Vec2& point,
-									  const p2Vec2& normal, float fraction) override;
 
 
-};
-*/
-/**
- * \brief The Physics Manager use Box2D to simulate 2D physics
- */
-class Physics2dManager : public System
-{
-public:
-	using System::System;
-	~Physics2dManager() = default;
-	/**
-	 * \brief Initialize the Physics Manager, but do not create a b2World
-	 */
-	void OnEngineInit() override;
+	float pixel2meter(float pixel);
+	float pixel2meter(int pixel);
+	p2Vec2 pixel2meter(sf::Vector2f pixel);
+	p2Vec2 pixel2meter(Vec2f pixel);
+	p2Vec2 pixel2meter(sf::Vector2i pixel);
 
-	/**
-	* \brief Get The World
+	float meter2pixel(float meter);
+	Vec2f meter2pixel(p2Vec2 meter);
+
+	class ContactListener : public p2ContactListener
+	{
+	public:
+		ContactListener(Engine& engine);
+		void BeginContact(p2Contact* contact) override;
+
+		void EndContact(p2Contact* contact) override;
+	protected:
+		Engine & m_Engine;
+	};
+	/*
+	class RaycastCallback : public p2RayCastCallback
+	{
+	public:
+		float fraction;
+		p2Collider* touchedFixture = nullptr;
+		float ReportCollider(p2Collider* fixture, const p2Vec2& point,
+										  const p2Vec2& normal, float fraction) override;
+
+
+	};
 	*/
-	std::weak_ptr<p2World> GetWorld() const;
 	/**
-	 * \brief Called each frame to update the b2World if not in editor mode
-	 * @param dt Delta time since last frame
+	 * \brief The Physics Manager use Box2D to simulate 2D physics
 	 */
-	void OnUpdate(float dt) override;
-	void OnFixedUpdate() override;
-	/**
-	* \brief Called at the end of the program to Destroy a b2World, if it sill exists
-	*/
-	void Destroy() override;
+	class Physics2dManager : public System
+	{
+	public:
+		using System::System;
+		~Physics2dManager() = default;
+		/**
+		 * \brief Initialize the Physics Manager, but do not create a b2World
+		 */
+		void OnEngineInit() override;
 
-	void OnBeforeSceneLoad() override;
-	void OnAfterSceneLoad() override;
+		/**
+		* \brief Get The World
+		*/
+		std::weak_ptr<p2World> GetWorld() const;
+		/**
+		 * \brief Called each frame to update the b2World if not in editor mode
+		 * @param dt Delta time since last frame
+		 */
+		void OnUpdate(float dt) override;
+		void OnFixedUpdate() override;
+		/**
+		* \brief Called at the end of the program to Destroy a b2World, if it sill exists
+		*/
+		void Destroy() override;
+
+		void OnBeforeSceneLoad() override;
+		void OnAfterSceneLoad() override;
 
 
-	Body2dManager* GetBodyManager();
-	ColliderManager* GetColliderManager();
+		Body2dManager* GetBodyManager();
+		ColliderManager* GetColliderManager();
 
-	//float Raycast(Vec2f startPoint, Vec2f direction, float rayLength);
+		//float Raycast(Vec2f startPoint, Vec2f direction, float rayLength);
 
-	const static float pixelPerMeter;
-private:
-	friend class Body2d;
-	std::shared_ptr<p2World> m_World = nullptr;
-	p2Vec2 m_Gravity;
+		const static float pixelPerMeter;
+	private:
+		friend class Body2d;
+		std::shared_ptr<p2World> m_World = nullptr;
 
-	std::unique_ptr<ContactListener> m_ContactListener = nullptr;
-	Body2dManager m_BodyManager{m_Engine};
-	ColliderManager m_ColliderManager{m_Engine};
-};
+		std::unique_ptr<ContactListener> m_ContactListener = nullptr;
+		Body2dManager m_BodyManager{m_Engine};
+		ColliderManager m_ColliderManager{m_Engine};
+
+	};
+
+
+
 }
 #endif

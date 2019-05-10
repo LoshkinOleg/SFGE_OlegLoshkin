@@ -28,75 +28,68 @@ SOFTWARE.
 #include <p2aabb.h>
 #include <vector>
 #include <p2collider.h>
+#include <engine\transform2d.h>
 
-namespace sfge
+using namespace sfge;
+
+enum class p2BodyType
 {
-	class p2Collider;
-	struct p2ColliderDef;
+	STATIC,
+	KINETIC,
+	DYNAMIC
+};
 
-	enum class p2BodyType
-	{
-		STATIC,
-		KINEMATIC,
-		DYNAMIC
-	};
+/**
+* \brief Struct Defining the p2Body when creating it
+*/
+struct p2BodyDef
+{
+	p2BodyType type;
+	p2Shape shape;
+	Transform2d* transform;
+	p2Vec2 linearVelocity;
+};
 
+const size_t MAX_COLLIDER_LEN = 8;
+
+/**
+* \brief Rigidbody representation
+*/
+class p2Body
+{
+public:
+	void Init(p2BodyDef* bodyDef);
+	p2Vec2 GetLinearVelocity() const;
+	
+	void SetLinearVelocity(p2Vec2 velocity);
+
+	float GetAngularVelocity();
+	
+	p2Vec2 GetPosition();
 	/**
-	* \brief Struct Defining the p2Body when creating it
+	* \brief Factory method creating a p2Collider
+	* \param colliderDef p2ColliderDef definition of the collider
+	* \return p2Collider collider attached to the p2Body
 	*/
-	struct p2BodyDef
-	{
-		p2BodyType type;
-		p2Vec2 position;
-		p2Vec2 linearVelocity;
-		float gravityScale;
-		float dt;
-		p2AABB aabb;
-	};
+	p2Collider* CreateCollider(const p2ColliderDef* colliderDef);
+	// void UpdatePosition();
+	void ApplyForceToCenter(const p2Vec2& force);
+	// void ApplyGravity(const p2Vec2& force);
+	p2BodyType GetType() const;
+	float GetMass() const;
+	const p2AABB* GetAabb() const;
+	// const bool IsInit() const;
+private:
+	Transform2d* m_Transform;
+	p2Shape m_Shape;
+	p2AABB m_Aabb;
+	p2BodyType m_Type;
+	p2Vec2 m_LinearVelocity;
+	float m_AngularVelocity;
 
-	const size_t MAX_COLLIDER_LEN = 8;
-
-	/**
-	* \brief Rigidbody representation
-	*/
-	class p2Body
-	{
-	public:
-		void Init(p2BodyDef* bodyDef);
-		p2Vec2 GetLinearVelocity() const;
-		
-		void SetLinearVelocity(p2Vec2 velocity);
-
-		float GetAngularVelocity();
-		
-		p2Vec2 GetPosition();
-		/**
-		* \brief Factory method creating a p2Collider
-		* \param colliderDef p2ColliderDef definition of the collider
-		* \return p2Collider collider attached to the p2Body
-		*/
-		p2Collider* CreateCollider(const p2ColliderDef* colliderDef);
-		void UpdatePosition();
-		void ApplyForceToCenter(const p2Vec2& force);
-		void ApplyGravity(const p2Vec2& force);
-		p2BodyType GetType() const;
-		float GetMass() const;
-		const p2AABB* GetAabb() const;
-		const bool IsInit() const;
-	private:
-		p2AABB m_Aabb;
-		p2BodyType m_Type;
-		p2Vec2 m_Position;
-		p2Vec2 m_LinearVelocity;
-		float m_AngularVelocity;
-		float m_GravityScale;
-		float m_Dt;
-		bool m_IsInit;
-
-		int m_ColliderIndex = 0;
-		std::vector<p2Collider> m_Colliders;
-	};
-}
+	int m_ColliderIndex = 0;
+	std::vector<p2Collider> m_Colliders;
+};
 
 
 #endif

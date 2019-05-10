@@ -25,9 +25,8 @@ SOFTWARE.
 #ifndef SFGE_P2AABB_H
 #define SFGE_P2AABB_H
 
-#include <p2vector.h>
-#include <..\externals\SFML\include\SFML\System\Vector2.hpp>
 #include <vector>
+#include <p2vector.h>
 
 /**
 * \brief Struct representing a Axis Aligned Bounding Box
