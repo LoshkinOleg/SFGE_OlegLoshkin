@@ -367,6 +367,10 @@ PYBIND11_EMBEDDED_MODULE(SFGE, m)
 		.def(py::self += py::self)
 		.def(py::self -= py::self)
 		.def(py::self *= float())
+		.def(py::self + py::self)
+		.def(py::self - py::self)
+		.def(py::self * float())
+		.def(py::self / float())
 		.def_static("dot", &p2Vec2::Dot)
 		.def_static("cross", &p2Vec2::Cross)
 		.def("rotate", &p2Vec2::Rotate)
@@ -381,6 +385,7 @@ PYBIND11_EMBEDDED_MODULE(SFGE, m)
 			oss << "p2Vec2(" << vec.x << ", " << vec.y << ")";
 			return oss.str();
 		});
+
 	py::class_<p2Vec3> p2vec3(m, "p2Vec3");
 	p2vec3
 		.def(py::init<>())

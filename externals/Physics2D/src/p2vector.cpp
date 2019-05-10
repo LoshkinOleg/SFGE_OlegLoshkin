@@ -22,8 +22,9 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include <p2vector.h>
 #include <cmath>
+#include <p2vector.h>
+#include <p2matrix.h>
 
 p2Vec2::p2Vec2()
 {
@@ -35,83 +36,86 @@ p2Vec2::p2Vec2(float x, float y)
 	this->y = y;
 }
 
-p2Vec2 p2Vec2::operator+(p2Vec2 v)
+p2Vec2 p2Vec2::operator+(const p2Vec2 v)const
 {
 	return p2Vec2(x+v.x, y+v.y);
 }
 
-p2Vec2 p2Vec2::operator+=(p2Vec2 v)
+p2Vec2 p2Vec2::operator+=(const p2Vec2 v)const
 {
 	return *this+v;
 }
 
-p2Vec2 p2Vec2::operator-(p2Vec2 v)
+p2Vec2 p2Vec2::operator-(const p2Vec2 v)const
 {
 	return p2Vec2(x-v.x, y-v.y);
 }
 
-p2Vec2 p2Vec2::operator-=(p2Vec2 v)
+p2Vec2 p2Vec2::operator-=(const p2Vec2 v)const
 {
 	return *this-v;
 }
 
-p2Vec2 p2Vec2::operator*=(float f)
+p2Vec2 p2Vec2::operator*=(const float f)const
 {
 	return (*this) * f;
 }
 
-p2Vec2 p2Vec2::operator/(float f)
+p2Vec2 p2Vec2::operator/=(const float f) const
+{
+	return (*this) / f;
+}
+
+p2Vec2 p2Vec2::operator/(const float f)const
 {
 	return p2Vec2(x/f, y/f);
 }
 
-p2Vec2 p2Vec2::operator*(float f)
+p2Vec2 p2Vec2::operator*(const float f)const
 {
 	return p2Vec2(x*f, y*f);
 }
 
-float p2Vec2::Dot(p2Vec2 v1, p2Vec2 v2)
+float p2Vec2::Dot(const p2Vec2 v1, const p2Vec2 v2)
 {
-	//TODO
-	return 0.0f;
+	return (v1.x * v2.x) + (v1.y + v2.y);
 }
-p2Vec3 p2Vec2::Cross(p2Vec2 v1, p2Vec2 v2)
+p2Vec3 p2Vec2::Cross(const p2Vec2 v1, const p2Vec2 v2)
 {
-	return p2Vec3();
+	return p2Vec3(0,0, (v1.x * v2.y) - (v1.y * v2.x) );
 }
-float p2Vec2::GetMagnitude()
+float p2Vec2::GetMagnitude()const
 {
-	//TODO
-	return 0.0f;
+	return _CMATH_::sqrt((x*x, y*y));
 }
 
-p2Vec2 p2Vec2::Normalized()
+p2Vec2 p2Vec2::Normalized()const
 {
-	//TODO
-	return p2Vec2();
+	return p2Vec2(*this / GetMagnitude());
 }
 
 void p2Vec2::NormalizeSelf()
 {
-	//TODO
+	*this = *this / GetMagnitude();
 }
 
-p2Vec2 p2Vec2::Rotate(float angle) const
+p2Vec2 p2Vec2::Rotate(const float angle) const
 {
-	return p2Vec2();
+	return p2Mat22(	p2Vec2(_CMATH_::cos(angle*(3.1416f / 360.0f)), -_CMATH_::sin(angle*(3.1416f / 360.0f))),
+					p2Vec2(_CMATH_::sin(angle*(3.1416f / 360.0f)), _CMATH_::cos(angle*(3.1416f / 360.0f))))		* (*this);
 }
 
-p2Vec2 p2Vec2::Lerp(const p2Vec2& v1, const p2Vec2& v2, float t)
+p2Vec2 p2Vec2::Lerp(const p2Vec2& v1, const p2Vec2& v2, const float t)
 {
-	return p2Vec2();
+	return p2Vec2( v2 * (1 - t) + v1 * t );
 }
 
 float p2Vec2::AngleBetween(const p2Vec2& v1, const p2Vec2& v2)
 {
-	return 0.0f;
+	return (p2Vec2::Dot(v1,v2) / (v1.GetMagnitude() * v2.GetMagnitude()));
 }
 
-p2Vec3 p2Vec2::to3()
+p2Vec3 p2Vec2::to3()const
 {
 	return p2Vec3(x, y, 0.0f);
 }
@@ -164,14 +168,14 @@ p2Vec3 p2Vec3::operator*(float f)
 
 float p2Vec3::Dot(p2Vec3 v1, p2Vec3 v2)
 {
-	//TODO
-	return 0.0f;
+	return (v1.x * v2.x) + (v1.y + v2.y) + (v1.z + v2.z);
 }
 
 p2Vec3 p2Vec3::Cross(p2Vec3 v1, p2Vec3 v2)
 {
-	//TODO
-	return p2Vec3();
+	return p2Vec3(	(v1.y * v2.z) - (v1.z * v2.y),
+					(v1.z * v2.x) - (v1.x * v2.z),
+					(v1.x * v2.y) - (v1.y * v2.x));
 }
 
 p2Vec3 p2Vec3::Rotate(float angle) const

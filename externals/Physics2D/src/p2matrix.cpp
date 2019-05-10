@@ -49,7 +49,7 @@ p2Mat22 p2Mat22::operator*(p2Mat22 m1)
 
 p2Vec2 p2Mat22::operator*(p2Vec2 v)
 {
-	return p2Vec2();
+	return p2Vec2( (rows[0].x * v.x) + ((rows[0]).y * v.y), (rows[1].x * v.x) + (rows[1].y * v.y) );
 }
 
 p2Mat22 p2Mat22::operator*(float f)

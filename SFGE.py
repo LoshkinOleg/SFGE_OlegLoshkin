@@ -249,6 +249,12 @@ class Body2dManager(System, ComponentManager):
 class Physics2dManager(System):
     body2d_manager = None # type: Body2dManager
 
+    def pixel2meter(self, value):
+        pass
+
+    def meter2pixel(self, value: p2Vec2):
+        pass
+
 
 class Configuration:
     def __init__(self):

@@ -33,16 +33,16 @@ struct p2Vec3;
 struct p2Vec2
 {
 	p2Vec2();
-
 	p2Vec2(float x, float y);
 
-	p2Vec2 operator+(p2Vec2 v);
-	p2Vec2 operator+=(p2Vec2 v);
-	p2Vec2 operator-(p2Vec2 v);
-	p2Vec2 operator-=(p2Vec2 v);
-	p2Vec2 operator*=(float f);
-	p2Vec2 operator /(float f);
-	p2Vec2 operator *(float f);
+	p2Vec2 operator+(const p2Vec2 v)const;
+	p2Vec2 operator-(const p2Vec2 v)const;
+	p2Vec2 operator*(const float f)const;
+	p2Vec2 operator/(const float f)const;
+	p2Vec2 operator+=(const p2Vec2 v)const;
+	p2Vec2 operator-=(const p2Vec2 v)const;
+	p2Vec2 operator*=(const float f)const;
+	p2Vec2 operator/=(const float f)const;
 	/**
 	* \brief Dot product of two vectors
 	*/
@@ -54,24 +54,24 @@ struct p2Vec2
 	/**
 	* \brief Calculate the magnitude of the p2Vec2
 	*/
-	float GetMagnitude();
+	float GetMagnitude()const;
 	/**
 	* \brief Calculate a normalized version of the p2Vec2
 	*/
-	p2Vec2 Normalized();
+	p2Vec2 Normalized()const;
 	/**
 	* \brief Normalize the p2Vec2
 	*/
 	void NormalizeSelf();
 
-	p2Vec2 Rotate(float angle) const;
-	static p2Vec2 Lerp(const p2Vec2& v1, const p2Vec2& v2, float t);
+	p2Vec2 Rotate(const float angle) const;
+	static p2Vec2 Lerp(const p2Vec2& v1, const p2Vec2& v2, const float t);
 	static float AngleBetween(const p2Vec2& v1, const p2Vec2& v2);
 
 	/**
 	* \brief 
 	*/
-	p2Vec3 to3();
+	p2Vec3 to3()const;
 
 	float x = 0.0f;
 	float y = 0.0f;
