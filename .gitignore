@@ -18,6 +18,8 @@
 *.mod
 *.smod
 
+[Bb]uild/
+[Dd]ocumentation/
 
 # Executables
 *.exe
