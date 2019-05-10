@@ -37,9 +37,9 @@ void Physics2dManager::OnEngineInit()
 	p2Vec2 gravity;
 	if(const auto configPtr = m_Engine.GetConfig())
 		gravity = configPtr->gravity;
-	m_World = std::make_shared<p2World>(gravity);
+	// m_World = std::make_shared<p2World>(gravity);
 	m_ContactListener = std::make_unique<ContactListener>(m_Engine);
-	m_World->SetContactListener(m_ContactListener.get());
+	// m_World->SetContactListener(m_ContactListener.get());
 
 	m_BodyManager.OnEngineInit();
 	m_ColliderManager.OnEngineInit();
@@ -58,25 +58,23 @@ void Physics2dManager::OnFixedUpdate()
 	const auto config = m_Engine.GetConfig();
 	if (config != nullptr and m_World != nullptr)
 	{
-		m_World->Step(config->fixedDeltaTime);
+		// m_World->Step(config->fixedDeltaTime);
 		m_BodyManager.OnFixedUpdate();
-		m_P2PhysicsManager.ApplyGravity(m_World->GetThisBodies());
-		m_P2PhysicsManager.FixedUpdate(m_World->GetThisBodies());
+		m_P2PhysicsManager.FixedUpdate(/*m_World->GetThisBodies()*/);
 	}
 }
 
 std::weak_ptr<p2World> Physics2dManager::GetWorld() const
 {
-	return m_World;
+	return std::weak_ptr<p2World>(m_P2PhysicsManager.World());
 }
-
 
 void Physics2dManager::Destroy()
 {
-	if (m_World != nullptr)
+	/*if (m_World != nullptr)
 	{
 		m_World = nullptr;
-	}
+	}*/
 	if (m_ContactListener != nullptr)
 	{
 		m_ContactListener = nullptr;

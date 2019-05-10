@@ -41,7 +41,7 @@ public:
 	/**
 	* \brief Simulate a new step of the physical world, simplify the resolution with a QuadTree, generate the new contacts
 	*/
-	void Step(float dt);
+	void Step();
 	/**
 	* \brief Factory method to create a new p2Body attached to the p2World
 	*/
@@ -54,6 +54,7 @@ public:
 	std::vector<p2Body>& GetThisBodies();
 private:
 	p2Vec2 m_Gravity;
+	float m_Fixed_dt;
 	std::vector<p2Body> m_Bodies;
 	int m_BodyIndex = 0;
 };

@@ -34,22 +34,30 @@ SOFTWARE.
 namespace sfge
 {
 
+enum Body2dType
+{
+	DYNAMIC,
+	KINETIC,
+	STATIC
+};
+
+// Can access p2Body but cannot modify it.
 class Body2d: public Offsetable
 {
 public:
 	Body2d();
-	Body2d(Transform2d *transform, Vec2f offset);
+	Body2d(Transform2d *transform, Vec2f offset, const p2Body& p2Body);
 
 	p2Vec2 GetLinearVelocity() const;
 	void SetLinearVelocity(p2Vec2 velocity);
 	void ApplyForce(const p2Vec2& force);
-	p2BodyType GetType();
+	Body2dType GetType();
 	float GetMass();
-	void SetBody(p2Body* body);
-	p2Body* GetBody() const;
-	p2AABB* GetAabb() const;
+	// void SetBody(p2Body* body);
+	const p2Body* Getp2Body() const;
+	// p2AABB* GetAabb() const;
 private:
-	p2Body * m_Body = nullptr;
+	const p2Body& m_Body;
 };
 
 class BodyManager;

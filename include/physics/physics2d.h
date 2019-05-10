@@ -30,8 +30,8 @@ SOFTWARE.
 #include <engine/system.h>
 #include <physics/collider2d.h>
 #include <physics/body2d.h>
-#include "p2contact.h"
-#include "p2world.h"
+// #include "p2contact.h"
+// #include "p2world.h"
 #include <p2physics.h>
 
 namespace sfge
@@ -115,10 +115,6 @@ private:
 	std::unique_ptr<ContactListener> m_ContactListener = nullptr;
 	Body2dManager m_BodyManager{m_Engine};
 	ColliderManager m_ColliderManager{m_Engine};
-	P2PhysicsManager m_P2PhysicsManager;
 };
-
-
-
 }
 #endif
