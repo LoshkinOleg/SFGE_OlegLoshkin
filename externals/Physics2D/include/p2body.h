@@ -67,6 +67,7 @@ public:
 	float GetAngularVelocity();
 	
 	p2Vec2 GetPosition();
+	void UpdatePosition();
 	/**
 	* \brief Factory method creating a p2Collider
 	* \param colliderDef p2ColliderDef definition of the collider
@@ -77,10 +78,12 @@ public:
 	p2BodyType GetType() const;
 	float GetMass() const;
 private:
+	p2BodyType type;
 	p2AABB aabb;
 	p2Vec2 position;
 	p2Vec2 linearVelocity;
 	float angularVelocity;
+	float gravityScale;
 
 	int m_ColliderIndex = 0;
 	std::vector<p2Collider> m_Colliders;

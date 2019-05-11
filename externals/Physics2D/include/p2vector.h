@@ -40,10 +40,10 @@ struct p2Vec2
 	p2Vec2 operator-(const p2Vec2 v)const;
 	p2Vec2 operator*(const float f)const;
 	p2Vec2 operator/(const float f)const;
-	p2Vec2 operator+=(const p2Vec2 v)const;
-	p2Vec2 operator-=(const p2Vec2 v)const;
-	p2Vec2 operator*=(const float f)const;
-	p2Vec2 operator/=(const float f)const;
+	void operator+=(const p2Vec2 v);
+	void operator-=(const p2Vec2 v);
+	void operator*=(const float f);
+	void operator/=(const float f);
 	/**
 	* \brief Dot product of two vectors
 	*/

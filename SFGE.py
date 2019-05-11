@@ -262,19 +262,11 @@ class Physics2dManager(System):
 class Configuration:
     def __init__(self):
         self.screen_size = Vec2f()
+        self.fixed_dt = 0.0
 
 class Engine:
     def __init__(self):
         self.config = Configuration()
-
-
-class Component:
-    Sprite = 0
-    Shape = 0
-    Body = 0
-    Sound = 0
-    Transform2d = 0
-
 
 class Transform2d():
     """Mandatory Component attached to the GameObject containing all the geometric important data of the GameObject"""
@@ -292,7 +284,7 @@ class Sound:
         pass
 
 
-class Body2d:
+class Body:
     def __init__(self):
         self.velocity = p2Vec2()
         self.magnitude = 0.0
@@ -328,12 +320,19 @@ class InputManager:
     keyboard = KeyboardManager()
     mouse = MouseManager()
 
+class Component:
+    Sprite = 0
+    Shape = 0
+    Body2d = 0
+    Sound = 0
+    Transform2d = 0
+
 engine = Engine()
 input_manager = InputManager()
 scene_manager = SceneManager()
 transform2d_manager = Transform2dManager()
 entity_manager = EntityManager()
 physics2d_manager = Physics2dManager()
-body2d_manager = Body2dManager()
+# body2d_manager = Body2dManager() # Use physics2d_manager.body2d_manager instead.
 graphics2d_manager = Graphics2dManager()
 python_engine = PythonEngine()

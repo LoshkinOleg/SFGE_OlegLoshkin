@@ -42,9 +42,9 @@ p2Vec2 p2Vec2::operator+(const p2Vec2 v)const
 	return p2Vec2(x+v.x, y+v.y);
 }
 
-p2Vec2 p2Vec2::operator+=(const p2Vec2 v)const
+void p2Vec2::operator+=(const p2Vec2 v)
 {
-	return *this+v;
+	*this = *this+v;
 }
 
 p2Vec2 p2Vec2::operator-(const p2Vec2 v)const
@@ -52,19 +52,19 @@ p2Vec2 p2Vec2::operator-(const p2Vec2 v)const
 	return p2Vec2(x-v.x, y-v.y);
 }
 
-p2Vec2 p2Vec2::operator-=(const p2Vec2 v)const
+void p2Vec2::operator-=(const p2Vec2 v)
 {
-	return *this-v;
+	*this = *this-v;
 }
 
-p2Vec2 p2Vec2::operator*=(const float f)const
+void p2Vec2::operator*=(const float f)
 {
-	return (*this) * f;
+	*this = (*this) * f;
 }
 
-p2Vec2 p2Vec2::operator/=(const float f) const
+void p2Vec2::operator/=(const float f) 
 {
-	return (*this) / f;
+	*this = (*this) / f;
 }
 
 p2Vec2 p2Vec2::operator/(const float f)const
