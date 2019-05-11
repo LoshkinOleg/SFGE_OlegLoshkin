@@ -27,6 +27,7 @@ SOFTWARE.
 p2World::p2World(p2Vec2 gravity): m_Gravity(gravity)
 {
 	m_Bodies.resize(MAX_BODY_LEN);
+	m_RootQuad = p2QuadTree();
 }
 
 void p2World::Step(float dt)
@@ -62,6 +63,7 @@ p2Body * p2World::CreateBody(p2BodyDef* bodyDef)
 	p2Body& body = m_Bodies[m_BodyIndex];
 	body.Init(bodyDef);
 	m_BodyIndex++;
+	m_RootQuad.Insert(&body);
 	return &body;
 }
 

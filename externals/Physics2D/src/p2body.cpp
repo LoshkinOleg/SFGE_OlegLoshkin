@@ -77,3 +77,8 @@ float p2Body::GetMass() const
 {
 	return 0.0f;
 }
+
+p2AABB p2Body::GetAabb() const
+{
+	return aabb;
+}
