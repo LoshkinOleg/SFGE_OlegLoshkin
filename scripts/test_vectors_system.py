@@ -16,6 +16,8 @@ class TestVectorsSystem(System):
     pos_9 = Vec2f()
     # Scale factor
     scale = 0.0
+    # Displayed numerical values boolean
+    displayedResults = False
     # p2Vec2 + p2Vec2
     addition_0 = p2Vec2()
     addition_1 = p2Vec2()
@@ -71,7 +73,9 @@ class TestVectorsSystem(System):
         self.pos_8 = Vec2f(4 * (screenSize.x / 5) - (screenSize.x / 10), 2 * (screenSize.y / 2) - (screenSize.y / 4) )
         self.pos_9 = Vec2f(5 * (screenSize.x / 5) - (screenSize.x / 10), 2 * (screenSize.y / 2) - (screenSize.y / 4) )
         # Scale factor
-        self.scale = 0.05
+        self.scale = 0.025
+        # Displayed numerical values boolean
+        self.displayedResults = False
         # p2Vec2 + p2Vec2
         self.addition_0 = p2Vec2(1,0)
         self.addition_1 = p2Vec2(0,1)
@@ -95,18 +99,18 @@ class TestVectorsSystem(System):
         # Angle between
         self.angleBetween_0 = p2Vec2(1,0)
         self.angleBetween_1 = p2Vec2(1,1)
-        self.angleBetween_result = 0.0
+        self.angleBetween_result = 0.0 # Result is supposed to be 45° Euler.
         # Rotation
         self.rotation_v = p2Vec2(1,0)
-        self.rotation_angle = 45.0
+        self.rotation_angle = 90.0
         # Dot
         self.dot_0 = p2Vec2(1,0)
-        self.dot_1 = p2Vec2(1,0.5)
-        self.dot_result = 0.0
+        self.dot_1 = p2Vec2(1,1)
+        self.dot_result = 0.0 # Result is supposed to be 2.
         # Cross
-        self.cross_0 = p2Vec2(1,0)
-        self.cross_1 = p2Vec2(0,1)
-        self.cross_result = p2Vec3()
+        self.cross_0 = p2Vec2(2,0)
+        self.cross_1 = p2Vec2(0,2)
+        self.cross_result = p2Vec3() # Result is supposed to be (0,0,4).
         # Normalized
         self.normalized_v = p2Vec2(2,0)
         self.normalized_result = 0.0
@@ -159,17 +163,22 @@ class TestVectorsSystem(System):
         # Angle between
         graphics2d_manager.draw_vector(Physics2dManager.meter2pixel(self.angleBetween_0) * self.scale, self.pos_5, Color.Green)
         graphics2d_manager.draw_vector(Physics2dManager.meter2pixel(self.angleBetween_1) * self.scale, self.pos_5, Color.Green)
-        print("Angle between angleBetween_0 and angleBetween_1 is: ", self.angleBetween_result)
+        if (self.displayedResults == False):
+            print("Angle between angleBetween_0 and angleBetween_1 is: ", self.angleBetween_result)
         # Rotation
         graphics2d_manager.draw_vector(Physics2dManager.meter2pixel(self.rotation_v) * self.scale, self.pos_6, Color.Green)
         # Dot
         graphics2d_manager.draw_vector(Physics2dManager.meter2pixel(self.dot_0) * self.scale, self.pos_7, Color.Green)
         graphics2d_manager.draw_vector(Physics2dManager.meter2pixel(self.dot_1) * self.scale, self.pos_7, Color.Green)
-        print("Dot product of dot_0 and dot_1 is: ", self.dot_result)
+        if (self.displayedResults == False):
+            print("Dot product of dot_0 and dot_1 is: ", self.dot_result)
         # Cross
         graphics2d_manager.draw_vector(Physics2dManager.meter2pixel(self.cross_0) * self.scale, self.pos_8, Color.Green)
         graphics2d_manager.draw_vector(Physics2dManager.meter2pixel(self.cross_1) * self.scale, self.pos_8, Color.Green)
-        print("Cross_result is: (", self.cross_result.x, ";", self.cross_result.y, ";", self.cross_result.z, ")")
+        if (self.displayedResults == False):
+            print("Cross_result is: (", self.cross_result.x, ";", self.cross_result.y, ";", self.cross_result.z, ")")
         # Normalized
         graphics2d_manager.draw_vector(Physics2dManager.meter2pixel(self.normalized_v) * self.scale, self.pos_9, Color.Green)
         graphics2d_manager.draw_vector(Physics2dManager.meter2pixel(self.normalized_result) * self.scale, self.pos_9, Color.Red)
+        # Displayed numerical values boolean
+        self.displayedResults = True

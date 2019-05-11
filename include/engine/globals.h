@@ -49,6 +49,7 @@ enum class ModuleType
 	GRAPHICS2D,
 
 };
+const float PI = 3.14159265359f;
 
 
 

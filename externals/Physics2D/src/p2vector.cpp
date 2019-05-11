@@ -25,6 +25,7 @@ SOFTWARE.
 #include <cmath>
 #include <p2vector.h>
 #include <p2matrix.h>
+#include <engine\globals.h>
 
 p2Vec2::p2Vec2()
 {
@@ -78,7 +79,7 @@ p2Vec2 p2Vec2::operator*(const float f)const
 
 float p2Vec2::Dot(const p2Vec2 v1, const p2Vec2 v2)
 {
-	return (v1.x * v2.x) + (v1.y + v2.y);
+	return (v1.x * v2.x) + (v1.y * v2.y);
 }
 p2Vec3 p2Vec2::Cross(const p2Vec2 v1, const p2Vec2 v2)
 {
@@ -86,7 +87,7 @@ p2Vec3 p2Vec2::Cross(const p2Vec2 v1, const p2Vec2 v2)
 }
 float p2Vec2::GetMagnitude()const
 {
-	return _CMATH_::sqrt((x*x, y*y));
+	return _CMATH_::sqrt((x*x + y*y));
 }
 
 p2Vec2 p2Vec2::Normalized()const
@@ -101,8 +102,8 @@ void p2Vec2::NormalizeSelf()
 
 p2Vec2 p2Vec2::Rotate(const float angle) const
 {
-	return p2Mat22(	p2Vec2(_CMATH_::cos(angle*(3.1416f / 360.0f)), -_CMATH_::sin(angle*(3.1416f / 360.0f))),
-					p2Vec2(_CMATH_::sin(angle*(3.1416f / 360.0f)), _CMATH_::cos(angle*(3.1416f / 360.0f))))		* (*this);
+	return p2Mat22(	p2Vec2(_CMATH_::cos(angle*(PI / 180.0f)), -_CMATH_::sin(angle*(PI / 180.0f))),
+					p2Vec2(_CMATH_::sin(angle*(PI / 180.0f)), _CMATH_::cos(angle*(PI / 180.0f))))		* (*this);
 }
 
 p2Vec2 p2Vec2::Lerp(const p2Vec2& v1, const p2Vec2& v2, const float t)
@@ -112,12 +113,23 @@ p2Vec2 p2Vec2::Lerp(const p2Vec2& v1, const p2Vec2& v2, const float t)
 
 float p2Vec2::AngleBetween(const p2Vec2& v1, const p2Vec2& v2)
 {
-	return (p2Vec2::Dot(v1,v2) / (v1.GetMagnitude() * v2.GetMagnitude()));
+	return (_CMATH_::acos(p2Vec2::Dot(v1,v2) / (v1.GetMagnitude() * v2.GetMagnitude()))) * (180.0f/ PI);
 }
 
 p2Vec3 p2Vec2::to3()const
 {
 	return p2Vec3(x, y, 0.0f);
+}
+
+std::string p2Vec2::ToString() const
+{
+	std::string returnValue;
+	returnValue = std::string("(");
+	returnValue.append(std::to_string(x));
+	returnValue.push_back(';');
+	returnValue.append(std::to_string(y));
+	returnValue.push_back(')');
+	return returnValue;
 }
 
 p2Vec3::p2Vec3()

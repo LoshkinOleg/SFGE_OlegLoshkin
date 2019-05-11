@@ -25,6 +25,7 @@ SOFTWARE.
 #ifndef SFGE_P2VECTOR_H
 #define SFGE_P2VECTOR_H
 
+#include <string>
 struct p2Vec3;
 
 /**
@@ -72,6 +73,7 @@ struct p2Vec2
 	* \brief 
 	*/
 	p2Vec3 to3()const;
+	std::string ToString() const;
 
 	float x = 0.0f;
 	float y = 0.0f;

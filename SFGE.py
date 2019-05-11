@@ -79,6 +79,9 @@ class p2Vec2:
     def normalized_self(self):
         pass
 
+    def to_string(self):
+        pass
+
 
 class p2Vec3:
     """Box2d Vector type used for physics related"""

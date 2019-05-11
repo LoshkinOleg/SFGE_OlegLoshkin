@@ -30,6 +30,8 @@ p2Mat22::p2Mat22()
 
 p2Mat22::p2Mat22(p2Vec2 r1, p2Vec2 r2)
 {
+	rows[0] = r1;
+	rows[1] = r2;
 }
 
 p2Mat22 p2Mat22::operator+(p2Mat22 m1)
@@ -70,6 +72,13 @@ p2Mat22 p2Mat22::Invert()
 float p2Mat22::GetDeterminant()
 {
 	return 0.0f;
+}
+
+std::string p2Mat22::To_String()
+{
+	std::string str = rows[0].ToString();
+	str.append(rows[1].ToString());
+	return str;
 }
 
 p2Mat33::p2Mat33()

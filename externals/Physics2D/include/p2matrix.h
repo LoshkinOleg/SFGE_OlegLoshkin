@@ -43,6 +43,7 @@ struct p2Mat22
 	*/
 	p2Mat22 Invert();
 	float GetDeterminant();
+	std::string To_String();
 
 	p2Vec2 rows[2] = {};
 };

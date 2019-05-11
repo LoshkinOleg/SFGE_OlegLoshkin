@@ -379,6 +379,7 @@ PYBIND11_EMBEDDED_MODULE(SFGE, m)
 		.def_property_readonly("magnitude", &p2Vec2::GetMagnitude)
 		.def("normalized", &p2Vec2::Normalized)
 		.def("normalize_self", &p2Vec2::NormalizeSelf)
+		.def("to_string", &p2Vec2::ToString)
 		.def("__repr__", [](const p2Vec2 &vec)
 		{
 			std::ostringstream oss;
