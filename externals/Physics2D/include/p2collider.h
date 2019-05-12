@@ -58,12 +58,12 @@ public:
 	* \brief Return the userData
 	*/
 	void* GetUserData();
-	void GetShape();
+	p2Shape* GetShape()const;
 	void SetUserData(void* colliderData);
 	p2AABB GetAabb()const;
 private:
 	void* userData = nullptr;
-	p2Shape m_Shape;
+	p2Shape* m_Shape;
 	bool m_IsSensor;
 	float m_restitution;
 	p2AABB m_Aabb;

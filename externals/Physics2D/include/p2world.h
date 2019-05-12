@@ -38,7 +38,7 @@ const size_t MAX_BODY_LEN = 256;
 class p2World
 {
 public:
-	p2World(p2Vec2 gravity);
+	p2World(p2Vec2 gravity, p2Vec2 aabbSize);
 	/**
 	* \brief Simulate a new step of the physical world, simplify the resolution with a QuadTree, generate the new contacts
 	*/

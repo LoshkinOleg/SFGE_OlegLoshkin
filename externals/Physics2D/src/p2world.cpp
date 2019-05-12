@@ -24,10 +24,10 @@ SOFTWARE.
 #include <p2world.h>
 
 
-p2World::p2World(p2Vec2 gravity): m_Gravity(gravity)
+p2World::p2World(p2Vec2 gravity, p2Vec2 aabbSize): m_Gravity(gravity)
 {
 	m_Bodies.resize(MAX_BODY_LEN);
-	m_RootQuad = p2QuadTree(0, p2AABB(p2Vec2(0,720), p2Vec2(1280,0)));
+	m_RootQuad = p2QuadTree(0, p2AABB(p2Vec2(0, aabbSize.y), p2Vec2(aabbSize.x, 0)));
 }
 
 void p2World::Step(float dt)

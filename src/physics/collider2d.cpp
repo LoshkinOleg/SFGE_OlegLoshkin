@@ -107,7 +107,7 @@ void ColliderManager::CreateComponent(json& componentJson, Entity entity)
 						oss << "Box physics size: " << size.x << ", " << size.y;
 						Log::GetInstance()->Msg(oss.str());
 					}
-					//boxShape->SetAsBox(size.x / 2.0f, size.y / 2.0f);
+					boxShape->SetSize(size);
 				}
 				shape = std::move(boxShape);
 			}	

@@ -35,9 +35,10 @@ const float Physics2dManager::pixelPerMeter = 100.0f;
 void Physics2dManager::OnEngineInit()
 {
 	p2Vec2 gravity;
-	if(const auto configPtr = m_Engine.GetConfig())
+	Configuration* configPtr;
+	if(configPtr = m_Engine.GetConfig())
 		gravity = configPtr->gravity;
-	m_World = std::make_shared<p2World>(gravity);
+	m_World = std::make_shared<p2World>(gravity, pixel2meter(configPtr->screenResolution));
 	m_ContactListener = std::make_unique<ContactListener>(m_Engine);
 	m_World->SetContactListener(m_ContactListener.get());
 

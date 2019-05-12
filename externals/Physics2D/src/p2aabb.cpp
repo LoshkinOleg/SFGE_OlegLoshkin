@@ -64,8 +64,8 @@ std::array<p2Mat22, 4> p2AABB::Sides() const
 
 bool p2AABB::Overlaps(const p2AABB other) const
 {
-	p2Vec2 other_topBound =		other.GetCenter() + p2Vec2(0,						other.GetExtends().y);
-	p2Vec2 other_bottomBound =	other.GetCenter() - p2Vec2(0,						other.GetExtends().y);
+	p2Vec2 other_topBound =		other.GetCenter() - p2Vec2(0,						other.GetExtends().y);
+	p2Vec2 other_bottomBound =	other.GetCenter() + p2Vec2(0,						other.GetExtends().y);
 	p2Vec2 other_leftBound =	other.GetCenter() - p2Vec2(other.GetExtends().x,	0					);
 	p2Vec2 other_rightBound =	other.GetCenter() + p2Vec2(other.GetExtends().x,	0					);
 
@@ -81,7 +81,7 @@ bool p2AABB::Overlaps(const p2AABB other) const
 	if (other_leftBound.y	>= XMin() && other_leftBound.y	<= XMax()  ||
 		other_rightBound.y	>= XMin() && other_rightBound.y	<= XMax()	)
 	{
-		flag = 1 << 1; // Tag for horizontal overlap.
+		flag = flag | 1 << 1; // Tag for horizontal overlap.
 	}
 
 	return flag == (1 << 1 | 1 << 0); // Return true if there's both vertical and horizontal overlapping.

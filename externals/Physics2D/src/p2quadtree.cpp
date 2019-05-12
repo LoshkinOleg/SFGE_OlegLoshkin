@@ -32,6 +32,7 @@ p2QuadTree::~p2QuadTree()
 p2QuadTree& p2QuadTree::operator=(p2QuadTree & other)
 {
 	m_NodeLevel = other.m_NodeLevel;
+	m_Bounds = other.m_Bounds;
 	hasChildren = other.hasChildren;
 	nodes[0] = std::move(other.nodes[0]);
 	nodes[1] = std::move(other.nodes[1]);
