@@ -22,6 +22,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 #include <p2world.h>
+// debugging
+#include <iostream>
 
 
 p2World::p2World(p2Vec2 gravity, p2Vec2 aabbSize): m_Gravity(gravity)
@@ -75,4 +77,11 @@ p2Body * p2World::CreateBody(p2BodyDef* bodyDef)
 
 void p2World::SetContactListener(p2ContactListener * contactListener)
 {
+}
+
+std::vector<p2AABB> p2World::GetQuadTreeBounds() const
+{
+	std::vector<p2AABB> returnValue = std::vector<p2AABB>();
+	m_RootQuad.GetQuadTreesAabbs(returnValue);
+	return returnValue;
 }

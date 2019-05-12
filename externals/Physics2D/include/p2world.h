@@ -51,6 +51,9 @@ public:
 	* \brief Set the contact listener
 	*/
 	void SetContactListener(p2ContactListener* contactListener);
+
+	std::vector<p2AABB> GetQuadTreeBounds() const;
+
 private:
 	p2QuadTree m_RootQuad;
 	p2Vec2 m_Gravity;

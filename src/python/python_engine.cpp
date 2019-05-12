@@ -141,6 +141,7 @@ PYBIND11_EMBEDDED_MODULE(SFGE, m)
 		.def("pixel2meter", [](Vec2f v) {return pixel2meter(v); })
 		.def("meter2pixel", [](float v) {return meter2pixel(v); })
 		.def("meter2pixel", [](p2Vec2 v)->Vec2f {return meter2pixel(v); })
+		.def_property_readonly("world", &Physics2dManager::GetWorld_RawPtr, py::return_value_policy::reference)
 		//.def("raycast", &Physics2dManager::Raycast)
 	;
 
@@ -208,6 +209,15 @@ PYBIND11_EMBEDDED_MODULE(SFGE, m)
 		.value("Sound", ComponentType::SOUND)
 		.value("Transform2d", ComponentType::TRANSFORM2D)
 		.export_values();
+
+	py::class_<p2AABB> p2aabb(m, "p2Aabb");
+	p2aabb
+		.def_readonly("bottom_left", &p2AABB::bottomLeft)
+		.def_readonly("top_right", &p2AABB::topRight);
+	
+	py::class_<p2World> p2world(m, "p2World");
+	p2world
+		.def("get_quadtree_aabbs", &p2World::GetQuadTreeBounds);
 
 	py::class_<Transform2d> transform(m, "Transform2d");
 	transform

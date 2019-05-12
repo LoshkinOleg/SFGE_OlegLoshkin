@@ -122,14 +122,14 @@ TEST(OlegLoshkin, QuadTree)
 	};
 
 	// Create entities.
-	json entities[256];
-	for (int i = 0; i < 256; i++)
+	json entities[22];
+	for (int i = 0; i < 22; i++)
 	{
 		json rect;
 		rect["name"] = "Rect_" + std::to_string(i);
 		json transform;
 		transform["type"] = sfge::ComponentType::TRANSFORM2D;
-		transform["position"] = { std::rand() % screenSize.x, std::rand() % screenSize.y };
+		transform["position"] = { (std::rand() % screenSize.x / 2.0f) + (screenSize.x / 2.0f), std::rand() % screenSize.y };
 		transform["scale"] = { 1.0,1.0 };
 		json shape;
 		shape["type"] = sfge::ComponentType::SHAPE2D;

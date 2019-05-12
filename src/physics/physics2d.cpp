@@ -67,6 +67,10 @@ std::weak_ptr<p2World> Physics2dManager::GetWorld() const
 	return m_World;
 }
 
+p2World* Physics2dManager::GetWorld_RawPtr() const
+{
+	return m_World.get();
+}
 
 void Physics2dManager::Destroy()
 {

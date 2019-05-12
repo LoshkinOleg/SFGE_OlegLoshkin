@@ -249,8 +249,18 @@ class Body2dManager(System, ComponentManager):
     pass
 
 
+class p2Aabb:
+    def __init__(self):
+        self.bottom_left = p2Vec2()
+        self.top_right = p2Vec2()
+
+class p2World:
+    def get_quadtree_aabbs(self):
+        pass
+
 class Physics2dManager(System):
     body2d_manager = None # type: Body2dManager
+    world = p2World()
 
     def pixel2meter(self, value):
         pass
