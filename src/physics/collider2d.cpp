@@ -75,6 +75,7 @@ void ColliderManager::CreateComponent(json& componentJson, Entity entity)
 		auto & body = m_BodyManager->GetComponentRef(entity);
 
 		p2ColliderDef fixtureDef;
+		fixtureDef.position = body.GetBody()->GetPosition(); // Passing body's position to collider's definition.
 
 		if (CheckJsonExists(componentJson, "sensor"))
 		{

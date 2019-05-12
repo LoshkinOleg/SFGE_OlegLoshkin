@@ -27,7 +27,7 @@ SOFTWARE.
 p2World::p2World(p2Vec2 gravity): m_Gravity(gravity)
 {
 	m_Bodies.resize(MAX_BODY_LEN);
-	m_RootQuad = p2QuadTree();
+	m_RootQuad = p2QuadTree(0, p2AABB(p2Vec2(0,720), p2Vec2(1280,0)));
 }
 
 void p2World::Step(float dt)
@@ -55,7 +55,14 @@ void p2World::Step(float dt)
 		}
 	}
 
-	// Update quadtree.
+	// Update QuadTree.
+	m_RootQuad.Clear(); // Clear it.
+	// Refill it.
+	for (p2Body& body : m_Bodies)
+	{
+		m_RootQuad.Insert(&body);
+	}
+
 }
 
 p2Body * p2World::CreateBody(p2BodyDef* bodyDef)
@@ -63,7 +70,6 @@ p2Body * p2World::CreateBody(p2BodyDef* bodyDef)
 	p2Body& body = m_Bodies[m_BodyIndex];
 	body.Init(bodyDef);
 	m_BodyIndex++;
-	m_RootQuad.Insert(&body);
 	return &body;
 }
 

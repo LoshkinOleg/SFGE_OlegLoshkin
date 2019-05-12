@@ -28,6 +28,7 @@ SOFTWARE.
 
 #include <p2shape.h>
 #include "engine/entity.h"
+#include <p2aabb.h>
 
 /**
 * \brief Struct defining a p2Collider when creating one
@@ -38,6 +39,7 @@ struct p2ColliderDef
 	p2Shape* shape;
 	float restitution;
 	bool isSensor;
+	p2Vec2 position;
 };
 
 /**
@@ -47,6 +49,7 @@ struct p2ColliderDef
 class p2Collider
 {
 public:
+	void Init(const p2ColliderDef* def);
 	/**
 	* \brief Check if the p2Collider is a sensor
 	*/
@@ -57,8 +60,13 @@ public:
 	void* GetUserData();
 	void GetShape();
 	void SetUserData(void* colliderData);
+	p2AABB GetAabb()const;
 private:
 	void* userData = nullptr;
+	p2Shape m_Shape;
+	bool m_IsSensor;
+	float m_restitution;
+	p2AABB m_Aabb;
 };
 
 

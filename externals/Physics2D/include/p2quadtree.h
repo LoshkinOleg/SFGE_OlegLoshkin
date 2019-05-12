@@ -41,6 +41,7 @@ public:
 	p2QuadTree();
 	p2QuadTree(int nodeLevel, p2AABB bounds);
 	~p2QuadTree();
+	p2QuadTree& operator=(p2QuadTree& other);
 
 	/**
 	* Remove all objects leafs and quadtrees children
@@ -62,15 +63,20 @@ public:
 	/**
 	* Return a list of all the p2Body that might collide
 	*/
-	void Retrieve();
+	std::vector<p2Body*> Retrieve() const;
+	/**
+	 * @Brief: Fills up passed vector with the aabb's of all quads for debugging.
+	 */
+	void GetQuadTreesAabbs(std::vector<p2AABB>& listToFill) const;
 	
 private:
 	static const int MAX_OBJECTS = 10;
 	static const int MAX_LEVELS = 5;
 	static const int CHILD_TREE_NMB = 4;
 	int m_NodeLevel = 0;
-	std::unique_ptr<p2QuadTree> nodes[CHILD_TREE_NMB] = { nullptr };
-	std::list<p2Body*> m_Objects;
+	bool hasChildren;
+	std::unique_ptr<p2QuadTree> nodes[CHILD_TREE_NMB];
+	std::unique_ptr<std::vector<p2Body*>> m_Objects;
 	p2AABB m_Bounds;
 };
 

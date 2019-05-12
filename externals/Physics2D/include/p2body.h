@@ -80,7 +80,6 @@ public:
 	p2AABB GetAabb()const;
 private:
 	p2BodyType type;
-	p2AABB aabb;
 	p2Vec2 position;
 	p2Vec2 linearVelocity;
 	float angularVelocity;

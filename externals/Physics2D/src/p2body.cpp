@@ -59,6 +59,7 @@ void p2Body::UpdatePosition()
 p2Collider * p2Body::CreateCollider(p2ColliderDef * colliderDef)
 {
 	p2Collider& collider = m_Colliders[m_ColliderIndex];
+	collider.Init(colliderDef);
 	m_ColliderIndex++;
 	return &collider;
 }
@@ -80,5 +81,5 @@ float p2Body::GetMass() const
 
 p2AABB p2Body::GetAabb() const
 {
-	return aabb;
+	return m_Colliders[m_ColliderIndex - 1].GetAabb();
 }

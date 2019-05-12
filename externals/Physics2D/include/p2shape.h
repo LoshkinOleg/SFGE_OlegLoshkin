@@ -27,12 +27,24 @@ SOFTWARE.
 
 #include <p2vector.h>
 
+enum p2ShapeType
+{
+	NONE,
+	RECTANGLE,
+	CIRCLE
+};
+
 /**
 * \brief Abstract representation of a shape
 */
 class p2Shape
 {
-
+public:
+	p2Shape() : m_type(p2ShapeType::NONE){};
+	p2Shape(p2ShapeType type) : m_type(type) {};
+	p2ShapeType GetType()const;
+private:
+	p2ShapeType m_type;
 };
 
 /**
@@ -41,6 +53,8 @@ class p2Shape
 class p2CircleShape : public p2Shape
 {
 public:
+	p2CircleShape() : p2Shape(p2ShapeType::CIRCLE) {};
+	p2CircleShape(const float radius) : p2Shape(p2ShapeType::CIRCLE), m_Radius(radius) {};
 	/**
 	* \brief Setter for the radius
 	*/
@@ -55,7 +69,11 @@ private:
 class p2RectShape : public p2Shape
 {
 public:
+	p2RectShape() : p2Shape(p2ShapeType::RECTANGLE) {};
+	p2RectShape(const p2Vec2 size) : p2Shape(p2ShapeType::RECTANGLE), m_Size(size) {};
+
 	void SetSize(p2Vec2 size);
+	p2Vec2 GetSize()const;
 private:
 	p2Vec2 m_Size;
 };
