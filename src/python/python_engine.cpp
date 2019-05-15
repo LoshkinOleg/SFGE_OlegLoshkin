@@ -217,7 +217,8 @@ PYBIND11_EMBEDDED_MODULE(SFGE, m)
 	
 	py::class_<p2World> p2world(m, "p2World");
 	p2world
-		.def("get_quadtree_aabbs", &p2World::GetQuadTreeBounds);
+		.def("get_quadtree_aabbs", &p2World::GetQuadTreeBounds)
+		.def("log_quadtree_bodycount", &p2World::LogQuadsBodyCount);
 
 	py::class_<Transform2d> transform(m, "Transform2d");
 	transform
@@ -234,7 +235,9 @@ PYBIND11_EMBEDDED_MODULE(SFGE, m)
 	body2d
 		.def_property("velocity", &Body2d::GetLinearVelocity, &Body2d::SetLinearVelocity)
 		.def("apply_force", &Body2d::ApplyForce)
+		.def("set_position", &Body2d::SetPosition)
 		.def_property_readonly("body_type", &Body2d::GetType)
+		.def_property_readonly("position", &Body2d::GetPosition)
 		.def_property_readonly("mass", &Body2d::GetMass);
 
 	py::class_<p2Body,std::unique_ptr<p2Body, py::nodelete>> body(m, "Body");

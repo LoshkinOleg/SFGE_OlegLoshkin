@@ -69,6 +69,11 @@ bool p2AABB::Overlaps(const p2AABB other) const
 	p2Vec2 other_leftBound =	other.GetCenter() - p2Vec2(other.GetExtends().x,	0					);
 	p2Vec2 other_rightBound =	other.GetCenter() + p2Vec2(other.GetExtends().x,	0					);
 
+	if (XMin() == 6.4f && XMax() == 9.6f && YMin() == 3.6f)
+	{
+		int i = 0;
+	}
+
 	__int8 flag = 0;
 
 	// If other's top or bottom bounds are located between this aabb's bounds.
@@ -78,11 +83,25 @@ bool p2AABB::Overlaps(const p2AABB other) const
 		flag = 1 << 0; // Tag for vertical overlap.
 	}
 	// If other's left or right bounds are located between this aabb's bounds.
-	if (other_leftBound.y	>= XMin() && other_leftBound.y	<= XMax()  ||
-		other_rightBound.y	>= XMin() && other_rightBound.y	<= XMax()	)
+	if (other_leftBound.x	>= XMin() && other_leftBound.x	<= XMax()  ||
+		other_rightBound.x	>= XMin() && other_rightBound.x	<= XMax()	)
 	{
 		flag = flag | 1 << 1; // Tag for horizontal overlap.
 	}
 
 	return flag == (1 << 1 | 1 << 0); // Return true if there's both vertical and horizontal overlapping.
+}
+
+std::string p2AABB::ToString() const
+{
+	std::string returnValue = "Left: ";
+	returnValue.append(std::to_string(XMin()));
+	returnValue.append("\n Right: ");
+	returnValue.append(std::to_string(XMax()));
+	returnValue.append("\n Top: ");
+	returnValue.append(std::to_string(YMin()));
+	returnValue.append("\n Bottom: ");
+	returnValue.append(std::to_string(YMax()));
+	returnValue.append("\n");
+	return returnValue;
 }

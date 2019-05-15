@@ -68,9 +68,13 @@ public:
 	 * @Brief: Fills up passed vector with the aabb's of all quads for debugging.
 	 */
 	void GetQuadTreesAabbs(std::vector<p2AABB>& listToFill) const;
+	/**
+	@Brief: Fills up passed vector with the number of bodies stored in each quad for debugging.
+	 */
+	void LogQuadsBodyCount() const;
 	
 private:
-	static const int MAX_OBJECTS = 10;
+	static const int MAX_OBJECTS = 5;
 	static const int MAX_LEVELS = 5;
 	static const int CHILD_TREE_NMB = 4;
 	int m_NodeLevel = 0;

@@ -258,6 +258,9 @@ class p2World:
     def get_quadtree_aabbs(self):
         pass
 
+    def log_quadtree_bodycount(self):
+        pass
+
 class Physics2dManager(System):
     body2d_manager = None # type: Body2dManager
     world = p2World()
@@ -298,8 +301,12 @@ class Body:
     def __init__(self):
         self.velocity = p2Vec2()
         self.magnitude = 0.0
+        self.position = p2Vec2()
 
     def apply_force(self, force:p2Vec2):
+        pass
+
+    def set_position(self, position:p2Vec2):
         pass
 
 class Collider:

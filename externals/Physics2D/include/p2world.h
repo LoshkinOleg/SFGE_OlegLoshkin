@@ -53,6 +53,10 @@ public:
 	void SetContactListener(p2ContactListener* contactListener);
 
 	std::vector<p2AABB> GetQuadTreeBounds() const;
+	/**
+	@Brief: Fills up passed vector with the number of bodies stored in each quad for debugging.
+	 */
+	void LogQuadsBodyCount() const;
 
 private:
 	p2QuadTree m_RootQuad;

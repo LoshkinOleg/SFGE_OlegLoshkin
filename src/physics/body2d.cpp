@@ -55,10 +55,20 @@ void Body2d::SetLinearVelocity(p2Vec2 velocity)
 
 }
 
+void Body2d::SetPosition(p2Vec2 position)
+{
+	m_Body->SetPosition(position);
+}
+
 void Body2d::ApplyForce(p2Vec2 force)
 {
 	if (m_Body != nullptr)
 		m_Body->ApplyForceToCenter(force);
+}
+
+p2Vec2 Body2d::GetPosition()
+{
+	return m_Body->GetPosition();
 }
 
 p2BodyType Body2d::GetType()

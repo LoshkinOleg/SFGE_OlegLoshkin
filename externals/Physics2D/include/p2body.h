@@ -63,6 +63,7 @@ public:
 	p2Vec2 GetLinearVelocity() const;
 	
 	void SetLinearVelocity(p2Vec2 velocity);
+	void SetPosition(const p2Vec2 position);
 
 	float GetAngularVelocity();
 	
@@ -78,12 +79,14 @@ public:
 	p2BodyType GetType() const;
 	float GetMass() const;
 	p2AABB GetAabb()const;
+	bool IsInit() const;
 private:
 	p2BodyType type;
 	p2Vec2 position;
 	p2Vec2 linearVelocity;
 	float angularVelocity;
 	float gravityScale;
+	bool m_IsInit;
 
 	int m_ColliderIndex = 0;
 	std::vector<p2Collider> m_Colliders;

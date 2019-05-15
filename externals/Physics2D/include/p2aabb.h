@@ -28,6 +28,7 @@ SOFTWARE.
 #include <array>
 #include <p2vector.h>
 #include <p2matrix.h>
+#include <string>
 
 /**
 * \brief Struct representing a Axis Aligned Bounding Box
@@ -55,5 +56,6 @@ struct p2AABB
 	std::array<p2Mat22, 4> Sides() const;
 
 	bool Overlaps(const p2AABB other) const;
+	std::string ToString() const;
 };
 #endif // !SFGE_P2AABB:H

@@ -64,7 +64,6 @@ void p2World::Step(float dt)
 	{
 		m_RootQuad.Insert(&body);
 	}
-
 }
 
 p2Body * p2World::CreateBody(p2BodyDef* bodyDef)
@@ -84,4 +83,10 @@ std::vector<p2AABB> p2World::GetQuadTreeBounds() const
 	std::vector<p2AABB> returnValue = std::vector<p2AABB>();
 	m_RootQuad.GetQuadTreesAabbs(returnValue);
 	return returnValue;
+}
+
+void p2World::LogQuadsBodyCount() const
+{
+	std::cout << "--------------------------------" << std::endl;
+	m_RootQuad.LogQuadsBodyCount();
 }

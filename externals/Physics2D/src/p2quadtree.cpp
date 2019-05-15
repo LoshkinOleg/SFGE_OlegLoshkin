@@ -1,5 +1,4 @@
 #include <p2quadtree.h>
-// debugging
 #include <iostream>
 
 p2QuadTree::p2QuadTree()
@@ -68,14 +67,14 @@ void p2QuadTree::Split()
 
 	// Create new instances of quadtrees and initialize them.
 	p2AABB newAabb = p2AABB();
-	for (int i = 0; i < CHILD_TREE_NMB; ++i)
+	for (int i = 0; i < CHILD_TREE_NMB; i++)
 	{
 		nodes[i] = std::make_unique<p2QuadTree>();
 		nodes[i]->m_NodeLevel = m_NodeLevel + 1;
 	}
 	// TopLeft's AABB.
-	newAabb.bottomLeft	= p2Vec2(m_Bounds.bottomLeft	- p2Vec2(0,							m_Bounds.GetExtends().y));
-	newAabb.topRight	= p2Vec2(m_Bounds.topRight		- p2Vec2(m_Bounds.GetExtends().x,	0));
+	newAabb.bottomLeft	= p2Vec2(m_Bounds.bottomLeft	+ p2Vec2(0,							- m_Bounds.GetExtends().y));
+	newAabb.topRight	= p2Vec2(m_Bounds.topRight		+ p2Vec2(- m_Bounds.GetExtends().x,	0));
 	nodes[0]->m_Bounds	= newAabb;
 	// TopRight's AABB.
 	newAabb.bottomLeft	= p2Vec2(m_Bounds.bottomLeft	+ p2Vec2(m_Bounds.GetExtends().x,	-m_Bounds.GetExtends().y));
@@ -83,7 +82,7 @@ void p2QuadTree::Split()
 	nodes[1]->m_Bounds	= newAabb;
 	// BottomLeft's AABB.
 	newAabb.bottomLeft	= p2Vec2(m_Bounds.bottomLeft);
-	newAabb.topRight	= p2Vec2(m_Bounds.topRight		- p2Vec2(m_Bounds.GetExtends().x,	m_Bounds.GetExtends().y));
+	newAabb.topRight	= p2Vec2(m_Bounds.topRight		+ p2Vec2(- m_Bounds.GetExtends().x,	m_Bounds.GetExtends().y));
 	nodes[2]->m_Bounds	= newAabb;
 	// BottomRight's AABB.
 	newAabb.bottomLeft	= p2Vec2(m_Bounds.bottomLeft	+ p2Vec2(m_Bounds.GetExtends().x,	0));
@@ -98,13 +97,10 @@ int p2QuadTree::GetIndex(p2Body* rect)
 
 void p2QuadTree::Insert(p2Body* obj)
 {
-	if (obj->GetPosition().x != 0 && obj->GetPosition().y != 0)
+	if (obj->IsInit()) // Ignore all bodies that aren't used.
 	{
 		if (!hasChildren) // If quad has no children.
 		{
-			// debugging
-			// std::cout << std::to_string(m_Objects->size()) << std::endl;
-
 			if (m_Objects->size() < MAX_OBJECTS) // If there's still room for insertion in this node.
 			{
 				m_Objects->push_back(obj); // Add body to this node's bodies list.
@@ -114,6 +110,27 @@ void p2QuadTree::Insert(p2Body* obj)
 				if (m_NodeLevel + 1 <= MAX_LEVELS) // If we still can split quads.
 				{
 					Split();
+
+					// Fill out children with bodies aleready contained within this node.
+					std::vector<p2Body*> bodiesRefCopy = *m_Objects.get(); // Copy ptrs for analysis.
+					m_Objects->clear(); // And clear body's list.
+					for (p2Body* body : bodiesRefCopy) // For each body.
+					{
+						// Find all children that overlap current body.
+						std::vector<p2QuadTree*> matchingChildren = std::vector<p2QuadTree*>();
+						for (int i = 0; i < CHILD_TREE_NMB; i++)
+						{
+							if (nodes[i]->m_Bounds.Overlaps(body->GetAabb())) matchingChildren.push_back(nodes[i].get());
+						}
+						if (matchingChildren.size() < 2) // If body only overlaps one quad.
+						{
+							matchingChildren[0]->Insert(body); // Insert body there.
+						}
+						else
+						{
+							m_Objects->push_back(body); // Else add body back to this quad.
+						}
+					}
 
 					// Check the body isn't overlapping two children quads.
 					std::vector<p2QuadTree*> overlappingQuads = std::vector<p2QuadTree*>();
@@ -172,5 +189,17 @@ void p2QuadTree::GetQuadTreesAabbs(std::vector<p2AABB>& listToFill) const
 		nodes[1]->GetQuadTreesAabbs(listToFill);
 		nodes[2]->GetQuadTreesAabbs(listToFill);
 		nodes[3]->GetQuadTreesAabbs(listToFill);
+	}
+}
+
+void p2QuadTree::LogQuadsBodyCount() const
+{
+	std::cout << "Quad at level: " << m_NodeLevel << " : " << m_Objects->size() << " bodies." << std::endl;
+	if (hasChildren)
+	{
+		nodes[0]->LogQuadsBodyCount();
+		nodes[1]->LogQuadsBodyCount();
+		nodes[2]->LogQuadsBodyCount();
+		nodes[3]->LogQuadsBodyCount();
 	}
 }

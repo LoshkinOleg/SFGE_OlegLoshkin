@@ -30,6 +30,7 @@ void p2Body::Init(p2BodyDef* bodyDef)
 	this->position = bodyDef->position;
 	this->gravityScale = bodyDef->gravityScale;
 	this->linearVelocity = bodyDef->linearVelocity;
+	m_IsInit = true;
 }
 
 p2Vec2 p2Body::GetLinearVelocity() const
@@ -40,6 +41,10 @@ p2Vec2 p2Body::GetLinearVelocity() const
 void p2Body::SetLinearVelocity(p2Vec2 velocity)
 {
 	linearVelocity = velocity;
+}
+void p2Body::SetPosition(const p2Vec2 position)
+{
+	this->position = position;
 }
 float p2Body::GetAngularVelocity()
 {
@@ -82,4 +87,9 @@ float p2Body::GetMass() const
 p2AABB p2Body::GetAabb() const
 {
 	return m_Colliders[m_ColliderIndex - 1].GetAabb();
+}
+
+bool p2Body::IsInit() const
+{
+	return m_IsInit;
 }
