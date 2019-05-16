@@ -27,7 +27,7 @@ p2QuadTree::p2QuadTree(int nodeLevel, p2AABB bounds)
 
 p2QuadTree::~p2QuadTree()
 {
-	Clear();
+	// Clear();
 }
 
 p2QuadTree& p2QuadTree::operator=(p2QuadTree & other)
@@ -52,13 +52,17 @@ void p2QuadTree::Clear()
 		{
 			nodes[i]->Clear();
 		}
+		nodes[0] = nullptr;
+		nodes[1] = nullptr;
+		nodes[2] = nullptr;
+		nodes[3] = nullptr;
 	}
 	// Clear objects list if current Node is root Node since it won't be deleted thus not triggering m_Objects deallocation automatically.
 	if (m_NodeLevel == 0 && m_Objects.size() > 0)
 	{
 		m_Objects.clear();
-		hasChildren = false;
 	}
+	hasChildren = false;
 }
 
 void p2QuadTree::Split()
@@ -101,8 +105,6 @@ void p2QuadTree::Insert(p2Body* obj)
 	{
 		if (!hasChildren) // If quad has no children.
 		{
-			
-
 			if (m_Objects.size() < MAX_OBJECTS) // If there's still room for insertion in this node.
 			{
 				m_Objects.push_back(obj); // Add body to this node's bodies list.
@@ -111,14 +113,11 @@ void p2QuadTree::Insert(p2Body* obj)
 			{
 				if (m_NodeLevel + 1 <= MAX_LEVELS) // If we still can split quads.
 				{
-					
 					Split();
 
 					// Fill out children with bodies aleready contained within this node.
-					
 					std::vector<p2Body*> bodiesRefCopy = m_Objects; // Copy ptrs for analysis.
 					m_Objects.clear(); // And clear body's list.
-					
 					for (p2Body* body : bodiesRefCopy) // For each body.
 					{
 						// Find all children that overlap current body.
@@ -133,9 +132,7 @@ void p2QuadTree::Insert(p2Body* obj)
 						}
 						else
 						{
-							
 							m_Objects.push_back(body); // Else add body back to this quad.
-							
 						}
 					}
 
@@ -153,20 +150,15 @@ void p2QuadTree::Insert(p2Body* obj)
 					{
 						m_Objects.push_back(obj);
 					}
-
-
 				}
 				else // Can't split any more. Add body to this quad.
 				{
 					m_Objects.push_back(obj);
 				}
-				
 			}
-			
 		}
 		else // If the quad does have children.
 		{
-
 			// Check the body isn't overlapping two children quads.
 			std::vector<p2QuadTree*> overlappingQuads = std::vector<p2QuadTree*>();
 			for (int i = 0; i < 4; i++)
@@ -182,7 +174,6 @@ void p2QuadTree::Insert(p2Body* obj)
 				m_Objects.push_back(obj);
 			}
 		}
-		
 	}
 }
 

@@ -122,8 +122,8 @@ TEST(OlegLoshkin, QuadTree)
 	};
 
 	// Create entities.
-	json entities[32];
-	for (int i = 0; i < 32; i++)
+	json entities[64];
+	for (int i = 0; i < 64; i++)
 	{
 		json rect;
 		rect["name"] = "Rect_" + std::to_string(i);

@@ -23,8 +23,6 @@ SOFTWARE.
 */
 
 #include <p2aabb.h>
-// debugging
-#include <iostream>
 
 p2Vec2 p2AABB::GetCenter() const
 {
@@ -38,19 +36,10 @@ p2Vec2 p2AABB::GetExtends() const
 
 void p2AABB::SetCenter(const p2Vec2 center)
 {
-	// std::cout << "----------------" << std::endl;
-	// std::cout << "Initial aabb pos: Center = " << GetCenter().ToString() << std::endl;
-
-	// std::cout << "SetCenter() called" << std::endl;
-	
 	p2Vec2 temp_bottomLeft = center + p2Vec2(- GetExtends().x, GetExtends().y);
 	p2Vec2 temp_topRight = center + p2Vec2(GetExtends().x, - GetExtends().y);
 	bottomLeft = temp_bottomLeft;
 	topRight = temp_topRight;
-	
-	// std::cout << "SetCenter() ended" << std::endl;
-
-	// std::cout << "Final aabb pos: Center = " << GetCenter().ToString() << std::endl;
 }
 
 float p2AABB::XMin() const
