@@ -1,4 +1,6 @@
 #include "..\include\p2collider.h"
+// debugging
+#include <iostream>
 
 void p2Collider::Init(const p2ColliderDef* def)
 {
@@ -50,4 +52,11 @@ void p2Collider::SetUserData(void* colliderData)
 p2AABB p2Collider::GetAabb() const
 {
 	return m_Aabb;
+}
+
+void p2Collider::UpdateAabb(const p2Vec2 center)
+{
+	// std::cout << "UpdateAabb() called" << std::endl;
+
+	m_Aabb.SetCenter(center);
 }

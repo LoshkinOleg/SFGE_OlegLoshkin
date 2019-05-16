@@ -204,7 +204,7 @@ PYBIND11_EMBEDDED_MODULE(SFGE, m)
 	py::enum_<ComponentType>(system, "ComponentType")
 		.value("PyComponent", ComponentType::PYCOMPONENT)
 		.value("Shape", ComponentType::SHAPE2D)
-		.value("Body", ComponentType::BODY2D)
+		.value("Body2d", ComponentType::BODY2D)
 		.value("Sprite", ComponentType::SPRITE2D)
 		.value("Sound", ComponentType::SOUND)
 		.value("Transform2d", ComponentType::TRANSFORM2D)
@@ -238,14 +238,17 @@ PYBIND11_EMBEDDED_MODULE(SFGE, m)
 		.def("set_position", &Body2d::SetPosition)
 		.def_property_readonly("body_type", &Body2d::GetType)
 		.def_property_readonly("position", &Body2d::GetPosition)
+		.def_property_readonly("aabb", &Body2d::GetAabb)
 		.def_property_readonly("mass", &Body2d::GetMass);
 
-	py::class_<p2Body,std::unique_ptr<p2Body, py::nodelete>> body(m, "Body");
+	py::class_<p2Body,std::unique_ptr<p2Body, py::nodelete>> body(m, "p2Body");
 	body
 		.def_property("velocity", &p2Body::GetLinearVelocity, &p2Body::SetLinearVelocity)
-		.def("apply_force", &p2Body::ApplyForceToCenter)
+		// .def("apply_force", &p2Body::ApplyForceToCenter)
+		// .def("set_position", &p2Body::SetPosition)
 		.def_property_readonly("body_type", &p2Body::GetType)
 		.def_property_readonly("mass", &p2Body::GetMass);
+		// .def_property_readonly("aabb", &p2Body::GetAabb);
 		
 	py::enum_<p2BodyType>(body, "BodyType")
 		.value("STATIC_BODY", p2BodyType::STATIC)

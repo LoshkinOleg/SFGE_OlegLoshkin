@@ -95,6 +95,11 @@ p2Body * Body2d::GetBody() const
 	return m_Body;
 }
 
+p2AABB Body2d::GetAabb() const
+{
+	return m_Body->GetAabb();
+}
+
 void editor::Body2dInfo::DrawOnInspector()
 {
 	const auto& body = bodyManager->GetComponentRef(m_Entity);

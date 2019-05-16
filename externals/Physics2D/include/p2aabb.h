@@ -49,6 +49,7 @@ struct p2AABB
 	* \brief Calculate the extends and return it
 	*/
 	p2Vec2 GetExtends() const;
+	void SetCenter(const p2Vec2 center);
 	float XMin() const;
 	float XMax() const;
 	float YMin() const;

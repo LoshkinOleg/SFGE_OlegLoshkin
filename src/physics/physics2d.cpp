@@ -26,6 +26,9 @@ SOFTWARE.
 #include <python/python_engine.h>
 #include <engine/config.h>
 #include <engine/engine.h>
+// debugging
+#include <iostream>
+
 namespace sfge
 {
 
@@ -53,6 +56,7 @@ void Physics2dManager::OnUpdate(float dt)
 
 void Physics2dManager::OnFixedUpdate()
 {
+
 	rmt_ScopedCPUSample(Physics2dManager,0);
 	const auto config = m_Engine.GetConfig();
 	if (config != nullptr and m_World != nullptr)
@@ -60,6 +64,7 @@ void Physics2dManager::OnFixedUpdate()
 		m_World->Step(config->fixedDeltaTime);
 		m_BodyManager.OnFixedUpdate();
 	}
+
 }
 
 std::weak_ptr<p2World> Physics2dManager::GetWorld() const

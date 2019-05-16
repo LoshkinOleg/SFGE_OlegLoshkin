@@ -297,7 +297,7 @@ class Sound:
         pass
 
 
-class Body:
+class Body2d:
     def __init__(self):
         self.velocity = p2Vec2()
         self.magnitude = 0.0

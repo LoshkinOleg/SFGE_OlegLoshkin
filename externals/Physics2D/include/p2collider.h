@@ -61,6 +61,7 @@ public:
 	p2Shape* GetShape()const;
 	void SetUserData(void* colliderData);
 	p2AABB GetAabb()const;
+	void UpdateAabb(const p2Vec2 center);
 private:
 	void* userData = nullptr;
 	p2Shape* m_Shape;
