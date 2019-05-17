@@ -59,35 +59,35 @@ const size_t MAX_COLLIDER_LEN = 8;
 class p2Body
 {
 public:
-	void Init(p2BodyDef* bodyDef);
-	p2Vec2 GetLinearVelocity() const;
-	
-	void SetLinearVelocity(p2Vec2 velocity);
-	void SetPosition(const p2Vec2 position);
-
-	float GetAngularVelocity();
-	
+	// Properties
+	p2BodyType GetType() const;
 	p2Vec2 GetPosition();
-	void UpdatePosition();
+	p2Vec2 GetLinearVelocity() const;
+	float GetAngularVelocity();
+	bool IsInit() const;
+	float GetMass() const;
+	void SetPosition(const p2Vec2 position);
+	void SetLinearVelocity(p2Vec2 velocity);
+
+	// Public methods.
+	void Init(p2BodyDef* bodyDef);
 	/**
 	* \brief Factory method creating a p2Collider
 	* \param colliderDef p2ColliderDef definition of the collider
 	* \return p2Collider collider attached to the p2Body
 	*/
 	p2Collider* CreateCollider(p2ColliderDef* colliderDef);
+	void UpdatePosition();
 	void ApplyForceToCenter(const p2Vec2& force);
-	p2BodyType GetType() const;
-	float GetMass() const;
 	p2AABB GetAabb()const;
-	bool IsInit() const;
-private:
-	p2BodyType type;
-	p2Vec2 position;
-	p2Vec2 linearVelocity;
-	float angularVelocity;
-	float gravityScale;
-	bool m_IsInit;
 
+private:
+	p2BodyType m_Type;
+	p2Vec2 m_Position;
+	p2Vec2 m_LinearVelocity;
+	float m_AngularVelocity;
+	float m_GravityScale;
+	bool m_IsInit;
 	int m_ColliderIndex = 0;
 	std::vector<p2Collider> m_Colliders;
 };

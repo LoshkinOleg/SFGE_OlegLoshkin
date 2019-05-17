@@ -26,41 +26,41 @@ SOFTWARE.
 void p2Body::Init(p2BodyDef* bodyDef)
 {
 	m_Colliders.resize(MAX_COLLIDER_LEN);
-	this->type = bodyDef->type;
-	this->position = bodyDef->position;
-	this->gravityScale = bodyDef->gravityScale;
-	this->linearVelocity = bodyDef->linearVelocity;
+	this->m_Type = bodyDef->type;
+	this->m_Position = bodyDef->position;
+	this->m_GravityScale = bodyDef->gravityScale;
+	this->m_LinearVelocity = bodyDef->linearVelocity;
 	m_IsInit = true;
 }
 
 p2Vec2 p2Body::GetLinearVelocity() const
 {
-	return linearVelocity;
+	return m_LinearVelocity;
 }
 
 void p2Body::SetLinearVelocity(p2Vec2 velocity)
 {
-	linearVelocity = velocity;
+	m_LinearVelocity = velocity;
 }
 void p2Body::SetPosition(const p2Vec2 position)
 {
-	this->position = position;
+	this->m_Position = position;
 	m_Colliders[0].UpdateAabb(position);
 }
 float p2Body::GetAngularVelocity()
 {
-	return angularVelocity;
+	return m_AngularVelocity;
 }
 
 p2Vec2 p2Body::GetPosition()
 {
-	return position;
+	return m_Position;
 }
 
 void p2Body::UpdatePosition()
 {
-	position += linearVelocity;
-	m_Colliders[0].UpdateAabb(position);
+	m_Position += m_LinearVelocity;
+	m_Colliders[0].UpdateAabb(m_Position);
 }
 
 p2Collider * p2Body::CreateCollider(p2ColliderDef * colliderDef)
@@ -73,12 +73,12 @@ p2Collider * p2Body::CreateCollider(p2ColliderDef * colliderDef)
 
 void p2Body::ApplyForceToCenter(const p2Vec2& force)
 {
-	linearVelocity += force;
+	m_LinearVelocity += force;
 }
 
 p2BodyType p2Body::GetType() const
 {
-	return type;
+	return m_Type;
 }
 
 float p2Body::GetMass() const

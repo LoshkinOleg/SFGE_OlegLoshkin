@@ -40,5 +40,5 @@ p2Vec2 p2RectShape::GetSize() const
 
 p2ShapeType p2Shape::GetType() const
 {
-	return m_type;
+	return m_Type;
 }

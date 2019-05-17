@@ -49,24 +49,20 @@ struct p2ColliderDef
 class p2Collider
 {
 public:
-	void Init(const p2ColliderDef* def);
-	/**
-	* \brief Check if the p2Collider is a sensor
-	*/
-	bool IsSensor();
-	/**
-	* \brief Return the userData
-	*/
+	// Properties.
 	void* GetUserData();
 	p2Shape* GetShape()const;
-	void SetUserData(void* colliderData);
+	bool IsSensor();
 	p2AABB GetAabb()const;
+	void SetUserData(void* colliderData);
+	// Public methods.
+	void Init(const p2ColliderDef* def);
 	void UpdateAabb(const p2Vec2 center);
 private:
-	void* userData = nullptr;
+	void* m_UserData = nullptr;
 	p2Shape* m_Shape;
+	float m_Restitution;
 	bool m_IsSensor;
-	float m_restitution;
 	p2AABB m_Aabb;
 };
 

@@ -30,33 +30,31 @@ SOFTWARE.
 #include <p2matrix.h>
 #include <string>
 
-/**
-* \brief Struct representing a Axis Aligned Bounding Box
-*/
 struct p2AABB
 {
+	// Constructors.
 	p2AABB(): bottomLeft(p2Vec2()), topRight(p2Vec2()){};
 	p2AABB(const p2Vec2 bottomLeft, const p2Vec2 topRight) : bottomLeft(bottomLeft), topRight(topRight) {};
 
-	p2Vec2 bottomLeft;
-	p2Vec2 topRight;
-
-	/**
-	* \brief Calculate the center and return it
-	*/
+	// Properties.
 	p2Vec2 GetCenter() const;
 	/**
-	* \brief Calculate the extends and return it
+	@Brief: AABB's extends where value of extend = 1/2 of AABB's size.
 	*/
 	p2Vec2 GetExtends() const;
-	void SetCenter(const p2Vec2 center);
 	float XMin() const;
 	float XMax() const;
 	float YMin() const;
 	float YMax() const;
 	std::array<p2Mat22, 4> Sides() const;
+	void SetCenter(const p2Vec2 center);
 
+	// Public methods.
 	bool Overlaps(const p2AABB other) const;
 	std::string ToString() const;
+
+	// Attributes.
+	p2Vec2 bottomLeft;
+	p2Vec2 topRight;
 };
-#endif // !SFGE_P2AABB:H
+#endif

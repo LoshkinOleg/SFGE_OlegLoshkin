@@ -77,11 +77,14 @@ private:
 	static const int MAX_OBJECTS = 5;
 	static const int MAX_LEVELS = 5;
 	static const int CHILD_TREE_NMB = 4;
-	int m_NodeLevel = 0;
-	bool hasChildren;
-	std::unique_ptr<p2QuadTree> nodes[CHILD_TREE_NMB];
-	std::vector<p2Body*> m_Objects;
+	int m_NodeLevel;
+	bool m_HasChildren;
+	std::unique_ptr<p2QuadTree> m_Children[CHILD_TREE_NMB];
+	std::vector<p2Body*> m_Bodies;
 	p2AABB m_Bounds;
+
+	// debugging
+	static int g;
 };
 
 #endif

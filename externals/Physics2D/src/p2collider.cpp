@@ -4,10 +4,10 @@
 
 void p2Collider::Init(const p2ColliderDef* def)
 {
-	userData = def->userData;
+	m_UserData = def->userData;
 	m_Shape = def->shape;
 	m_IsSensor = def->isSensor;
-	m_restitution = def->restitution;
+	m_Restitution = def->restitution;
 	p2AABB myAabb = p2AABB();
 	switch (m_Shape->GetType())
 	{
@@ -46,7 +46,7 @@ p2Shape* p2Collider::GetShape() const
 
 void p2Collider::SetUserData(void* colliderData)
 {
-	userData = colliderData;
+	m_UserData = colliderData;
 }
 
 p2AABB p2Collider::GetAabb() const

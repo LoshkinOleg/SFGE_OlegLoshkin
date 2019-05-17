@@ -40,11 +40,11 @@ enum p2ShapeType
 class p2Shape
 {
 public:
-	p2Shape() : m_type(p2ShapeType::NONE){};
-	p2Shape(p2ShapeType type) : m_type(type) {};
+	p2Shape() : m_Type(p2ShapeType::NONE){};
+	p2Shape(p2ShapeType type) : m_Type(type) {};
 	p2ShapeType GetType()const;
 private:
-	p2ShapeType m_type;
+	p2ShapeType m_Type;
 };
 
 /**
@@ -72,8 +72,8 @@ public:
 	p2RectShape() : p2Shape(p2ShapeType::RECTANGLE) {};
 	p2RectShape(const p2Vec2 size) : p2Shape(p2ShapeType::RECTANGLE), m_Size(size) {};
 
-	void SetSize(p2Vec2 size);
 	p2Vec2 GetSize()const;
+	void SetSize(p2Vec2 size);
 private:
 	p2Vec2 m_Size;
 };
