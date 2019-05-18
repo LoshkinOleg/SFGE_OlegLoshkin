@@ -24,11 +24,11 @@ SOFTWARE.
 #include <p2world.h>
 #include <iostream>
 
-
 p2World::p2World(p2Vec2 gravity, p2Vec2 aabbSize): m_Gravity(gravity)
 {
 	m_Bodies.resize(MAX_BODY_LEN);
 	m_RootQuad = p2QuadTree(0, p2AABB(p2Vec2(0, aabbSize.y), p2Vec2(aabbSize.x, 0)));
+	m_ContactManager = p2ContactManager();
 }
 
 void p2World::Step(float dt)
@@ -63,6 +63,9 @@ void p2World::Step(float dt)
 	{
 		m_RootQuad.Insert(&body);
 	}
+
+	// Solve contacts.
+	m_ContactManager.SolveContacts(&m_RootQuad);
 }
 
 p2Body * p2World::CreateBody(p2BodyDef* bodyDef)
@@ -75,6 +78,7 @@ p2Body * p2World::CreateBody(p2BodyDef* bodyDef)
 
 void p2World::SetContactListener(p2ContactListener * contactListener)
 {
+	m_ContactManager.SetContactListener(contactListener);
 }
 
 std::vector<p2AABB> p2World::GetQuadTreeBounds() const

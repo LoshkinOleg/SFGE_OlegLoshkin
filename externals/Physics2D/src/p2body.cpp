@@ -91,6 +91,11 @@ p2AABB p2Body::GetAabb() const
 	return m_Colliders[m_ColliderIndex - 1].GetAabb();
 }
 
+p2Collider p2Body::GetCollider() const
+{
+	return m_Colliders[0]; // Only dealing with one collider for now.
+}
+
 bool p2Body::IsInit() const
 {
 	return m_IsInit;

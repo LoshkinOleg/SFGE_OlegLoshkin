@@ -58,11 +58,14 @@ public:
 	 */
 	void LogQuadsBodyCount() const;
 
+	void RetrieveSortedBodiesFromQuadTrees(std::vector<p2Body*>& listToFill, std::vector<p2QuadTree*>& correspondingQuads);
+
 private:
 	p2QuadTree m_RootQuad;
 	p2Vec2 m_Gravity;
 	std::vector<p2Body> m_Bodies;
 	int m_BodyIndex = 0;
+	p2ContactManager m_ContactManager;
 };
 
 #endif

@@ -26,16 +26,8 @@ SOFTWARE.
 #define SFGE_P2CONTACT_H
 
 #include <p2collider.h>
-
-/**
-* \brief Representation of a contact given as argument in a p2ContactListener
-*/
-class p2Contact
-{
-public:
-	p2Collider* GetColliderA();
-	p2Collider* GetColliderB();
-};
+class p2Body;
+class p2QuadTree;
 
 /**
 * \brief Listener of contacts happening in an attached p2World
@@ -48,10 +40,37 @@ public:
 };
 
 /**
-* \brief Managing the creation and destruction of contact between colliders
+* \brief Representation of a contact given as argument in a p2ContactListener
+*/
+struct p2Contact
+{
+	p2Collider* ColliderA;
+	p2Collider* ColliderB;
+};
+
+/**
+@Brief: Manages creation, filtering and destruction of p2Contacts. Sends contact messages to contact listener.
 */
 class p2ContactManager
 {
+public:
+	// Constructors.
+	p2ContactManager() {};
+	p2ContactManager(p2ContactListener* listener) : m_ContactListener(listener) {};
 
+	// Properties.
+	void SetContactListener(p2ContactListener* listener);
+	
+	// Public methods.
+	void SolveContacts(p2QuadTree* rootQuad) const;
+
+private:
+	// Private methods.
+	void SendContactMessage() const;
+	std::vector<p2Contact> FilteringBroadPhase(std::vector<p2Body*> bodies) const;
+	void FilteringNarrowPhase(std::vector<p2Contact>& contactsToFilter) const;
+	
+	// Private attributes.
+	p2ContactListener* m_ContactListener = nullptr;
 };
 #endif

@@ -13,7 +13,7 @@ p2QuadTree::p2QuadTree()
 	m_HasChildren = false;
 }
 
-p2QuadTree::p2QuadTree(int nodeLevel, p2AABB bounds)
+p2QuadTree::p2QuadTree(int nodeLevel, p2AABB bounds, int childId = -1)
 {
 	m_NodeLevel = nodeLevel;
 	m_Bounds = bounds;
@@ -94,11 +94,6 @@ void p2QuadTree::Split()
 	m_Children[3]->m_Bounds	= newAabb;
 }
 
-int p2QuadTree::GetIndex(p2Body* rect)
-{
-	return 0;
-}
-
 void p2QuadTree::Insert(p2Body* obj)
 {
 	if (obj->IsInit()) // Ignore all bodies that aren't used.
@@ -177,9 +172,10 @@ void p2QuadTree::Insert(p2Body* obj)
 	}
 }
 
-std::vector<p2Body*> p2QuadTree::Retrieve() const
+void p2QuadTree::Retrieve(std::vector<p2Body*>& listToFill, std::vector<p2QuadTree*>& ptrsToContainingQuads)
 {
-	return m_Bodies;
+	// Add own bodies.
+	int maxLevels = MAX_LEVELS - m_NodeLevel;
 }
 
 void p2QuadTree::GetQuadTreesAabbs(std::vector<p2AABB>& listToFill) const

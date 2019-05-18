@@ -25,7 +25,7 @@ SOFTWARE.
 #ifndef SFGE_P2QUADTREE_H
 #define SFGE_P2QUADTREE_H
 
-#include <list>
+// #include <list>
 
 #include <p2vector.h>
 #include <p2aabb.h>
@@ -39,7 +39,7 @@ class p2QuadTree
 {
 public:
 	p2QuadTree();
-	p2QuadTree(int nodeLevel, p2AABB bounds);
+	p2QuadTree(int nodeLevel, p2AABB bounds, int childId = -1);
 	~p2QuadTree();
 	p2QuadTree& operator=(p2QuadTree& other);
 
@@ -51,19 +51,14 @@ public:
 	* Called when node have too much objects and split the current node into four
 	*/
 	void Split();
-
-	/**
-	* Get the index of the child trees of the p2Body
-	*/
-	int GetIndex(p2Body* rect);
 	/**
 	* Insert a new p2Body in the tree
 	*/
 	void Insert(p2Body* obj);
 	/**
-	* Return a list of all the p2Body that might collide
+	@Brief: Return a list of all bodies recursively from this quad down and ptrs to quads containing them.
 	*/
-	std::vector<p2Body*> Retrieve() const;
+	void Retrieve(std::vector<p2Body*>& listToFill, std::vector<p2QuadTree*>& ptrsToContainingQuads);
 	/**
 	 * @Brief: Fills up passed vector with the aabb's of all quads for debugging.
 	 */
@@ -74,6 +69,7 @@ public:
 	void LogQuadsBodyCount() const;
 	
 private:
+	// Attributes.
 	static const int MAX_OBJECTS = 5;
 	static const int MAX_LEVELS = 5;
 	static const int CHILD_TREE_NMB = 4;
@@ -82,9 +78,6 @@ private:
 	std::unique_ptr<p2QuadTree> m_Children[CHILD_TREE_NMB];
 	std::vector<p2Body*> m_Bodies;
 	p2AABB m_Bounds;
-
-	// debugging
-	static int g;
 };
 
 #endif

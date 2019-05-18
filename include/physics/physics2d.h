@@ -114,7 +114,6 @@ private:
 	std::unique_ptr<ContactListener> m_ContactListener = nullptr;
 	Body2dManager m_BodyManager{m_Engine};
 	ColliderManager m_ColliderManager{m_Engine};
-
 };
 
 

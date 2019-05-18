@@ -26,8 +26,6 @@ SOFTWARE.
 #include <python/python_engine.h>
 #include <engine/config.h>
 #include <engine/engine.h>
-// debugging
-#include <iostream>
 
 namespace sfge
 {
@@ -41,8 +39,8 @@ void Physics2dManager::OnEngineInit()
 	Configuration* configPtr;
 	if(configPtr = m_Engine.GetConfig())
 		gravity = configPtr->gravity;
-	m_World = std::make_shared<p2World>(gravity, pixel2meter(configPtr->screenResolution));
 	m_ContactListener = std::make_unique<ContactListener>(m_Engine);
+	m_World = std::make_shared<p2World>(gravity, pixel2meter(configPtr->screenResolution));
 	m_World->SetContactListener(m_ContactListener.get());
 
 	m_BodyManager.OnEngineInit();

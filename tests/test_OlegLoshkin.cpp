@@ -161,3 +161,58 @@ TEST(OlegLoshkin, QuadTree)
 	sceneManager->LoadSceneFromJson(sceneJson);
 	engine.Start();
 }
+
+TEST(OlegLoshkin, Sensors)
+{
+	sfge::Engine engine;
+	std::unique_ptr<sfge::Configuration> initConfig = std::make_unique<sfge::Configuration>();
+	initConfig->gravity = p2Vec2(0, 0);
+	auto screenSize = sf::Vector2i(1280, 720);
+	engine.Init(std::move(initConfig));
+
+	// Set up scene.
+	auto* sceneManager = engine.GetSceneManager();
+	json sceneJson = {
+			{ "name", "p2Vec2 Testing" }
+	};
+
+	// Create entities.
+	json entities[64];
+	for (int i = 0; i < 64; i++)
+	{
+		json rect;
+		rect["name"] = "Rect_" + std::to_string(i);
+		json transform;
+		transform["type"] = sfge::ComponentType::TRANSFORM2D;
+		transform["position"] = {rand() % screenSize.x, rand() % screenSize.y};
+		transform["scale"] = {1.0,1.0};
+		json shape;
+		shape["type"] = sfge::ComponentType::SHAPE2D;
+		shape["shape_type"] = sfge::ShapeType::RECTANGLE;
+		shape["size"] = {10.0,10.0};
+		json body;
+		body["type"] = sfge::ComponentType::BODY2D;
+		body["body_type"] = p2BodyType::DYNAMIC;
+		rect["components"] = {transform, shape, body};
+		json collider;
+		collider["type"] = sfge::ComponentType::COLLIDER2D;
+		collider["collider_type"] = sfge::ColliderType::BOX;
+		collider["size"] = {10.0,10.0};
+		collider["sensor"] = false;
+
+		rect["components"] = {transform, shape, body, collider};
+		entities[i] = rect;
+	}
+
+	sceneJson["entities"] = entities;
+
+	// Set up systems.
+	json systemJson = {
+			{"script_path", "scripts/test_quadtree_system.py"}
+	};
+	sceneJson["systems"] = json::array({systemJson});
+
+	// Start engine.
+	sceneManager->LoadSceneFromJson(sceneJson);
+	engine.Start();
+}
