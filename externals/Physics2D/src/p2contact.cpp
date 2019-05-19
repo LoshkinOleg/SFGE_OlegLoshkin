@@ -25,28 +25,73 @@ SOFTWARE.
 #include <p2contact.h>
 #include <p2quadtree.h>
 #include <p2body.h>
+// debugging
+#include <iostream>
 
 void p2ContactManager::SetContactListener(p2ContactListener* listener)
 {
 	m_ContactListener = listener;
 }
 
-void p2ContactManager::SendContactMessage() const
+void p2ContactManager::SolveContacts(p2QuadTree* rootQuad)
 {
-	// TODO
-}
+	// Send contact messages.
+	for each (p2Contact& contact in m_CurrentContacts)
+	{
+		m_ContactListener->EndContact(&contact);
+	}
 
-void p2ContactManager::SolveContacts(p2QuadTree* rootQuad) const
-{
-	
-}
+	// Broad phase.
+	std::vector<PotentialCollision> potentialCollisions = rootQuad->Retrieve();
+	m_CurrentContacts = std::vector<p2Contact>();
 
-std::vector<p2Contact> p2ContactManager::FilteringBroadPhase(std::vector<p2Body*> bodies) const
-{
-	// TODO
-}
+	for each (PotentialCollision potentialCol in potentialCollisions)
+	{
+		// Check against bodies above.
+		for each (p2Body* leafBody in potentialCol.siblings)
+		{
+			for (int i = 0; i < potentialCol.potentialCollideesAbove.size(); i++)
+			{
+				if (leafBody->GetAabb().Overlaps(potentialCol.potentialCollideesAbove[i]->GetAabb()))
+				{
+					m_CurrentContacts.push_back(p2Contact());
+					m_CurrentContacts.back().ColliderA = &leafBody->GetCollider();
+					m_CurrentContacts.back().ColliderB = &potentialCol.potentialCollideesAbove[i]->GetCollider();
+				}
+			}
+		}
 
-void p2ContactManager::FilteringNarrowPhase(std::vector<p2Contact>& contactsToFilter) const
-{
-	// TODO
+		// Check against siblings.
+		int firstSiblingToCheck = 1;
+		for (int sibling = 0; sibling < potentialCol.siblings.size() - 1; sibling++)
+		{
+			for (int otherSibling = firstSiblingToCheck; otherSibling < potentialCol.siblings.size(); otherSibling++)
+			{
+				if (potentialCol.siblings[sibling]->GetAabb().Overlaps(potentialCol.siblings[otherSibling]->GetAabb()))
+				{
+					m_CurrentContacts.push_back(p2Contact());
+					m_CurrentContacts.back().ColliderA = &potentialCol.siblings[sibling]->GetCollider();
+					m_CurrentContacts.back().ColliderB = &potentialCol.siblings[otherSibling]->GetCollider();
+				}
+			}
+
+			firstSiblingToCheck++;
+		}
+	}
+
+	// debugging
+	std::cout << "----------------------" << std::endl;
+	for each (p2Contact& contact in m_CurrentContacts)
+	{
+		std::cout << contact.ColliderA->GetAabb().GetCenter().ToString() << " ; " << contact.ColliderB->GetAabb().GetCenter().ToString() << std::endl;
+	}
+
+
+	// Narrow phase.
+
+	// Send contact messages.
+	for each (p2Contact& contact in m_CurrentContacts)
+	{
+		m_ContactListener->BeginContact(&contact);
+	}
 }

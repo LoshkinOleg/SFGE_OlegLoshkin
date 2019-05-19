@@ -27,6 +27,7 @@ void System::Destroy()
 
 void System::OnContact(ColliderData* c1, ColliderData* c2, bool enter)
 {
+
 }
 
 void System::SetEnable(bool enable)

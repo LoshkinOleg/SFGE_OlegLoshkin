@@ -173,8 +173,12 @@ void p2QuadTree::Insert(p2Body* obj)
 	}
 }
 
-void p2QuadTree::Retrieve(std::vector<PotentialCollision>& listToFill)
+std::vector<PotentialCollision> p2QuadTree::Retrieve()
 {
+	// Problem: does not create potential collisions between non leaf and non leaf bodies, only between leaf-leaf and leaf-nonleaf
+
+	std::vector<PotentialCollision> listToFill = std::vector<PotentialCollision>();
+
 	// Create new potential collision instance if there needs be one.
 	if (m_Bodies.size() > 0 || m_HasChildren)
 	{
@@ -202,6 +206,8 @@ void p2QuadTree::Retrieve(std::vector<PotentialCollision>& listToFill)
 	{
 		listToFill[0].siblings = m_Bodies;
 	}
+
+	return listToFill;
 }
 
 void p2QuadTree::RetrieveRecursively(std::vector<PotentialCollision>& listToFill, int& currentIndex)

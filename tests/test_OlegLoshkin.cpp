@@ -162,7 +162,7 @@ TEST(OlegLoshkin, QuadTree)
 	engine.Start();
 }
 
-TEST(OlegLoshkin, Sensors)
+TEST(OlegLoshkin, BroadPhase)
 {
 	sfge::Engine engine;
 	std::unique_ptr<sfge::Configuration> initConfig = std::make_unique<sfge::Configuration>();
@@ -173,12 +173,12 @@ TEST(OlegLoshkin, Sensors)
 	// Set up scene.
 	auto* sceneManager = engine.GetSceneManager();
 	json sceneJson = {
-			{ "name", "p2Vec2 Testing" }
+			{ "name", "BroadPhase" }
 	};
 
 	// Create entities.
-	json entities[64];
-	for (int i = 0; i < 64; i++)
+	json entities[16];
+	for (int i = 0; i < 16; i++)
 	{
 		json rect;
 		rect["name"] = "Rect_" + std::to_string(i);
@@ -189,7 +189,7 @@ TEST(OlegLoshkin, Sensors)
 		json shape;
 		shape["type"] = sfge::ComponentType::SHAPE2D;
 		shape["shape_type"] = sfge::ShapeType::RECTANGLE;
-		shape["size"] = {10.0,10.0};
+		shape["size"] = {100.0,100.0};
 		json body;
 		body["type"] = sfge::ComponentType::BODY2D;
 		body["body_type"] = p2BodyType::DYNAMIC;
@@ -197,7 +197,7 @@ TEST(OlegLoshkin, Sensors)
 		json collider;
 		collider["type"] = sfge::ComponentType::COLLIDER2D;
 		collider["collider_type"] = sfge::ColliderType::BOX;
-		collider["size"] = {10.0,10.0};
+		collider["size"] = {100.0,100.0};
 		collider["sensor"] = false;
 
 		rect["components"] = {transform, shape, body, collider};
@@ -208,7 +208,7 @@ TEST(OlegLoshkin, Sensors)
 
 	// Set up systems.
 	json systemJson = {
-			{"script_path", "scripts/test_quadtree_system.py"}
+			{"script_path", "scripts/contact_debug_system.py"}
 	};
 	sceneJson["systems"] = json::array({systemJson});
 

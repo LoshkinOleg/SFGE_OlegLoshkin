@@ -64,7 +64,7 @@ public:
 	/**
 	@Brief: Return a list of all bodies recursively from this quad down and ptrs to quads containing them.
 	*/
-	void Retrieve(std::vector<PotentialCollision>& listToFill);
+	std::vector<PotentialCollision> Retrieve();
 	/**
 	 * @Brief: Fills up passed vector with the aabb's of all quads for debugging.
 	 */
@@ -80,7 +80,6 @@ private:
 	@Brief: Called by Retrieve().
 	*/
 	void RetrieveRecursively(std::vector<PotentialCollision>& listToFill, int& currentIndex);
-	void CorrectPotentialCollision(std::vector<PotentialCollision>& listToFill, int& currentIndex);
 
 	// Attributes.
 	static const int MAX_OBJECTS = 5;

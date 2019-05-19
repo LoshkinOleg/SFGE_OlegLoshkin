@@ -120,8 +120,8 @@ float Physics2dManager::Raycast(Vec2f startPoint, Vec2f direction, float rayLeng
 void ContactListener::BeginContact(p2Contact* contact)
 {
 	auto* pythonEngine = m_Engine.GetPythonEngine();
-	const auto colliderA = static_cast<ColliderData*>(contact->GetColliderA()->GetUserData());
-	const auto colliderB = static_cast<ColliderData*>(contact->GetColliderB()->GetUserData());
+	const auto colliderA = static_cast<ColliderData*>(contact->ColliderA->GetUserData());
+	const auto colliderB = static_cast<ColliderData*>(contact->ColliderB->GetUserData());
 
 	/*{
 		std::ostringstream oss;
@@ -143,8 +143,8 @@ void ContactListener::BeginContact(p2Contact* contact)
 void ContactListener::EndContact(p2Contact* contact)
 {
 	auto pythonEngine = m_Engine.GetPythonEngine();
-	auto* colliderA = static_cast<ColliderData*>(contact->GetColliderA()->GetUserData());
-	auto* colliderB = static_cast<ColliderData*>(contact->GetColliderB()->GetUserData());
+	auto* colliderA = static_cast<ColliderData*>(contact->ColliderA->GetUserData());
+	auto* colliderB = static_cast<ColliderData*>(contact->ColliderB->GetUserData());
 
 	/*{
 		std::ostringstream oss;

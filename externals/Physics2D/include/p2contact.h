@@ -62,15 +62,11 @@ public:
 	void SetContactListener(p2ContactListener* listener);
 	
 	// Public methods.
-	void SolveContacts(p2QuadTree* rootQuad) const;
+	void SolveContacts(p2QuadTree* rootQuad);
 
 private:
-	// Private methods.
-	void SendContactMessage() const;
-	std::vector<p2Contact> FilteringBroadPhase(std::vector<p2Body*> bodies) const;
-	void FilteringNarrowPhase(std::vector<p2Contact>& contactsToFilter) const;
-	
 	// Private attributes.
 	p2ContactListener* m_ContactListener = nullptr;
+	std::vector<p2Contact> m_CurrentContacts = std::vector<p2Contact>();
 };
 #endif
