@@ -75,6 +75,7 @@ void p2QuadTree::Split()
 	{
 		m_Children[i] = std::make_unique<p2QuadTree>();
 		m_Children[i]->m_NodeLevel = m_NodeLevel + 1;
+		m_Children[i]->m_Parent = this;
 	}
 	// TopLeft's AABB.
 	newAabb.bottomLeft	= p2Vec2(m_Bounds.bottomLeft	+ p2Vec2(0,							- m_Bounds.GetExtends().y));
@@ -172,10 +173,78 @@ void p2QuadTree::Insert(p2Body* obj)
 	}
 }
 
-void p2QuadTree::Retrieve(std::vector<p2Body*>& listToFill, std::vector<p2QuadTree*>& ptrsToContainingQuads)
+void p2QuadTree::Retrieve(std::vector<PotentialCollision>& listToFill)
 {
-	// Add own bodies.
-	int maxLevels = MAX_LEVELS - m_NodeLevel;
+	// Create new potential collision instance if there needs be one.
+	if (m_Bodies.size() > 0 || m_HasChildren)
+	{
+		listToFill.push_back(PotentialCollision());
+	}
+
+	if (m_HasChildren)
+	{
+		int iterator = 0;
+
+		// Add self to collidees above.
+		for each (p2Body* body in m_Bodies)
+		{
+			listToFill[0].potentialCollideesAbove.push_back(body);
+		}
+		// Call children recursively.
+		for (int i = 0; i < CHILD_TREE_NMB; i++)
+		{
+			m_Children[i]->RetrieveRecursively(listToFill, iterator);
+		}
+
+		listToFill.pop_back(); // Remove last uninitialized potential collision.
+	}
+	else // This is a leaf.
+	{
+		listToFill[0].siblings = m_Bodies;
+	}
+}
+
+void p2QuadTree::RetrieveRecursively(std::vector<PotentialCollision>& listToFill, int& currentIndex)
+{
+	if (m_HasChildren)
+	{
+
+		// Add self to collidees above.
+		for each (p2Body* body in m_Bodies)
+		{
+			listToFill[currentIndex].potentialCollideesAbove.push_back(body);
+		}
+		// Call children recursively.
+		for (int i = 0; i < CHILD_TREE_NMB; i++)
+		{
+			int initialIndex = currentIndex;
+			std::vector<p2Body*> potentialCollideesAbove_Copy = listToFill[currentIndex].potentialCollideesAbove;
+
+			m_Children[i]->RetrieveRecursively(listToFill, currentIndex);
+
+			if (currentIndex != initialIndex) // We've added a new potential collision in the meantime.
+			{
+				listToFill[currentIndex].potentialCollideesAbove = potentialCollideesAbove_Copy;
+			}
+
+			/*if (i == CHILD_TREE_NMB - 1) // If this is the last child
+			{
+				for (int i = 0; i < m_Bodies.size(); i++)
+				{
+					listToFill[currentIndex].potentialCollideesAbove.pop_back();
+				}
+			}*/
+		}
+	}
+	else // This is a leaf.
+	{
+		if (m_Bodies.size() > 0) // This leaf has bodies in it.
+		{
+			listToFill[currentIndex].siblings = m_Bodies;
+			listToFill.push_back(PotentialCollision());
+			currentIndex++;
+		}
+	}
 }
 
 void p2QuadTree::GetQuadTreesAabbs(std::vector<p2AABB>& listToFill) const

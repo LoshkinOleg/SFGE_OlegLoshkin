@@ -32,6 +32,12 @@ SOFTWARE.
 #include <p2body.h>
 #include <memory>
 
+struct PotentialCollision
+{
+	std::vector<p2Body*> siblings;
+	std::vector<p2Body*> potentialCollideesAbove;
+};
+
 /**
 * \brief Representation of a tree with 4 branches containing p2Body defined by their p2AABB
 */
@@ -58,7 +64,7 @@ public:
 	/**
 	@Brief: Return a list of all bodies recursively from this quad down and ptrs to quads containing them.
 	*/
-	void Retrieve(std::vector<p2Body*>& listToFill, std::vector<p2QuadTree*>& ptrsToContainingQuads);
+	void Retrieve(std::vector<PotentialCollision>& listToFill);
 	/**
 	 * @Brief: Fills up passed vector with the aabb's of all quads for debugging.
 	 */
@@ -69,12 +75,20 @@ public:
 	void LogQuadsBodyCount() const;
 	
 private:
+	// Private methods.
+	/**
+	@Brief: Called by Retrieve().
+	*/
+	void RetrieveRecursively(std::vector<PotentialCollision>& listToFill, int& currentIndex);
+	void CorrectPotentialCollision(std::vector<PotentialCollision>& listToFill, int& currentIndex);
+
 	// Attributes.
 	static const int MAX_OBJECTS = 5;
 	static const int MAX_LEVELS = 5;
 	static const int CHILD_TREE_NMB = 4;
 	int m_NodeLevel;
 	bool m_HasChildren;
+	p2QuadTree* m_Parent = nullptr;
 	std::unique_ptr<p2QuadTree> m_Children[CHILD_TREE_NMB];
 	std::vector<p2Body*> m_Bodies;
 	p2AABB m_Bounds;
