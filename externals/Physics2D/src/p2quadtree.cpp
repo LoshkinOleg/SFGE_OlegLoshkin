@@ -1,5 +1,6 @@
-#include <p2quadtree.h>
 #include <iostream>
+#include <p2quadtree.h>
+#include <p2body.h>
 
 p2QuadTree::p2QuadTree()
 {
@@ -13,7 +14,7 @@ p2QuadTree::p2QuadTree()
 	m_HasChildren = false;
 }
 
-p2QuadTree::p2QuadTree(int nodeLevel, p2AABB bounds, int childId = -1)
+p2QuadTree::p2QuadTree(int nodeLevel, p2AABB bounds)
 {
 	m_NodeLevel = nodeLevel;
 	m_Bounds = bounds;

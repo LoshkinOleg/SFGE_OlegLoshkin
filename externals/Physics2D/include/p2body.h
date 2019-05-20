@@ -25,12 +25,10 @@ SOFTWARE.
 #ifndef SFGE_P2BODY_H
 #define SFGE_P2BODY_H
 
-#include <p2aabb.h>
 #include <vector>
+#include <p2vector.h>
+#include <p2aabb.h>
 #include <p2collider.h>
-
-class p2Collider;
-struct p2ColliderDef;
 
 enum class p2BodyType
 {

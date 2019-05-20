@@ -26,9 +26,9 @@ SOFTWARE.
 #ifndef SFGE_P2COLLIDER_H
 #define SFGE_P2COLLIDER_H
 
-#include <p2shape.h>
-#include "engine/entity.h"
+#include <p2vector.h>
 #include <p2aabb.h>
+class p2Shape;
 
 /**
 * \brief Struct defining a p2Collider when creating one
@@ -60,9 +60,9 @@ public:
 	void UpdateAabb(const p2Vec2 center);
 private:
 	void* m_UserData = nullptr;
-	p2Shape* m_Shape;
-	float m_Restitution;
-	bool m_IsSensor;
+	p2Shape* m_Shape = nullptr;
+	float m_Restitution = 1;
+	bool m_IsSensor = false;
 	p2AABB m_Aabb;
 };
 

@@ -25,12 +25,10 @@ SOFTWARE.
 #ifndef SFGE_P2QUADTREE_H
 #define SFGE_P2QUADTREE_H
 
-// #include <list>
-
-#include <p2vector.h>
-#include <p2aabb.h>
-#include <p2body.h>
 #include <memory>
+#include <vector>
+#include <p2aabb.h>
+class p2Body;
 
 struct PotentialCollision
 {
@@ -45,7 +43,7 @@ class p2QuadTree
 {
 public:
 	p2QuadTree();
-	p2QuadTree(int nodeLevel, p2AABB bounds, int childId = -1);
+	p2QuadTree(int nodeLevel, p2AABB bounds);
 	~p2QuadTree();
 	p2QuadTree& operator=(p2QuadTree& other);
 

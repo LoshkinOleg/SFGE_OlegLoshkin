@@ -40,13 +40,9 @@ class TestQuadtreeSystem(System):
         for body in self.bodies:
             if (body.position.x > 12.8 - self.buffer):
                 body.set_position(p2Vec2(self.buffer, body.position.y))
-                # body.set_position(p2Vec2(2.0, 2.0))
             if (body.position.y > 7.2 - self.buffer):
                 body.set_position(p2Vec2(body.position.x, self.buffer))
-                # body.set_position(p2Vec2(2.0, 2.0))
             if (body.position.x < self.buffer):
                 body.set_position(p2Vec2(12.8 - self.buffer, body.position.y))
-                # body.set_position(p2Vec2(2.0, 2.0))
             if (body.position.y < self.buffer):
                 body.set_position(p2Vec2(body.position.x, 7.20 - self.buffer))
-                # body.set_position(p2Vec2(2.0, 2.0))

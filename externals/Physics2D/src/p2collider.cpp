@@ -1,6 +1,5 @@
-#include "..\include\p2collider.h"
-// debugging
-#include <iostream>
+#include <p2collider.h>
+#include <p2shape.h>
 
 void p2Collider::Init(const p2ColliderDef* def)
 {
@@ -34,7 +33,7 @@ bool p2Collider::IsSensor()
 	return false;
 }
 
-void * p2Collider::GetUserData()
+void* p2Collider::GetUserData()
 {
 	return nullptr;
 }

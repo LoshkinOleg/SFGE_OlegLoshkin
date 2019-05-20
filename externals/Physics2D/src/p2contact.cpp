@@ -36,7 +36,7 @@ void p2ContactManager::SetContactListener(p2ContactListener* listener)
 void p2ContactManager::SolveContacts(p2QuadTree* rootQuad)
 {
 	// Send contact messages.
-	for each (p2Contact& contact in m_CurrentContacts)
+	for (p2Contact& contact : m_CurrentContacts)
 	{
 		m_ContactListener->EndContact(&contact);
 	}
@@ -79,18 +79,10 @@ void p2ContactManager::SolveContacts(p2QuadTree* rootQuad)
 		}
 	}
 
-	// debugging
-	std::cout << "----------------------" << std::endl;
-	for each (p2Contact& contact in m_CurrentContacts)
-	{
-		std::cout << contact.ColliderA->GetAabb().GetCenter().ToString() << " ; " << contact.ColliderB->GetAabb().GetCenter().ToString() << std::endl;
-	}
-
-
 	// Narrow phase.
 
 	// Send contact messages.
-	for each (p2Contact& contact in m_CurrentContacts)
+	for (p2Contact& contact : m_CurrentContacts)
 	{
 		m_ContactListener->BeginContact(&contact);
 	}

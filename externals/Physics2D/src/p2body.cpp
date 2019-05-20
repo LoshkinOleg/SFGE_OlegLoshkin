@@ -88,7 +88,7 @@ float p2Body::GetMass() const
 
 p2AABB p2Body::GetAabb() const
 {
-	return m_Colliders[m_ColliderIndex - 1].GetAabb();
+	return m_Colliders[(size_t)(m_ColliderIndex) - 1].GetAabb();
 }
 
 p2Collider p2Body::GetCollider() const

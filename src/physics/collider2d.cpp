@@ -27,6 +27,7 @@ SOFTWARE.
 #include <engine/component.h>
 #include <physics/physics2d.h>
 #include <engine/engine.h>
+#include <p2shape.h>
 namespace sfge
 {
 void editor::ColliderInfo::DrawOnInspector()

@@ -25,9 +25,18 @@ SOFTWARE.
 #ifndef SFGE_P2CONTACT_H
 #define SFGE_P2CONTACT_H
 
-#include <p2collider.h>
-class p2Body;
+#include <vector>
+class p2Collider;
 class p2QuadTree;
+
+/**
+* \brief Representation of a contact given as argument in a p2ContactListener
+*/
+struct p2Contact
+{
+	p2Collider* ColliderA;
+	p2Collider* ColliderB;
+};
 
 /**
 * \brief Listener of contacts happening in an attached p2World
@@ -37,15 +46,6 @@ class p2ContactListener
 public:
 	virtual void BeginContact(p2Contact* contact) = 0;
 	virtual void EndContact(p2Contact* contact) = 0;
-};
-
-/**
-* \brief Representation of a contact given as argument in a p2ContactListener
-*/
-struct p2Contact
-{
-	p2Collider* ColliderA;
-	p2Collider* ColliderB;
 };
 
 /**

@@ -60,7 +60,7 @@ public:
 	*/
 	void SetRadius(float radius);
 private:
-	float m_Radius;
+	float m_Radius = 0.0f;
 };
 
 /** 

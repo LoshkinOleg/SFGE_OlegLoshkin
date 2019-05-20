@@ -21,8 +21,9 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
-#include <p2world.h>
+
 #include <iostream>
+#include <p2world.h>
 
 p2World::p2World(p2Vec2 gravity, p2Vec2 aabbSize): m_Gravity(gravity)
 {
