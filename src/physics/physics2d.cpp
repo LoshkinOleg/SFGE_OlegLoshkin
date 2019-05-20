@@ -120,8 +120,8 @@ float Physics2dManager::Raycast(Vec2f startPoint, Vec2f direction, float rayLeng
 void ContactListener::BeginContact(p2Contact* contact)
 {
 	auto* pythonEngine = m_Engine.GetPythonEngine();
-	const auto colliderA = static_cast<ColliderData*>(contact->ColliderA->GetUserData());
-	const auto colliderB = static_cast<ColliderData*>(contact->ColliderB->GetUserData());
+	const auto colliderA = static_cast<ColliderData*>(contact->GetColliderA()->GetUserData());
+	const auto colliderB = static_cast<ColliderData*>(contact->GetColliderB()->GetUserData());
 
 	/*{
 		std::ostringstream oss;
@@ -143,8 +143,8 @@ void ContactListener::BeginContact(p2Contact* contact)
 void ContactListener::EndContact(p2Contact* contact)
 {
 	auto pythonEngine = m_Engine.GetPythonEngine();
-	auto* colliderA = static_cast<ColliderData*>(contact->ColliderA->GetUserData());
-	auto* colliderB = static_cast<ColliderData*>(contact->ColliderB->GetUserData());
+	auto* colliderA = static_cast<ColliderData*>(contact->GetColliderA()->GetUserData());
+	auto* colliderB = static_cast<ColliderData*>(contact->GetColliderB()->GetUserData());
 
 	/*{
 		std::ostringstream oss;
@@ -155,6 +155,11 @@ void ContactListener::EndContact(p2Contact* contact)
 	auto& pySystems = pythonEngine->GetPySystemManager().GetPySystems();
 	for (size_t i = 0; i < pySystems.size(); i++)
 	{
+		if (i == 400)
+		{
+			int a = 0;
+		}
+
 		if (pySystems[i] != nullptr)
 		{
 			pySystems[i]->OnContact(colliderA, colliderB, false);

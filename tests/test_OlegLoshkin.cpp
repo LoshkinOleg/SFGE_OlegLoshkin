@@ -208,7 +208,7 @@ TEST(OlegLoshkin, BroadPhase)
 
 	// Set up systems.
 	json systemJson = {
-			{"script_path", "scripts/test_broad_phase_system.py"}
+			{"systemClassName", "TestBroadPhaseSystem"}
 	};
 	sceneJson["systems"] = json::array({systemJson});
 

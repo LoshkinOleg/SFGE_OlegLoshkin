@@ -35,7 +35,7 @@ bool p2Collider::IsSensor()
 
 void* p2Collider::GetUserData()
 {
-	return nullptr;
+	return m_UserData;
 }
 
 p2Shape* p2Collider::GetShape() const

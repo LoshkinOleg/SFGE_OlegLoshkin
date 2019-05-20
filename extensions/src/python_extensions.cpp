@@ -43,6 +43,9 @@ void ExtendPython(py::module& m)
 	py::class_<PlanetSystem, System> planetSystem(m, "PlanetSystem");
 	planetSystem
 		.def(py::init<Engine&>());
+	py::class_<PlanetSystem, System> planetSystem(m, "TestBroadPhaseSystem");
+	planetSystem
+		.def(py::init<Engine&>());
 	
 
 	tools::ExtendPythonTools(m);
