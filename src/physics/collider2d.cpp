@@ -76,7 +76,7 @@ void ColliderManager::CreateComponent(json& componentJson, Entity entity)
 		auto & body = m_BodyManager->GetComponentRef(entity);
 
 		p2ColliderDef fixtureDef;
-		fixtureDef.position = body.GetBody()->GetPosition(); // Passing body's position to collider's definition.
+		fixtureDef.body = body.GetBody(); // Passing body's position to collider's definition.
 
 		if (CheckJsonExists(componentJson, "sensor"))
 		{
@@ -94,7 +94,7 @@ void ColliderManager::CreateComponent(json& componentJson, Entity entity)
 				shape = std::make_unique<p2CircleShape>();
 				if (CheckJsonNumber(componentJson, "radius"))
 				{
-					//shape->m_radius = pixel2meter(static_cast<float>(componentJson["radius"]));
+					static_cast<p2CircleShape*>(shape.get())->SetRadius(componentJson["radius"]);
 				}
 				break;
 			case ColliderType::BOX:

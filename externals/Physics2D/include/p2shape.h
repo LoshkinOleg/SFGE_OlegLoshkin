@@ -55,9 +55,8 @@ class p2CircleShape : public p2Shape
 public:
 	p2CircleShape() : p2Shape(p2ShapeType::CIRCLE) {};
 	p2CircleShape(const float radius) : p2Shape(p2ShapeType::CIRCLE), m_Radius(radius) {};
-	/**
-	* \brief Setter for the radius
-	*/
+
+	float GetRadius() const;
 	void SetRadius(float radius);
 private:
 	float m_Radius = 0.0f;

@@ -24,8 +24,14 @@ SOFTWARE.
 
 #include <p2shape.h>
 
+float p2CircleShape::GetRadius() const
+{
+	return m_Radius;
+}
+
 void p2CircleShape::SetRadius(float radius)
 {
+	m_Radius = radius;
 }
 
 void p2RectShape::SetSize(p2Vec2 size)

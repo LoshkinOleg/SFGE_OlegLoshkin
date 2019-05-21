@@ -46,7 +46,7 @@ struct p2BodyDef
 	p2Vec2 position;
 	p2Vec2 linearVelocity;
 	float gravityScale;
-	
+	float mass;
 };
 
 const size_t MAX_COLLIDER_LEN = 8;
@@ -86,6 +86,7 @@ private:
 	p2Vec2 m_LinearVelocity;
 	float m_AngularVelocity;
 	float m_GravityScale;
+	float m_Mass = 1;
 	bool m_IsInit;
 	int m_ColliderIndex = 0;
 	std::vector<p2Collider> m_Colliders;

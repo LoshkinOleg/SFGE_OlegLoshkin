@@ -25,6 +25,7 @@ SOFTWARE.
 #include <p2contact.h>
 #include <p2quadtree.h>
 #include <p2body.h>
+#include <p2shape.h>
 #include <iostream>
 
 void p2ContactManager::SetContactListener(p2ContactListener* listener)
@@ -79,6 +80,26 @@ void p2ContactManager::SolveContacts(p2QuadTree* rootQuad)
 	}
 
 	// Narrow phase.
+
+	// Correct positions.
+	for (p2Contact& contact : m_CurrentContacts)
+	{
+		if (contact.ColliderA->GetShape()->GetType() == p2ShapeType::CIRCLE && contact.ColliderB->GetShape()->GetType() == p2ShapeType::CIRCLE) // Case circle vs circle.
+		{
+			p2Vec2 center_0 = contact.ColliderA->GetPosition();
+			p2Vec2 center_1 = contact.ColliderB->GetPosition();
+			p2Vec2 centerToCenter = center_1 - center_0;
+			float radius_0 = static_cast<p2CircleShape*>(contact.ColliderA->GetShape())->GetRadius();
+			float radius_1 = static_cast<p2CircleShape*>(contact.ColliderB->GetShape())->GetRadius();
+			
+			// Find intersections.
+			float known_0 = ((radius_0 * radius_0) - (center_0.x * center_0.x) - (center_0.y * center_0.y)) / 2.0f;
+			float known_1 = ((radius_1 * radius_1) - (center_1.x * center_1.x) - (center_1.y * center_1.y)) / 2.0f;
+
+		}
+	}
+
+	// Modify velocities.
 
 	// Send contact messages.
 	for (p2Contact& contact : m_CurrentContacts)

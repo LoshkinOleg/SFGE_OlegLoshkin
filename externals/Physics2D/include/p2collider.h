@@ -29,6 +29,7 @@ SOFTWARE.
 #include <p2vector.h>
 #include <p2aabb.h>
 class p2Shape;
+class p2Body;
 
 /**
 * \brief Struct defining a p2Collider when creating one
@@ -39,7 +40,7 @@ struct p2ColliderDef
 	p2Shape* shape;
 	float restitution;
 	bool isSensor;
-	p2Vec2 position;
+	p2Body* body;
 };
 
 /**
@@ -54,11 +55,14 @@ public:
 	p2Shape* GetShape()const;
 	bool IsSensor();
 	p2AABB GetAabb()const;
+	p2Vec2 GetPosition() const;
+	p2Body* GetBody() const;
 	void SetUserData(void* colliderData);
 	// Public methods.
 	void Init(const p2ColliderDef* def);
 	void UpdateAabb(const p2Vec2 center);
 private:
+	p2Body* m_Body;
 	void* m_UserData = nullptr;
 	p2Shape* m_Shape = nullptr;
 	float m_Restitution = 1;

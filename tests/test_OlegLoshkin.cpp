@@ -260,3 +260,128 @@ TEST(OlegLoshkin, BroadPhase)
 	sceneManager->LoadSceneFromJson(sceneJson);
 	engine.Start();
 }
+
+TEST(OlegLoshkin, SpheresPerpetualCollisions)
+{
+	sfge::Engine engine;
+	std::unique_ptr<sfge::Configuration> initConfig = std::make_unique<sfge::Configuration>();
+	initConfig->gravity = p2Vec2(0, 0);
+	initConfig->quadTreeBodiesPerQuad = 3;
+	auto screenSize = sf::Vector2i(1280, 720);
+	engine.Init(std::move(initConfig));
+
+	// Set up scene.
+	auto* sceneManager = engine.GetSceneManager();
+	json sceneJson = {
+			{ "name", "Spheres Perpetual Collisions" }
+	};
+
+	// Create entities.
+	json entities[2];
+	json circle;
+	json transform;
+	json shape;
+	json body;
+	json collider;
+
+	circle["name"] = "Circle_0";
+	transform["type"] = sfge::ComponentType::TRANSFORM2D;
+	transform["position"] = { screenSize.x / 3.0f, screenSize.y / 2.0f };
+	transform["scale"] = { 1.0,1.0 };
+	shape["type"] = sfge::ComponentType::SHAPE2D;
+	shape["shape_type"] = sfge::ShapeType::CIRCLE;
+	shape["radius"] = 50;
+	body["type"] = sfge::ComponentType::BODY2D;
+	body["body_type"] = p2BodyType::DYNAMIC;
+	body["velocity"] = { 20,0 };
+	collider["type"] = sfge::ComponentType::COLLIDER2D;
+	collider["collider_type"] = sfge::ColliderType::CIRCLE;
+	collider["radius"] = 50;
+	collider["sensor"] = false;
+	circle["components"] = { transform, shape, body, collider };
+	entities[0] = circle;
+
+	circle["name"] = "Circle_1";
+	transform["type"] = sfge::ComponentType::TRANSFORM2D;
+	transform["position"] = { 2.0f * screenSize.x / 3.0f, screenSize.y / 2.0f };
+	transform["scale"] = { 1.0,1.0 };
+	shape["type"] = sfge::ComponentType::SHAPE2D;
+	shape["shape_type"] = sfge::ShapeType::CIRCLE;
+	shape["radius"] = 50;
+	body["type"] = sfge::ComponentType::BODY2D;
+	body["body_type"] = p2BodyType::DYNAMIC;
+	body["velocity"] = {0,0};
+	collider["type"] = sfge::ComponentType::COLLIDER2D;
+	collider["collider_type"] = sfge::ColliderType::CIRCLE;
+	collider["radius"] = 50;
+	collider["sensor"] = false;
+	circle["components"] = { transform, shape, body, collider };
+	entities[1] = circle;
+
+	sceneJson["entities"] = entities;
+
+	// Set up systems.
+	json systemJson = {
+			{"systemClassName", "TestCollisionsSystem"}
+	};
+	sceneJson["systems"] = json::array({ systemJson });
+
+	// Start engine.
+	sceneManager->LoadSceneFromJson(sceneJson);
+	engine.Start();
+}
+
+TEST(OlegLoshkin, Collisions)
+{
+	sfge::Engine engine;
+	std::unique_ptr<sfge::Configuration> initConfig = std::make_unique<sfge::Configuration>();
+	initConfig->gravity = p2Vec2(0, 0);
+	initConfig->quadTreeBodiesPerQuad = 3;
+	auto screenSize = sf::Vector2i(1280, 720);
+	engine.Init(std::move(initConfig));
+
+	// Set up scene.
+	auto* sceneManager = engine.GetSceneManager();
+	json sceneJson = {
+			{ "name", "Collisions" }
+	};
+
+	// Create entities.
+	json entities[16];
+	for (int i = 0; i < 16; i++)
+	{
+		json rect;
+		rect["name"] = "Rect_" + std::to_string(i);
+		json transform;
+		transform["type"] = sfge::ComponentType::TRANSFORM2D;
+		transform["position"] = { rand() % screenSize.x, rand() % screenSize.y };
+		transform["scale"] = { 1.0,1.0 };
+		json shape;
+		shape["type"] = sfge::ComponentType::SHAPE2D;
+		shape["shape_type"] = sfge::ShapeType::RECTANGLE;
+		shape["size"] = { 100.0,100.0 };
+		json body;
+		body["type"] = sfge::ComponentType::BODY2D;
+		body["body_type"] = p2BodyType::DYNAMIC;
+		json collider;
+		collider["type"] = sfge::ComponentType::COLLIDER2D;
+		collider["collider_type"] = sfge::ColliderType::BOX;
+		collider["size"] = { 100.0,100.0 };
+		collider["sensor"] = false;
+
+		rect["components"] = { transform, shape, body, collider };
+		entities[i] = rect;
+	}
+
+	sceneJson["entities"] = entities;
+
+	// Set up systems.
+	json systemJson = {
+			{"systemClassName", "TestCollisionsSystem"}
+	};
+	sceneJson["systems"] = json::array({ systemJson });
+
+	// Start engine.
+	sceneManager->LoadSceneFromJson(sceneJson);
+	engine.Start();
+}

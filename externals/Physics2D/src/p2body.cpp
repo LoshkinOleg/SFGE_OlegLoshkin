@@ -26,10 +26,11 @@ SOFTWARE.
 void p2Body::Init(p2BodyDef* bodyDef)
 {
 	m_Colliders.resize(MAX_COLLIDER_LEN);
-	this->m_Type = bodyDef->type;
-	this->m_Position = bodyDef->position;
-	this->m_GravityScale = bodyDef->gravityScale;
-	this->m_LinearVelocity = bodyDef->linearVelocity;
+	m_Type = bodyDef->type;
+	m_Position = bodyDef->position;
+	m_GravityScale = bodyDef->gravityScale;
+	m_LinearVelocity = bodyDef->linearVelocity;
+	m_Mass = bodyDef->mass;
 	m_IsInit = true;
 }
 
@@ -73,7 +74,7 @@ p2Collider * p2Body::CreateCollider(p2ColliderDef * colliderDef)
 
 void p2Body::ApplyForceToCenter(const p2Vec2& force)
 {
-	m_LinearVelocity += force;
+	m_LinearVelocity += (force / m_Mass);
 }
 
 p2BodyType p2Body::GetType() const
@@ -83,7 +84,7 @@ p2BodyType p2Body::GetType() const
 
 float p2Body::GetMass() const
 {
-	return 0.0f;
+	return m_Mass;
 }
 
 p2AABB p2Body::GetAabb() const
