@@ -34,10 +34,11 @@ class p2QuadTree;
 */
 struct p2Contact
 {
-	p2Collider* GetColliderA() { return ColliderA; };
-	p2Collider* GetColliderB() { return ColliderB; };
+	p2Collider* GetColliderA();
+	p2Collider* GetColliderB();
 	p2Collider* ColliderA;
 	p2Collider* ColliderB;
+	void ToString() const;
 };
 
 /**

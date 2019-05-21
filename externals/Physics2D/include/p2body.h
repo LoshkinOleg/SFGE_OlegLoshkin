@@ -78,7 +78,7 @@ public:
 	void UpdatePosition();
 	void ApplyForceToCenter(const p2Vec2& force);
 	p2AABB GetAabb()const;
-	p2Collider GetCollider() const;
+	p2Collider* GetCollider();
 
 private:
 	p2BodyType m_Type;

@@ -139,7 +139,7 @@ void p2QuadTree::Insert(p2Body* obj)
 					{
 						if (m_Children[i]->m_Bounds.Overlaps(obj->GetAabb())) overlappingQuads.push_back(m_Children[i].get());
 					}
-					if (overlappingQuads.size() < 2)
+					if (overlappingQuads.size() < 2 && overlappingQuads.size() > 0)
 					{
 						overlappingQuads[0]->Insert(obj); // It doesn't, insert it there.
 					}

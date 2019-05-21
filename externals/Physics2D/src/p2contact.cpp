@@ -25,7 +25,6 @@ SOFTWARE.
 #include <p2contact.h>
 #include <p2quadtree.h>
 #include <p2body.h>
-// debugging
 #include <iostream>
 
 void p2ContactManager::SetContactListener(p2ContactListener* listener)
@@ -55,8 +54,8 @@ void p2ContactManager::SolveContacts(p2QuadTree* rootQuad)
 				if (leafBody->GetAabb().Overlaps(potentialCol.potentialCollideesAbove[i]->GetAabb()))
 				{
 					m_CurrentContacts.push_back(p2Contact());
-					m_CurrentContacts.back().ColliderA = &leafBody->GetCollider();
-					m_CurrentContacts.back().ColliderB = &potentialCol.potentialCollideesAbove[i]->GetCollider();
+					m_CurrentContacts.back().ColliderA = leafBody->GetCollider();
+					m_CurrentContacts.back().ColliderB = potentialCol.potentialCollideesAbove[i]->GetCollider();
 				}
 			}
 		}
@@ -70,8 +69,8 @@ void p2ContactManager::SolveContacts(p2QuadTree* rootQuad)
 				if (potentialCol.siblings[sibling]->GetAabb().Overlaps(potentialCol.siblings[otherSibling]->GetAabb()))
 				{
 					m_CurrentContacts.push_back(p2Contact());
-					m_CurrentContacts.back().ColliderA = &potentialCol.siblings[sibling]->GetCollider();
-					m_CurrentContacts.back().ColliderB = &potentialCol.siblings[otherSibling]->GetCollider();
+					m_CurrentContacts.back().ColliderA = potentialCol.siblings[sibling]->GetCollider();
+					m_CurrentContacts.back().ColliderB = potentialCol.siblings[otherSibling]->GetCollider();
 				}
 			}
 
@@ -86,4 +85,20 @@ void p2ContactManager::SolveContacts(p2QuadTree* rootQuad)
 	{
 		m_ContactListener->BeginContact(&contact);
 	}
+}
+
+p2Collider* p2Contact::GetColliderA()
+{
+	return ColliderA;
+}
+
+p2Collider* p2Contact::GetColliderB()
+{
+	return ColliderB;
+}
+
+void p2Contact::ToString() const
+{
+	std::cout << "--------------" << std::endl;
+	std::cout << "Contact between: " << ColliderA->GetAabb().ToString() << "and \n" << ColliderB->GetAabb().ToString() << std::endl;
 }

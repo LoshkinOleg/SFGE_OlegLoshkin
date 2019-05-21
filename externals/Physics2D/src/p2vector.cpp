@@ -25,7 +25,7 @@ SOFTWARE.
 #include <cmath>
 #include <p2vector.h>
 #include <p2matrix.h>
-#include <engine\globals.h>
+#include <engine/globals.h>
 
 p2Vec2::p2Vec2()
 {
@@ -130,6 +130,11 @@ std::string p2Vec2::ToString() const
 	returnValue.append(std::to_string(y));
 	returnValue.push_back(')');
 	return returnValue;
+}
+
+sfge::Vec2f p2Vec2::ToGraphicSpace() const
+{
+	return sfge::Vec2f(x * 100.0f,y * 100.0f);
 }
 
 p2Vec3::p2Vec3()

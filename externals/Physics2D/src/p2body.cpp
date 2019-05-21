@@ -91,9 +91,9 @@ p2AABB p2Body::GetAabb() const
 	return m_Colliders[(size_t)(m_ColliderIndex) - 1].GetAabb();
 }
 
-p2Collider p2Body::GetCollider() const
+p2Collider* p2Body::GetCollider()
 {
-	return m_Colliders[0]; // Only dealing with one collider for now.
+	return &m_Colliders[0]; // Only dealing with one collider for now.
 }
 
 bool p2Body::IsInit() const

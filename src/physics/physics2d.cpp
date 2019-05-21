@@ -134,6 +134,10 @@ void ContactListener::BeginContact(p2Contact* contact)
 	{
 		if(pySystems[i] != nullptr)
 		{
+			if (i == 400)
+			{
+				int j = 0;
+			}
 			pySystems[i]->OnContact(colliderA, colliderB, true);
 		}
 	}
@@ -155,7 +159,7 @@ void ContactListener::EndContact(p2Contact* contact)
 	auto& pySystems = pythonEngine->GetPySystemManager().GetPySystems();
 	for (size_t i = 0; i < pySystems.size(); i++)
 	{
-		if (i == 400)
+		if (i == 399)
 		{
 			int a = 0;
 		}

@@ -30,6 +30,7 @@ SOFTWARE.
 
 #include <extensions/python_extensions.h>
 #include <extensions/planet_system.h>
+#include <extensions/test_broad_phase_system.h>
 
 #include <tools/tools_pch.h>
 
@@ -43,8 +44,8 @@ void ExtendPython(py::module& m)
 	py::class_<PlanetSystem, System> planetSystem(m, "PlanetSystem");
 	planetSystem
 		.def(py::init<Engine&>());
-	py::class_<PlanetSystem, System> planetSystem(m, "TestBroadPhaseSystem");
-	planetSystem
+	py::class_<TestBroadPhaseSystem, System> testBroadPhaseSystem(m, "TestBroadPhaseSystem");
+	testBroadPhaseSystem
 		.def(py::init<Engine&>());
 	
 

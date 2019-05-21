@@ -26,6 +26,7 @@ SOFTWARE.
 #define SFGE_P2VECTOR_H
 
 #include <string>
+#include <engine/vector.h>
 struct p2Vec3;
 
 /**
@@ -74,6 +75,7 @@ struct p2Vec2
 	*/
 	p2Vec3 to3()const;
 	std::string ToString() const;
+	sfge::Vec2f ToGraphicSpace() const;
 
 	float x = 0.0f;
 	float y = 0.0f;
