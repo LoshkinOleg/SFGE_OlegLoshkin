@@ -41,7 +41,7 @@ namespace sfge::ext
 		}
 
 		// Give bodies initial velocity.
-		float initialForceMultiplier = 0.02f;
+		float initialForceMultiplier = 0.04f;
 		float randomX, randomY;
 		for (size_t i = 0; i < m_Bodies.size(); i++)
 		{
@@ -62,7 +62,7 @@ namespace sfge::ext
 			bodyBounds = m_Bodies[i]->GetAabb();
 			if (bodyPosition.x - bodyBounds.GetExtends().x	< 0) // Entering left screen edge.
 			{
-				m_Bodies[i]->SetPosition(p2Vec2(12.8f - 1, bodyPosition.y)); // Teleport body to right edge of screen.
+				m_Bodies[i]->SetPosition(p2Vec2(12.8f - 0.51f, bodyPosition.y)); // Teleport body to right edge of screen.
 			}
 			if (bodyPosition.x + bodyBounds.GetExtends().x	> 12.8f) // Entering right screen edge.
 			{
@@ -70,11 +70,11 @@ namespace sfge::ext
 			}
 			if (bodyPosition.y - bodyBounds.GetExtends().y	< 0) // Entering top screen edge.
 			{
-				m_Bodies[i]->SetPosition(p2Vec2(bodyPosition.x,	7.2f - 1)); // Teleport body to bottom edge of screen.
+				m_Bodies[i]->SetPosition(p2Vec2(bodyPosition.x,	7.2f - 0.51f)); // Teleport body to bottom edge of screen.
 			}
 			if (bodyPosition.y + bodyBounds.GetExtends().y	> 7.2f) // Entering bottom screen edge.
 			{
-				m_Bodies[i]->SetPosition(p2Vec2(bodyPosition.x, 1)); // Teleport body to bottom edge of screen.
+				m_Bodies[i]->SetPosition(p2Vec2(bodyPosition.x, 0.51f)); // Teleport body to bottom edge of screen.
 			}
 		}
 

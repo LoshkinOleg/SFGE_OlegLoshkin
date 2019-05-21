@@ -65,6 +65,7 @@ struct Configuration
 	int velocityIterations = 8;
 	int positionIterations = 2;
 	size_t currentEntitiesNmb = INIT_ENTITY_NMB;
+	int quadTreeBodiesPerQuad = 5;
 
 	std::string windowName = "SFGE 1.1";
 	std::string scriptsDirname = "scripts/";

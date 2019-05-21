@@ -2,6 +2,8 @@
 #include <p2quadtree.h>
 #include <p2body.h>
 
+int p2QuadTree::Max_Objects = 5;
+
 p2QuadTree::p2QuadTree()
 {
 	m_NodeLevel = -1;
@@ -12,6 +14,7 @@ p2QuadTree::p2QuadTree()
 	m_Children[3] = nullptr;
 	m_Bodies = std::vector<p2Body*>();
 	m_HasChildren = false;
+
 }
 
 p2QuadTree::p2QuadTree(int nodeLevel, p2AABB bounds)
@@ -102,7 +105,7 @@ void p2QuadTree::Insert(p2Body* obj)
 	{
 		if (!m_HasChildren) // If quad has no children.
 		{
-			if (m_Bodies.size() < MAX_OBJECTS) // If there's still room for insertion in this node.
+			if (m_Bodies.size() < Max_Objects) // If there's still room for insertion in this node.
 			{
 				m_Bodies.push_back(obj); // Add body to this node's bodies list.
 			}
@@ -176,8 +179,6 @@ void p2QuadTree::Insert(p2Body* obj)
 
 std::vector<PotentialCollision> p2QuadTree::Retrieve()
 {
-	// Problem: does not create potential collisions between non leaf and non leaf bodies, only between leaf-leaf and leaf-nonleaf
-
 	std::vector<PotentialCollision> listToFill = std::vector<PotentialCollision>();
 
 	// Create new potential collision instance if there needs be one.
@@ -188,17 +189,33 @@ std::vector<PotentialCollision> p2QuadTree::Retrieve()
 
 	if (m_HasChildren)
 	{
+
 		int iterator = 0;
 
-		// Add self to collidees above.
-		for each (p2Body* body in m_Bodies)
+		// Create new potential collision for this quad.
+		if (m_Bodies.size() > 0)
 		{
-			listToFill[0].potentialCollideesAbove.push_back(body);
+			listToFill[iterator].siblings = m_Bodies;
+			listToFill.push_back(PotentialCollision());
+			iterator++;
+		}
+		for each (p2Body * body in m_Bodies)
+		{
+			// And add self to collidees above for potential collisions of children.
+			listToFill[iterator].potentialCollideesAbove.push_back(body);
 		}
 		// Call children recursively.
 		for (int i = 0; i < CHILD_TREE_NMB; i++)
 		{
+			int initialIndex = iterator;
+			std::vector<p2Body*> potentialCollideesAbove_Copy = listToFill[iterator].potentialCollideesAbove;
+
 			m_Children[i]->RetrieveRecursively(listToFill, iterator);
+
+			if (iterator != initialIndex) // We've added a new potential collision in the meantime.
+			{
+				listToFill[iterator].potentialCollideesAbove = potentialCollideesAbove_Copy;
+			}
 		}
 
 		listToFill.pop_back(); // Remove last uninitialized potential collision.
@@ -215,8 +232,15 @@ void p2QuadTree::RetrieveRecursively(std::vector<PotentialCollision>& listToFill
 {
 	if (m_HasChildren)
 	{
+		// Create new potential collision for this quad.
+		if (m_Bodies.size() > 0)
+		{
+			listToFill[currentIndex].siblings = m_Bodies;
+			listToFill.push_back(PotentialCollision());
+			currentIndex++;
+		}
 
-		// Add self to collidees above.
+		// And add self to collidees above for potential collisions of children.
 		for each (p2Body* body in m_Bodies)
 		{
 			listToFill[currentIndex].potentialCollideesAbove.push_back(body);
@@ -233,14 +257,6 @@ void p2QuadTree::RetrieveRecursively(std::vector<PotentialCollision>& listToFill
 			{
 				listToFill[currentIndex].potentialCollideesAbove = potentialCollideesAbove_Copy;
 			}
-
-			/*if (i == CHILD_TREE_NMB - 1) // If this is the last child
-			{
-				for (int i = 0; i < m_Bodies.size(); i++)
-				{
-					listToFill[currentIndex].potentialCollideesAbove.pop_back();
-				}
-			}*/
 		}
 	}
 	else // This is a leaf.

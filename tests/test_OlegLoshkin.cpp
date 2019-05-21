@@ -138,7 +138,7 @@ TEST(OlegLoshkin, QuadTree)
 		json body;
 		body["type"] = sfge::ComponentType::BODY2D;
 		body["body_type"] = p2BodyType::DYNAMIC;
-		rect["components"] = { transform, shape, body };
+		// rect["components"] = { transform, shape, body };
 		json collider;
 		collider["type"] = sfge::ComponentType::COLLIDER2D;
 		collider["collider_type"] = sfge::ColliderType::BOX;
@@ -167,6 +167,7 @@ TEST(OlegLoshkin, BroadPhase)
 	sfge::Engine engine;
 	std::unique_ptr<sfge::Configuration> initConfig = std::make_unique<sfge::Configuration>();
 	initConfig->gravity = p2Vec2(0, 0);
+	initConfig->quadTreeBodiesPerQuad = 3;
 	auto screenSize = sf::Vector2i(1280, 720);
 	engine.Init(std::move(initConfig));
 
@@ -176,6 +177,50 @@ TEST(OlegLoshkin, BroadPhase)
 			{ "name", "BroadPhase" }
 	};
 
+	/*
+	// Create entities.
+	const int ROWS = 3;
+	const int COLUMNS = 5;
+	float spacingX = screenSize.x / (float)COLUMNS;
+	float spacingY = screenSize.y / (float)ROWS;
+
+	json entities[(ROWS * COLUMNS) + 1];
+	json rect;
+	json transform;
+	transform["type"] = sfge::ComponentType::TRANSFORM2D;
+	transform["scale"] = { 1.0,1.0 };
+	json shape;
+	shape["type"] = sfge::ComponentType::SHAPE2D;
+	shape["shape_type"] = sfge::ShapeType::RECTANGLE;
+	shape["size"] = { 100.0,100.0 };
+	json collider;
+	collider["type"] = sfge::ComponentType::COLLIDER2D;
+	collider["collider_type"] = sfge::ColliderType::BOX;
+	collider["size"] = { 100.0,100.0 };
+	collider["sensor"] = false;
+	json body;
+	body["type"] = sfge::ComponentType::BODY2D;
+	body["body_type"] = p2BodyType::DYNAMIC;
+
+	int entityCounter = 0;
+	for (size_t x = 1; x <= COLUMNS; x++)
+	{
+		for (size_t y = 1; y <= ROWS; y++)
+		{
+			rect["name"] = "Rect_" + std::to_string(COLUMNS) + ":" + std::to_string(ROWS);
+			transform["position"] = { spacingX * x - (spacingX / 2.0f), spacingY * y - (spacingY / 2.0f) };
+			rect["components"] = { transform, shape, body, collider };
+			entities[entityCounter++] = rect;
+		}
+	}
+
+	rect["name"] = "MovingRect";
+	transform["position"] = { 51.0,51.0 };
+	body["velocity"] = {1.0,5.0};
+	rect["components"] = { transform, shape, body, collider };
+	entities[entityCounter] = rect;
+	*/
+
 	// Create entities.
 	json entities[16];
 	for (int i = 0; i < 16; i++)
@@ -184,23 +229,22 @@ TEST(OlegLoshkin, BroadPhase)
 		rect["name"] = "Rect_" + std::to_string(i);
 		json transform;
 		transform["type"] = sfge::ComponentType::TRANSFORM2D;
-		transform["position"] = {rand() % screenSize.x, rand() % screenSize.y};
-		transform["scale"] = {1.0,1.0};
+		transform["position"] = { rand() % screenSize.x, rand() % screenSize.y };
+		transform["scale"] = { 1.0,1.0 };
 		json shape;
 		shape["type"] = sfge::ComponentType::SHAPE2D;
 		shape["shape_type"] = sfge::ShapeType::RECTANGLE;
-		shape["size"] = {100.0,100.0};
+		shape["size"] = { 100.0,100.0 };
 		json body;
 		body["type"] = sfge::ComponentType::BODY2D;
 		body["body_type"] = p2BodyType::DYNAMIC;
-		rect["components"] = {transform, shape, body};
 		json collider;
 		collider["type"] = sfge::ComponentType::COLLIDER2D;
 		collider["collider_type"] = sfge::ColliderType::BOX;
-		collider["size"] = {100.0,100.0};
+		collider["size"] = { 100.0,100.0 };
 		collider["sensor"] = false;
 
-		rect["components"] = {transform, shape, body, collider};
+		rect["components"] = { transform, shape, body, collider };
 		entities[i] = rect;
 	}
 

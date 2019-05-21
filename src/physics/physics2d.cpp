@@ -40,7 +40,7 @@ void Physics2dManager::OnEngineInit()
 	if(configPtr = m_Engine.GetConfig())
 		gravity = configPtr->gravity;
 	m_ContactListener = std::make_unique<ContactListener>(m_Engine);
-	m_World = std::make_shared<p2World>(gravity, pixel2meter(configPtr->screenResolution));
+	m_World = std::make_shared<p2World>(gravity, pixel2meter(configPtr->screenResolution), configPtr->quadTreeBodiesPerQuad);
 	m_World->SetContactListener(m_ContactListener.get());
 
 	m_BodyManager.OnEngineInit();
@@ -134,10 +134,6 @@ void ContactListener::BeginContact(p2Contact* contact)
 	{
 		if(pySystems[i] != nullptr)
 		{
-			if (i == 400)
-			{
-				int j = 0;
-			}
 			pySystems[i]->OnContact(colliderA, colliderB, true);
 		}
 	}
@@ -159,11 +155,6 @@ void ContactListener::EndContact(p2Contact* contact)
 	auto& pySystems = pythonEngine->GetPySystemManager().GetPySystems();
 	for (size_t i = 0; i < pySystems.size(); i++)
 	{
-		if (i == 399)
-		{
-			int a = 0;
-		}
-
 		if (pySystems[i] != nullptr)
 		{
 			pySystems[i]->OnContact(colliderA, colliderB, false);

@@ -47,6 +47,8 @@ public:
 	~p2QuadTree();
 	p2QuadTree& operator=(p2QuadTree& other);
 
+	static int Max_Objects;
+
 	/**
 	* Remove all objects leafs and quadtrees children
 	*/
@@ -80,7 +82,6 @@ private:
 	void RetrieveRecursively(std::vector<PotentialCollision>& listToFill, int& currentIndex);
 
 	// Attributes.
-	static const int MAX_OBJECTS = 5;
 	static const int MAX_LEVELS = 5;
 	static const int CHILD_TREE_NMB = 4;
 	int m_NodeLevel;
