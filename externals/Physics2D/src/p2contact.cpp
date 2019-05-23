@@ -80,26 +80,56 @@ void p2ContactManager::SolveContacts(p2QuadTree* rootQuad)
 	}
 
 	// Narrow phase.
-
-	// Correct positions.
+	std::vector<p2Contact> filteredContacts = std::vector<p2Contact>();
 	for (p2Contact& contact : m_CurrentContacts)
 	{
 		if (contact.ColliderA->GetShape()->GetType() == p2ShapeType::CIRCLE && contact.ColliderB->GetShape()->GetType() == p2ShapeType::CIRCLE) // Case circle vs circle.
-		{
-			p2Vec2 center_0 = contact.ColliderA->GetPosition();
-			p2Vec2 center_1 = contact.ColliderB->GetPosition();
-			p2Vec2 centerToCenter = center_1 - center_0;
-			float radius_0 = static_cast<p2CircleShape*>(contact.ColliderA->GetShape())->GetRadius();
-			float radius_1 = static_cast<p2CircleShape*>(contact.ColliderB->GetShape())->GetRadius();
-			
-			// Find intersections.
-			float known_0 = ((radius_0 * radius_0) - (center_0.x * center_0.x) - (center_0.y * center_0.y)) / 2.0f;
-			float known_1 = ((radius_1 * radius_1) - (center_1.x * center_1.x) - (center_1.y * center_1.y)) / 2.0f;
+		{	
+			p2Body* body_0 = contact.ColliderA->GetBody();
+			p2Body* body_1 = contact.ColliderB->GetBody();
+			p2CircleShape circle_0 = *static_cast<p2CircleShape*>(contact.ColliderA->GetShape());
+			p2CircleShape circle_1 = *static_cast<p2CircleShape*>(contact.ColliderB->GetShape());
+			p2Vec2 position_0 = contact.ColliderA->GetPosition();
+			p2Vec2 position_1 = contact.ColliderB->GetPosition();
 
+			Intersection intersect = circle_0.IntersectsSameType(circle_1, position_0, position_1);
+
+			if (intersect.anyContact) // 2 intersections.
+			{
+				filteredContacts.push_back(contact); // Keep contact.
+
+				if (intersect.i0 != intersect.i1) // There's two separate contacts.
+				{
+					// Correct positions.
+					float penetration_0 = circle_0.GetRadius() - (intersect.intersectionCenter - position_0).GetMagnitude();
+					float penetration_1 = circle_1.GetRadius() - (intersect.intersectionCenter - position_1).GetMagnitude();
+					p2Vec2 direction_0 = (position_1 - position_0).Normalized();
+					p2Vec2 direction_1 = (position_0 - position_1).Normalized();
+					body_0->SetPosition(position_0 - (direction_0 * penetration_0));
+					body_1->SetPosition(position_1 - (direction_1 * penetration_1));
+
+					// Modify velocities.
+					p2Vec2 velocity_0 = body_0->GetLinearVelocity();
+					p2Vec2 velocity_1 = body_1->GetLinearVelocity();
+					body_0->SetLinearVelocity(p2Vec2());
+					body_1->SetLinearVelocity(p2Vec2());
+					body_0->ApplyForceToCenter(velocity_1);
+					body_1->ApplyForceToCenter(velocity_0);
+				}
+				else // There's only one contact.
+				{
+					// Modify velocities.
+					p2Vec2 momentum_0 = body_0->GetLinearVelocity() * body_0->GetMass();
+					p2Vec2 momentum_1 = body_1->GetLinearVelocity() * body_1->GetMass();
+
+					body_0->SetLinearVelocity(p2Vec2());
+					body_1->SetLinearVelocity(p2Vec2());
+					body_0->ApplyForceToCenter(momentum_1);
+					body_1->ApplyForceToCenter(momentum_0);
+				}
+			}
 		}
 	}
-
-	// Modify velocities.
 
 	// Send contact messages.
 	for (p2Contact& contact : m_CurrentContacts)

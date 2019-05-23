@@ -1,6 +1,8 @@
 #include <extensions/test_collisions_system.h>
 #include <physics/physics2d.h>
+#include <graphics/graphics2d.h>
 #include <p2aabb.h>
+#include <p2shape.h>
 
 namespace sfge::ext
 {
@@ -11,11 +13,13 @@ namespace sfge::ext
 		// Get ptrs to entities.
 		auto entities_bodies = m_Engine.GetEntityManager()->GetEntitiesWithType(ComponentType::BODY2D);
 
-		// Store ptrs to bodies.
+		// Store ptrs to bodies and store circles radii.
 		Body2dManager* bodyManager = m_Engine.GetPhysicsManager()->GetBodyManager();
+		m_GraphicsManager = m_Engine.GetGraphics2dManager();
 		for (size_t i = 0; i < entities_bodies.size(); i++)
 		{
 			m_Bodies.push_back(bodyManager->GetComponentPtr(entities_bodies[i]));
+			m_Radii.push_back(static_cast<p2CircleShape*>(m_Bodies[i]->GetBody()->GetCollider()->GetShape())->GetRadius());
 		}
 
 		// Give bodies initial velocity.
@@ -54,6 +58,16 @@ namespace sfge::ext
 			{
 				m_Bodies[i]->SetPosition(p2Vec2(bodyPosition.x, 0.51f)); // Teleport body to bottom edge of screen.
 			}
+		}
+	}
+	void TestCollisionsSystem::OnDraw()
+	{
+		p2AABB currentAABB;
+		for (size_t i = 0; i < m_Bodies.size(); i++)
+		{
+			m_GraphicsManager->DrawCircle(m_Bodies[i]->GetPosition().ToGraphicSpace(), m_Radii[i]);
+			currentAABB = m_Bodies[i]->GetAabb();
+			m_GraphicsManager->DrawBox(m_Bodies[i]->GetPosition().ToGraphicSpace(), sfge::Vec2f(2 * currentAABB.GetExtends().x, 2 * currentAABB.GetExtends().y));
 		}
 	}
 }

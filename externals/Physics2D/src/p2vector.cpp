@@ -23,6 +23,7 @@ SOFTWARE.
 */
 
 #include <cmath>
+#include <array>
 #include <p2vector.h>
 #include <p2matrix.h>
 #include <engine/globals.h>
@@ -67,6 +68,16 @@ void p2Vec2::operator/=(const float f)
 	*this = (*this) / f;
 }
 
+bool p2Vec2::operator==(const p2Vec2 other) const
+{
+	return x == other.x && y == other.y;
+}
+
+bool p2Vec2::operator!=(const p2Vec2 other) const
+{
+	return !(*this == other);
+}
+
 p2Vec2 p2Vec2::operator/(const float f)const
 {
 	return p2Vec2(x/f, y/f);
@@ -92,12 +103,17 @@ float p2Vec2::GetMagnitude()const
 
 p2Vec2 p2Vec2::Normalized()const
 {
-	return p2Vec2(*this / GetMagnitude());
+	return p2Vec2(x,y) / GetMagnitude();
 }
 
 void p2Vec2::NormalizeSelf()
 {
 	*this = *this / GetMagnitude();
+}
+
+std::array<p2Vec2, 2> p2Vec2::GetNormals()
+{
+	return std::array<p2Vec2, 2>{ p2Vec2(-y,x), p2Vec2(y,-x) };
 }
 
 p2Vec2 p2Vec2::Rotate(const float angle) const

@@ -14,9 +14,12 @@ namespace sfge::ext
 
 		void OnEngineInit() override;
 		void OnFixedUpdate() override;
+		void OnDraw() override;
 
 	private:
 		std::vector<Body2d*> m_Bodies;
+		std::vector<float> m_Radii;
+		Graphics2dManager* m_GraphicsManager;
 	};
 }
 #endif

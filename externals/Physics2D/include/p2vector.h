@@ -45,6 +45,8 @@ struct p2Vec2
 	void operator-=(const p2Vec2 v);
 	void operator*=(const float f);
 	void operator/=(const float f);
+	bool operator==(const p2Vec2 other) const;
+	bool operator!=(const p2Vec2 other) const;
 	/**
 	* \brief Dot product of two vectors
 	*/
@@ -65,6 +67,7 @@ struct p2Vec2
 	* \brief Normalize the p2Vec2
 	*/
 	void NormalizeSelf();
+	std::array<p2Vec2, 2> GetNormals();
 
 	p2Vec2 Rotate(const float angle) const;
 	static p2Vec2 Lerp(const p2Vec2& v1, const p2Vec2& v2, const float t);

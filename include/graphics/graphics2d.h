@@ -65,6 +65,8 @@ public:
 
 	void DrawLine(Vec2f from, Vec2f to, sf::Color color=sf::Color::Red);
     void DrawVector(Vec2f drawingVector, Vec2f originPos, sf::Color color=sf::Color::Red);
+	void DrawCircle(const Vec2f position, const float radius);
+	void DrawBox(const Vec2f center, const Vec2f size);
 	/**
 	* \brief Getter of the window created in GraphicsManager
 	* \return The SFML window

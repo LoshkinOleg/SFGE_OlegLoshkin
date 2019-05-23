@@ -25,6 +25,7 @@ SOFTWARE.
 #ifndef SFGE_P2SHAPE_H
 #define SFGE_P2SHAPE_H
 
+// #include <vector>
 #include <p2vector.h>
 
 enum p2ShapeType
@@ -32,6 +33,12 @@ enum p2ShapeType
 	NONE,
 	RECTANGLE,
 	CIRCLE
+};
+
+struct Intersection
+{
+	p2Vec2 i0, i1, intersectionCenter;
+	bool anyContact;
 };
 
 /**
@@ -43,6 +50,8 @@ public:
 	p2Shape() : m_Type(p2ShapeType::NONE){};
 	p2Shape(p2ShapeType type) : m_Type(type) {};
 	p2ShapeType GetType()const;
+	virtual p2Vec2 GetSize() = 0;
+	virtual Intersection IntersectsSameType(p2Shape& other, p2Vec2 myPosition, p2Vec2 otherPosition) = 0;
 private:
 	p2ShapeType m_Type;
 };
@@ -58,6 +67,8 @@ public:
 
 	float GetRadius() const;
 	void SetRadius(float radius);
+	p2Vec2 GetSize() override;
+	Intersection IntersectsSameType(p2Shape& other, p2Vec2 myPosition, p2Vec2 otherPosition) override;
 private:
 	float m_Radius = 0.0f;
 };
@@ -71,8 +82,9 @@ public:
 	p2RectShape() : p2Shape(p2ShapeType::RECTANGLE) {};
 	p2RectShape(const p2Vec2 size) : p2Shape(p2ShapeType::RECTANGLE), m_Size(size) {};
 
-	p2Vec2 GetSize()const;
 	void SetSize(p2Vec2 size);
+	p2Vec2 GetSize() override;
+	Intersection IntersectsSameType(p2Shape& other, p2Vec2 myPosition, p2Vec2 otherPosition) override;
 private:
 	p2Vec2 m_Size;
 };

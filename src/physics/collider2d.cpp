@@ -32,33 +32,29 @@ namespace sfge
 {
 void editor::ColliderInfo::DrawOnInspector()
 {
-  ImGui::Separator();
-  ImGui::Text("Collider");
-  if(data != nullptr)
-  {
-    if(data->fixture != nullptr)
-    {
-		/*
-      switch (data->fixture->GetShape()->m_type)
-      {
-      	case b2Shape::e_circle:
-      		ImGui::LabelText("Shape", "Circle");
-      		break;
-        case b2Shape::e_polygon:
-        	ImGui::LabelText("Shape", "Polygon");
-        	break;
-      	case b2Shape::e_chain:
-      		ImGui::LabelText("Shape", "Chain");
-			break;
-		case b2Shape::e_edge:
-			ImGui::LabelText("Shape", "Edge");
-		  	break;
-		  default:
-		  	break;
-      }
-		*/
-    }
-  }
+	ImGui::Separator();
+	ImGui::Text("Collider");
+	if (data != nullptr)
+	{
+		if (data->fixture != nullptr)
+		{
+			switch (data->fixture->GetShape()->GetType())
+			{
+				case p2ShapeType::NONE:
+				ImGui::LabelText("Shape", "NONE");
+				break;
+				case p2ShapeType::CIRCLE:
+				ImGui::LabelText("Shape", "Circle");
+				break;
+				case p2ShapeType::RECTANGLE:
+				ImGui::LabelText("Shape", "Rectangle");
+				break;
+				default:
+				ImGui::LabelText("Shape", "Undefined");
+				break;
+			}
+		}
+	}
 }
 
 
@@ -91,12 +87,15 @@ void ColliderManager::CreateComponent(json& componentJson, Entity entity)
 			switch (colliderType)
 			{
 			case ColliderType::CIRCLE:
-				shape = std::make_unique<p2CircleShape>();
+			{
+				auto circleShape = std::make_unique<p2CircleShape>();
 				if (CheckJsonNumber(componentJson, "radius"))
 				{
-					static_cast<p2CircleShape*>(shape.get())->SetRadius(componentJson["radius"]);
+					circleShape->SetRadius(componentJson["radius"]);
 				}
-				break;
+				shape = std::move(circleShape);
+			}
+			break;
 			case ColliderType::BOX:
 			{
 				auto boxShape = std::make_unique<p2RectShape>();
