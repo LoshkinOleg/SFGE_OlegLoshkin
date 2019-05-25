@@ -61,13 +61,12 @@ Intersection p2CircleShape::IntersectsSameType(p2Shape& other, p2Vec2 myPosition
 		float deltaY = h * (P1.y - P0.y) / d;
 		float deltaX = h * (P1.x - P0.x) / d;
 
-		return Intersection{ p2Vec2(P2.x + deltaY, P2.y - deltaX), p2Vec2(P2.x - deltaY, P2.y + deltaX), P2, true };
+		return Intersection{ std::vector<p2Vec2>{p2Vec2(P2.x + deltaY, P2.y - deltaX), p2Vec2(P2.x - deltaY, P2.y + deltaX)}, true };
 	}
 	else if (distanceBetweenCenters == m_Radius + c.m_Radius ||
 			 distanceBetweenCenters == _CMATH_::abs(m_Radius - c.m_Radius)) // Case 1 intersection.
 	{
-		p2Vec2 contactPoint = p2Vec2(myPosition + (directionBetweenCenters).Normalized() * m_Radius);
-		return Intersection{ Intersection{ contactPoint, contactPoint, contactPoint, true } };
+		return Intersection{ Intersection{ std::vector<p2Vec2>{p2Vec2(myPosition + (directionBetweenCenters).Normalized() * m_Radius)}, true } };
 	}
 	else // Case no intersections.
 	{
@@ -91,9 +90,9 @@ Intersection p2RectShape::IntersectsSameType(p2Shape& other, p2Vec2 myPosition, 
 {
 	p2RectShape otherRectShape = *static_cast<p2RectShape*>(&other); // Cast other.
 	p2Vec2 collisionDirection = otherPosition - myPosition;
-	Intersection intersect{p2Vec2(), p2Vec2()};
-	MirrorableFlag xFlag{0};
-	MirrorableFlag yFlag{0};
+	Intersection intersect{std::vector<p2Vec2>(), false};
+	RectIntersectionFlag xFlag;
+	RectIntersectionFlag yFlag;
 
 	// "t" stands for "this" and "o" stands for "other". See technical documentation to understand what's going on.
 	float t_XMin = myPosition.x - (m_Size.x * 0.5f);
@@ -105,213 +104,9 @@ Intersection p2RectShape::IntersectsSameType(p2Shape& other, p2Vec2 myPosition, 
 	float o_YMin = otherPosition.y - (otherRectShape.m_Size.y * 0.5f);
 	float o_YMax = otherPosition.y + (otherRectShape.m_Size.y * 0.5f);
 
-	// Set up flags.
-	// X flag.
-	if (t_XMin <= o_XMin)
-	{
-		xFlag.flag |= 1 << 3;
-	}
-	if (t_XMin >= o_XMin)
-	{
-		xFlag.flag |= 1 << 2;
-	}
-	if (t_XMax <= o_XMax)
-	{
-		xFlag.flag |= 1 << 1;
-	}
-	if (t_XMax >= o_XMax)
-	{
-		xFlag.flag |= 1 << 0;
-	}
-	// Y flag.
-	if (t_YMin <= o_YMin)
-	{
-		yFlag.flag |= 1 << 3;
-	}
-	if (t_YMin >= o_YMin)
-	{
-		yFlag.flag |= 1 << 2;
-	}
-	if (t_YMax <= o_YMax)
-	{
-		yFlag.flag |= 1 << 1;
-	}
-	if (t_YMax >= o_YMax)
-	{
-		yFlag.flag |= 1 << 0;
-	}
 
-	// Case 0 (IOIO || OIOI):
-	if (xFlag.flag == MirrorableFlagEnum::IOIO)
-	{
-		if (t_XMax == o_XMin) // Case T and O barely touching at the left. They share a segment or side.
-		{
-			if (yFlag.flag == MirrorableFlagEnum::IOIO) // T is located at top left of O.
-			{
-				if (t_YMax == o_YMin)
-				{
-					// T barely touching O. One intersection.
-					intersect.i0.x = t_XMax;
-					intersect.i1.x = t_XMax;
-					intersect.i0.y = t_YMax;
-					intersect.i1.y = t_YMax;
-					intersect.intersectionCenter = intersect.i0;
-					intersect.anyContact = true;
-					return intersect;
-				}
-				else
-				{
-					// T shares a segment with O. T's avg y > O's avg y but T's yMax < O's yMax.
-					intersect.i0.x = t_XMax;
-					intersect.i1.x = t_XMax;
-					intersect.i0.y = t_YMin;
-					intersect.i1.y = t_YMax;
-					intersect.intersectionCenter = (intersect.i0 + intersect.i1) * 0.5f;
-					intersect.anyContact = true;
-					return intersect;
-				}
-			}
-			else if (yFlag.flag == !MirrorableFlagEnum::IOIO) // T is located at bottom left of O.
-			{
-				if (t_YMin == o_YMax)
-				{
-					// T barely touching O. One intersection.
-					intersect.i0.x = t_XMax;
-					intersect.i1.x = t_XMax;
-					intersect.i0.y = t_YMin;
-					intersect.i1.y = t_YMin;
-					intersect.intersectionCenter = intersect.i0;
-					intersect.anyContact = true;
-					return intersect;
-				}
-				else
-				{
-					// T shares a segment with O. T's avg y > O's avg y but T's yMin < O's yMin.
-					intersect.i0.x = t_XMax;
-					intersect.i1.x = t_XMax;
-					intersect.i0.y = t_YMin;
-					intersect.i1.y = t_YMax;
-					intersect.intersectionCenter = (intersect.i0 + intersect.i1) * 0.5f;
-					intersect.anyContact = true;
-					return intersect;
-				}
-			}
-			if (yFlag.flag == MirrorableFlagEnum::IOII || yFlag.flag == !MirrorableFlagEnum::IOII || yFlag.flag == MirrorableFlagEnum::IOOI)
-			{
-				// T barely touching O. T's height is greater than O's height. They share a segment.
-				intersect.i0.x = t_XMax;
-				intersect.i1.x = t_XMax;
-				intersect.i0.y = o_YMin;
-				intersect.i1.y = o_YMax;
-				intersect.intersectionCenter = (intersect.i0 + intersect.i1) * 0.5f;
-				intersect.anyContact = true;
-				return intersect;
-			}
-			if (yFlag.flag == MirrorableFlagEnum::IIIO || yFlag.flag == !MirrorableFlagEnum::IIIO || yFlag.flag == MirrorableFlagEnum::IIII)
-			{
-				// T barely touching O. T's height is smaller or equal to O's height. They share a segment or a whole side in case of equality.
-				intersect.i0.x = t_XMax;
-				intersect.i1.x = t_XMax;
-				intersect.i0.y = t_YMin;
-				intersect.i1.y = t_YMax;
-				intersect.intersectionCenter = (intersect.i0 + intersect.i1) * 0.5f;
-				intersect.anyContact = true;
-				return intersect;
-			}
-		}
-		else // T and O share an area.
-		{
-			if (yFlag.flag == MirrorableFlagEnum::IOIO) // T is located at top left of O.
-			{
-				if (t_YMax == o_YMin)
-				{
-					// NOTE TO SELF: see drawing.
-					intersect.i0.x = t_XMax;
-					intersect.i1.x = t_XMax;
-					intersect.i0.y = t_YMax;
-					intersect.i1.y = t_YMax;
-					intersect.intersectionCenter = (intersect.i0 + intersect.i1) * 0.5f;
-					intersect.anyContact = true;
-					return intersect;
-				}
-				else
-				{
-					intersect.i0.x = t_XMax;
-					intersect.i1.x = t_XMax;
-					intersect.i0.y = t_YMax;
-					intersect.i1.y = t_YMax;
-					intersect.intersectionCenter = (intersect.i0 + intersect.i1) * 0.5f;
-					intersect.anyContact = true;
-					return intersect;
-				}
-			}
-			else if (yFlag.flag == !MirrorableFlagEnum::IOIO) // T is located at bottom left of O.
-			{
-				// T barely touching O.
-				intersect.i0.x = t_XMax;
-				intersect.i1.x = t_XMax;
-				intersect.i0.y = t_YMin;
-				intersect.i1.y = t_YMin;
-				intersect.intersectionCenter = intersect.i0;
-				intersect.anyContact = true;
-				return intersect;
-			}
-			if (yFlag.flag == MirrorableFlagEnum::IOII || yFlag.flag == !MirrorableFlagEnum::IOII || yFlag.flag == MirrorableFlagEnum::IOOI)
-			{
-				// T barely touching O. T's height is greater than O's height. They share a segment.
-				intersect.i0.x = t_XMax;
-				intersect.i1.x = t_XMax;
-				intersect.i0.y = o_YMin;
-				intersect.i1.y = o_YMax;
-				intersect.intersectionCenter = (intersect.i0 + intersect.i1) * 0.5f;
-				intersect.anyContact = true;
-				return intersect;
-			}
-			if (yFlag.flag == MirrorableFlagEnum::IIIO || yFlag.flag == !MirrorableFlagEnum::IIIO || yFlag.flag == MirrorableFlagEnum::IIII)
-			{
-				// T barely touching O. T's height is smaller or equal to O's height. They share a segment or a whole side in case of equality.
-				intersect.i0.x = t_XMax;
-				intersect.i1.x = t_XMax;
-				intersect.i0.y = t_YMin;
-				intersect.i1.y = t_YMax;
-				intersect.intersectionCenter = (intersect.i0 + intersect.i1) * 0.5f;
-				intersect.anyContact = true;
-				return intersect;
-			}
-		}
-	}
-	else if(xFlag.flag == !MirrorableFlagEnum::IOIO)
-	{
 
-		if (t_XMin == o_XMax)
-		{
-
-		}
-		else
-		{
-
-		}
-	}
-	// Case 1 (IOII || IIOI):
-	if (xFlag.flag == MirrorableFlagEnum::IOII || xFlag.flag == !(MirrorableFlagEnum::IOII))
-	{
-
-	}
-	// Case 2 (IIIO || OIII):
-	if (xFlag.flag == MirrorableFlagEnum::IIIO || xFlag.flag == !(MirrorableFlagEnum::IIIO))
-	{
-
-	}
-	// Case 3 (IIII):
-	if (xFlag.flag == MirrorableFlagEnum::IIII)
-	{
-
-	}
-	// Case 4 (IOOI):
-	if (xFlag.flag == MirrorableFlagEnum::IOOI)
-	{
-
-	}
+	return intersect;
 }
 
 p2ShapeType p2Shape::GetType() const
@@ -319,11 +114,83 @@ p2ShapeType p2Shape::GetType() const
 	return m_Type;
 }
 
-__int8 MirrorableFlag::operator!() const
+p2Vec2 Intersection::AverageIntersection() const
 {
-	// Thanks to Jeremy Ruten from https://stackoverflow.com/questions/47981/how-do-you-set-clear-and-toggle-a-single-bit
-	return	((flag >> 3) & 1) << 0 |
-			((flag >> 2) & 1) << 1 |
-			((flag >> 1) & 1) << 2 |
-			((flag >> 0) & 1) << 3;
+	return p2Vec2();
 }
+
+#pragma region RectIntersectionFlag
+std::array<Duet, 4> RectIntersectionFlag::GetFlag() const
+{
+	return std::array<Duet, 4>{ GetMins(), GetMaxes(), GetMaxMins(), GetSymmetry() };
+}
+
+void RectIntersectionFlag::SetFlag(const std::array<Duet, 4> flag)
+{}
+
+Duet RectIntersectionFlag::GetMins() const
+{
+	return (Duet)(m_flag >> 6);
+}
+
+void RectIntersectionFlag::SetMins(const Duet mins)
+{
+	m_flag |= ((mins >> 1) & 1) << 7 | (mins & 1) << 6;
+}
+
+Duet RectIntersectionFlag::GetMaxes() const
+{
+	return (Duet)((m_flag >> 4) | (0 << 3) || (0 << 2));
+}
+
+void RectIntersectionFlag::SetMaxes(const Duet maxs)
+{
+	m_flag |= ((maxs >> 1) & 1) << 5 | (maxs & 1) << 4;
+}
+
+Duet RectIntersectionFlag::GetMaxMins() const
+{
+	return (Duet)((m_flag >> 2) | (0 << 5) | (0 << 4) | (0 << 3) | (0 << 2));
+}
+
+void RectIntersectionFlag::SetMaxMins(const Duet maxMins)
+{
+	m_flag |= ((maxMins >> 1) & 1) << 3 | (maxMins & 1) << 2;
+}
+
+Duet RectIntersectionFlag::GetSymmetry() const
+{
+	return (Duet)(m_flag | (0 << 7) | (0 << 6) | (0 << 5) | (0 << 4) | (0 << 3) | (0 << 2));
+}
+
+void RectIntersectionFlag::InitSymmetry(const RectIntersectionFlag otherDimensionFlag)
+{
+	// TODO: take into account symmetrical cases.
+
+	// Bases.
+	__int8 IOIO = 1 << 3 | 1 << 1;
+	__int8 IOII = 1 << 3 | 1 << 1 | 1;
+	__int8 IIIO = 1 << 3 | 1 << 2 | 1 << 1;
+	// Symmetries.
+	__int8 OIOI = 1 << 2 | 1;
+	__int8 IIOI = 1 << 3 | 1 << 2 | 1;
+	__int8 OIII = 1 << 2 | 1 << 1 | 1;
+	// Get flag components.
+	__int8 thisDimension_mins = (__int8)GetMins();
+	__int8 thisDimension_maxes = (__int8)GetMaxes();
+	__int8 otherDimension_mins = (__int8)otherDimensionFlag.GetMins();
+	__int8 otherDimension_maxes = (__int8)otherDimensionFlag.GetMaxes();
+	// Set up partial flag for analysis.
+	__int8 thisDimension_partialFlag = (thisDimension_mins >> 1) & 1 << 3 | (thisDimension_mins & 1) << 2 | (thisDimension_maxes >> 1) & 1 << 1 | (thisDimension_maxes & 1);
+	__int8 otherDimension_partialFlag = (otherDimension_mins >> 1) & 1 << 3 | (otherDimension_mins & 1) << 2 | (otherDimension_maxes >> 1) & 1 << 1 | (otherDimension_maxes & 1);
+	// Analyse flags.
+	if (thisDimension_partialFlag == OIOI || thisDimension_partialFlag == IIOI || thisDimension_partialFlag == OIII) // This intersection's D dimension's intersection case is a symmetry of a base case.
+	{
+		m_flag |= 1 << 7;
+	}
+	if (otherDimension_partialFlag == OIOI || otherDimension_partialFlag == IIOI || otherDimension_partialFlag == OIII) // This intersection's D + 1 dimension's intersection case is a symmetry of a base case.
+	{
+		m_flag |= 1 << 6;
+	}
+}
+#pragma endregion

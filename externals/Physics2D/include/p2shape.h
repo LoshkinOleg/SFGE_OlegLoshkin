@@ -25,22 +25,35 @@ SOFTWARE.
 #ifndef SFGE_P2SHAPE_H
 #define SFGE_P2SHAPE_H
 
-// #include <vector>
+#include <array>
+#include <vector>
 #include <p2vector.h>
+#include <string>
 
-enum MirrorableFlagEnum : __int8
+enum Duet: int
 {
-	// See technical documentation for meaning of these bitflags.
-	IOIO = 1 << 3 | 1 << 1,
-	IOII = 1 << 3 | 1 << 1 | 1 << 0,
-	IIIO = 1 << 3 | 1 << 2 | 1 << 1,
-	IIII = 1 << 3 | 1 << 2 | 1 << 1 | 1 << 0,
-	IOOI = 1 << 3 | 1 << 0,
+	OO = 0,
+	OI = 1,
+	IO = 2,
+	II = 3
 };
-struct MirrorableFlag
+
+class RectIntersectionFlag
 {
-	__int8 flag;
-	__int8 operator!() const; // Mirrors flag.
+public:
+	std::array<Duet,4> GetFlag() const;
+	void SetFlag(const std::array<Duet, 4> flag);
+	Duet GetMins() const;
+	void SetMins(const Duet mins);
+	Duet GetMaxes() const;
+	void SetMaxes(const Duet maxs);
+	Duet GetMaxMins() const;
+	void SetMaxMins(const Duet maxMins);
+	Duet GetSymmetry() const;
+	void InitSymmetry(const RectIntersectionFlag otherDimensionFlag);
+
+private:
+	__int8 m_flag;
 };
 
 enum p2ShapeType
@@ -52,8 +65,9 @@ enum p2ShapeType
 
 struct Intersection
 {
-	p2Vec2 i0, i1, intersectionCenter;
+	std::vector<p2Vec2> intersections;
 	bool anyContact;
+	p2Vec2 AverageIntersection() const;
 };
 
 /**
