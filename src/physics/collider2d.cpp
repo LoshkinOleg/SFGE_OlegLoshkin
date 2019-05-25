@@ -91,7 +91,7 @@ void ColliderManager::CreateComponent(json& componentJson, Entity entity)
 				auto circleShape = std::make_unique<p2CircleShape>();
 				if (CheckJsonNumber(componentJson, "radius"))
 				{
-					circleShape->SetRadius(componentJson["radius"]);
+					circleShape->SetRadius(pixel2meter((float)componentJson["radius"]));
 				}
 				shape = std::move(circleShape);
 			}

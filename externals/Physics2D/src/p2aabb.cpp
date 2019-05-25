@@ -73,29 +73,19 @@ std::array<p2Mat22, 4> p2AABB::Sides() const
 
 bool p2AABB::Overlaps(const p2AABB other) const
 {
-	p2Vec2 other_topBound =		other.GetCenter() - p2Vec2(0,						other.GetExtends().y);
-	p2Vec2 other_bottomBound =	other.GetCenter() + p2Vec2(0,						other.GetExtends().y);
-	p2Vec2 other_leftBound =	other.GetCenter() - p2Vec2(other.GetExtends().x,	0					);
-	p2Vec2 other_rightBound =	other.GetCenter() + p2Vec2(other.GetExtends().x,	0					);
-
-	if (XMin() == 6.4f && XMax() == 9.6f && YMin() == 3.6f)
-	{
-		int i = 0;
-	}
-
 	__int8 flag = 0;
 
-	// If other's top or bottom bounds are located between this aabb's bounds.
-	if (other_topBound.y	>= YMin() && other_topBound.y		<= YMax()  ||
-		other_bottomBound.y	>= YMin() && other_bottomBound.y	<= YMax()	)
+	float averageX = ((XMin() + XMax()) * 0.5f) + (((other.XMin() + other.XMax())  * 0.5f)) * 0.5f;
+	float averageY = ((YMin() + YMax()) * 0.5f) + (((other.YMin() + other.YMax()) * 0.5f)) * 0.5f;
+
+	if (averageX >= XMin() && averageX <= XMax()) // If average X pos is within bounds.
 	{
-		flag = 1 << 0; // Tag for vertical overlap.
+		flag |= 1 << 1; // We've got overlapping on X, set flag accordingly.
 	}
-	// If other's left or right bounds are located between this aabb's bounds.
-	if (other_leftBound.x	>= XMin() && other_leftBound.x	<= XMax()  ||
-		other_rightBound.x	>= XMin() && other_rightBound.x	<= XMax()	)
+
+	if (averageY >= YMin() && averageY <= YMax()) // If average X pos is within bounds.
 	{
-		flag = flag | 1 << 1; // Tag for horizontal overlap.
+		flag |= 1 << 0; // We've got overlapping on X, set flag accordingly.
 	}
 
 	return flag == (1 << 1 | 1 << 0); // Return true if there's both vertical and horizontal overlapping.

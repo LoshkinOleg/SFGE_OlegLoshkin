@@ -28,6 +28,21 @@ SOFTWARE.
 // #include <vector>
 #include <p2vector.h>
 
+enum MirrorableFlagEnum : __int8
+{
+	// See technical documentation for meaning of these bitflags.
+	IOIO = 1 << 3 | 1 << 1,
+	IOII = 1 << 3 | 1 << 1 | 1 << 0,
+	IIIO = 1 << 3 | 1 << 2 | 1 << 1,
+	IIII = 1 << 3 | 1 << 2 | 1 << 1 | 1 << 0,
+	IOOI = 1 << 3 | 1 << 0,
+};
+struct MirrorableFlag
+{
+	__int8 flag;
+	__int8 operator!() const; // Mirrors flag.
+};
+
 enum p2ShapeType
 {
 	NONE,

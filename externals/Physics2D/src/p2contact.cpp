@@ -109,25 +109,28 @@ void p2ContactManager::SolveContacts(p2QuadTree* rootQuad)
 					body_1->SetPosition(position_1 - (direction_1 * penetration_1));
 
 					// Modify velocities.
-					p2Vec2 velocity_0 = body_0->GetLinearVelocity();
-					p2Vec2 velocity_1 = body_1->GetLinearVelocity();
+					p2Vec2 momentum_0 = body_0->GetLinearVelocity() * body_0->GetMass();
+					p2Vec2 momentum_1 = body_1->GetLinearVelocity() * body_1->GetMass();
 					body_0->SetLinearVelocity(p2Vec2());
 					body_1->SetLinearVelocity(p2Vec2());
-					body_0->ApplyForceToCenter(velocity_1);
-					body_1->ApplyForceToCenter(velocity_0);
+					body_0->ApplyForceToCenter(momentum_1);
+					body_1->ApplyForceToCenter(momentum_0);
 				}
 				else // There's only one contact.
 				{
 					// Modify velocities.
 					p2Vec2 momentum_0 = body_0->GetLinearVelocity() * body_0->GetMass();
 					p2Vec2 momentum_1 = body_1->GetLinearVelocity() * body_1->GetMass();
-
 					body_0->SetLinearVelocity(p2Vec2());
 					body_1->SetLinearVelocity(p2Vec2());
 					body_0->ApplyForceToCenter(momentum_1);
 					body_1->ApplyForceToCenter(momentum_0);
 				}
 			}
+		}
+		if (contact.ColliderA->GetShape()->GetType() == p2ShapeType::RECTANGLE && contact.ColliderB->GetShape()->GetType() == p2ShapeType::RECTANGLE) // Case circle vs circle.
+		{
+			
 		}
 	}
 
