@@ -92,7 +92,7 @@ void p2ContactManager::SolveContacts(p2QuadTree* rootQuad)
 			p2Vec2 position_0 = contact.ColliderA->GetPosition();
 			p2Vec2 position_1 = contact.ColliderB->GetPosition();
 
-			Intersection intersect = circle_0.IntersectsSameType(circle_1, position_0, position_1);
+			Intersection intersect = circle_0.Intersects(circle_1, position_0, position_1);
 
 			if (intersect.anyContact) // 2 intersections.
 			{

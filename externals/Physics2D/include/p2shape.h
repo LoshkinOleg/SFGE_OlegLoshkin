@@ -30,31 +30,30 @@ SOFTWARE.
 #include <p2vector.h>
 #include <string>
 
-enum Duet: int
+// Intersection related.
+
+struct Intersection
 {
-	OO = 0,
-	OI = 1,
-	IO = 2,
-	II = 3
+	bool anyContact;
+};
+struct CircleIntersection : public Intersection
+{
+	// Constructors.
+	CircleIntersection(const bool anyContact, const std::vector<p2Vec2> intersections) : Intersection{anyContact}, intersections(intersections){};
+	// Public methods.
+	p2Vec2 AverageIntersection() const;
+	// Public attributes.
+	std::vector<p2Vec2> intersections;
+};
+struct SatIntersection : public Intersection
+{
+	// Constructors.
+	SatIntersection(const bool anyContact, const p2Vec2 mtv) : Intersection{ anyContact }, minimumTranslationVector(mtv){};
+	// Public attributes.
+	p2Vec2 minimumTranslationVector;
 };
 
-class RectIntersectionFlag
-{
-public:
-	std::array<Duet,4> GetFlag() const;
-	void SetFlag(const std::array<Duet, 4> flag);
-	Duet GetMins() const;
-	void SetMins(const Duet mins);
-	Duet GetMaxes() const;
-	void SetMaxes(const Duet maxs);
-	Duet GetMaxMins() const;
-	void SetMaxMins(const Duet maxMins);
-	Duet GetSymmetry() const;
-	void InitSymmetry(const RectIntersectionFlag otherDimensionFlag);
-
-private:
-	__int8 m_flag;
-};
+// Shape related.
 
 enum p2ShapeType
 {
@@ -63,57 +62,48 @@ enum p2ShapeType
 	CIRCLE
 };
 
-struct Intersection
-{
-	std::vector<p2Vec2> intersections;
-	bool anyContact;
-	p2Vec2 AverageIntersection() const;
-};
-
-/**
-* \brief Abstract representation of a shape
-*/
 class p2Shape
 {
 public:
+	// Constructors.
 	p2Shape() : m_Type(p2ShapeType::NONE){};
 	p2Shape(p2ShapeType type) : m_Type(type) {};
+	// Properties.
 	p2ShapeType GetType()const;
 	virtual p2Vec2 GetSize() = 0;
-	virtual Intersection IntersectsSameType(p2Shape& other, p2Vec2 myPosition, p2Vec2 otherPosition) = 0;
 private:
 	p2ShapeType m_Type;
 };
 
-/**
-* \brief Representation of a physics circle
-*/
 class p2CircleShape : public p2Shape
 {
 public:
+	// Constructors.
 	p2CircleShape() : p2Shape(p2ShapeType::CIRCLE) {};
 	p2CircleShape(const float radius) : p2Shape(p2ShapeType::CIRCLE), m_Radius(radius) {};
-
+	// Properties.
+	p2Vec2 GetSize() override;
 	float GetRadius() const;
 	void SetRadius(float radius);
-	p2Vec2 GetSize() override;
-	Intersection IntersectsSameType(p2Shape& other, p2Vec2 myPosition, p2Vec2 otherPosition) override;
+	// Public methods.
+	CircleIntersection FindIntersections(p2Shape& other, p2Vec2 myPosition, p2Vec2 otherPosition);
 private:
 	float m_Radius = 0.0f;
 };
 
-/** 
-* \brief Representation of a rectangle
-*/
 class p2RectShape : public p2Shape
 {
 public:
+	// Constructors.
 	p2RectShape() : p2Shape(p2ShapeType::RECTANGLE) {};
 	p2RectShape(const p2Vec2 size) : p2Shape(p2ShapeType::RECTANGLE), m_Size(size) {};
-
-	void SetSize(p2Vec2 size);
+	// Properties.
 	p2Vec2 GetSize() override;
-	Intersection IntersectsSameType(p2Shape& other, p2Vec2 myPosition, p2Vec2 otherPosition) override;
+	std::array<p2Mat22,4> GetSides() const;
+	void SetSize(p2Vec2 size);
+	// Public methods.
+	SatIntersection FindIntersections(p2Shape& other, p2Vec2 myPosition, p2Vec2 otherPosition);
+	float ProjectSelfOnto(p2Vec2 axis) const;
 private:
 	p2Vec2 m_Size;
 };
@@ -122,5 +112,4 @@ class p2PolygonShape : public p2Shape
 {
 	
 };
-
 #endif

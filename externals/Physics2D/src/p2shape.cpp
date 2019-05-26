@@ -25,24 +25,45 @@ SOFTWARE.
 #include <p2shape.h>
 #include <cmath>
 #include <p2aabb.h>
+#include <p2matrix.h>
 
-float p2CircleShape::GetRadius() const
+// Intersection.
+
+p2Vec2 CircleIntersection::AverageIntersection() const
 {
-	return m_Radius;
+	p2Vec2 returnValue;
+	for (size_t i = 0; i < intersections.size(); i++)
+	{
+		returnValue += intersections[i];
+	}
+	return returnValue / intersections.size();
 }
 
-void p2CircleShape::SetRadius(float radius)
+// Shape.
+
+p2ShapeType p2Shape::GetType() const
 {
-	m_Radius = radius;
+	return m_Type;
 }
+
+// Circle shape.
 
 p2Vec2 p2CircleShape::GetSize()
 {
 	return p2Vec2(m_Radius, m_Radius);
 }
-
-Intersection p2CircleShape::IntersectsSameType(p2Shape& other, p2Vec2 myPosition, p2Vec2 otherPosition)
+float p2CircleShape::GetRadius() const
 {
+	return m_Radius;
+}
+void p2CircleShape::SetRadius(float radius)
+{
+	m_Radius = radius;
+}
+CircleIntersection p2CircleShape::FindIntersections(p2Shape& other, p2Vec2 myPosition, p2Vec2 otherPosition)
+{
+	// TODO: actually understand what's going on...
+
 	p2CircleShape c = *static_cast<p2CircleShape*>(&other); // Cast other shape.
 	p2Vec2 directionBetweenCenters = otherPosition - myPosition;
 	float distanceBetweenCenters = directionBetweenCenters.GetMagnitude();
@@ -61,136 +82,74 @@ Intersection p2CircleShape::IntersectsSameType(p2Shape& other, p2Vec2 myPosition
 		float deltaY = h * (P1.y - P0.y) / d;
 		float deltaX = h * (P1.x - P0.x) / d;
 
-		return Intersection{ std::vector<p2Vec2>{p2Vec2(P2.x + deltaY, P2.y - deltaX), p2Vec2(P2.x - deltaY, P2.y + deltaX)}, true };
+		return CircleIntersection{true, std::vector<p2Vec2>{p2Vec2(P2.x + deltaY, P2.y - deltaX), p2Vec2(P2.x - deltaY, P2.y + deltaX)} };
 	}
 	else if (distanceBetweenCenters == m_Radius + c.m_Radius ||
 			 distanceBetweenCenters == _CMATH_::abs(m_Radius - c.m_Radius)) // Case 1 intersection.
 	{
-		return Intersection{ Intersection{ std::vector<p2Vec2>{p2Vec2(myPosition + (directionBetweenCenters).Normalized() * m_Radius)}, true } };
+		return CircleIntersection{true, std::vector<p2Vec2>{p2Vec2(myPosition + (directionBetweenCenters).Normalized() * m_Radius)} };
 	}
 	else // Case no intersections.
 	{
-		Intersection intersect;
-		intersect.anyContact = false;
-		return intersect;
+		return CircleIntersection{ false, std::vector<p2Vec2>() };
 	}
 }
 
-void p2RectShape::SetSize(p2Vec2 size)
-{
-	m_Size = size;
-}
+// Rect shape.
 
 p2Vec2 p2RectShape::GetSize()
 {
 	return m_Size;
 }
-
-Intersection p2RectShape::IntersectsSameType(p2Shape& other, p2Vec2 myPosition, p2Vec2 otherPosition)
+std::array<p2Mat22,4> p2RectShape::GetSides() const
 {
-	p2RectShape otherRectShape = *static_cast<p2RectShape*>(&other); // Cast other.
-	p2Vec2 collisionDirection = otherPosition - myPosition;
-	Intersection intersect{std::vector<p2Vec2>(), false};
-	RectIntersectionFlag xFlag;
-	RectIntersectionFlag yFlag;
-
-	// "t" stands for "this" and "o" stands for "other". See technical documentation to understand what's going on.
-	float t_XMin = myPosition.x - (m_Size.x * 0.5f);
-	float t_XMax = myPosition.x + (m_Size.x * 0.5f);
-	float t_YMin = myPosition.y - (m_Size.y * 0.5f);
-	float t_YMax = myPosition.y + (m_Size.y * 0.5f);
-	float o_XMin = otherPosition.x - (otherRectShape.m_Size.x * 0.5f);
-	float o_XMax = otherPosition.x + (otherRectShape.m_Size.x * 0.5f);
-	float o_YMin = otherPosition.y - (otherRectShape.m_Size.y * 0.5f);
-	float o_YMax = otherPosition.y + (otherRectShape.m_Size.y * 0.5f);
-
-
-
-	return intersect;
+	std::array<p2Mat22, 4> returnValue;
+	returnValue[0] = p2Mat22(p2Vec2(0,			0),			p2Vec2(m_Size.x,	0));		// Top.
+	returnValue[1] = p2Mat22(p2Vec2(m_Size.x,	0),			p2Vec2(m_Size.x,	m_Size.y));	// Right.
+	returnValue[2] = p2Mat22(p2Vec2(0,			m_Size.y),	p2Vec2(m_Size.x,	m_Size.y));	// Bottom.
+	returnValue[3] = p2Mat22(p2Vec2(0,			0),			p2Vec2(0,			m_Size.y));	// Left.
+	return returnValue;
 }
-
-p2ShapeType p2Shape::GetType() const
+void p2RectShape::SetSize(p2Vec2 size)
 {
-	return m_Type;
+	m_Size = size;
 }
-
-p2Vec2 Intersection::AverageIntersection() const
+SatIntersection p2RectShape::FindIntersections(p2Shape& other, p2Vec2 myPosition, p2Vec2 otherPosition)
 {
-	return p2Vec2();
-}
+	// Convert shape.
+	p2RectShape convertedOther = *static_cast<p2RectShape*>(&other);
 
-#pragma region RectIntersectionFlag
-std::array<Duet, 4> RectIntersectionFlag::GetFlag() const
-{
-	return std::array<Duet, 4>{ GetMins(), GetMaxes(), GetMaxMins(), GetSymmetry() };
-}
+	// Get axes. Note: for now only bother with rectangular shapes.
+	std::array<p2Mat22,4> sides = GetSides();
+	std::array<p2Vec2, 2> axes;
+	axes[0] = (sides[0].rows[1] - sides[0].rows[0]).GetNormals()[0].Normalized();
+	axes[1] = (sides[1].rows[1] - sides[1].rows[0]).GetNormals()[0].Normalized();
 
-void RectIntersectionFlag::SetFlag(const std::array<Duet, 4> flag)
-{}
-
-Duet RectIntersectionFlag::GetMins() const
-{
-	return (Duet)(m_flag >> 6);
-}
-
-void RectIntersectionFlag::SetMins(const Duet mins)
-{
-	m_flag |= ((mins >> 1) & 1) << 7 | (mins & 1) << 6;
-}
-
-Duet RectIntersectionFlag::GetMaxes() const
-{
-	return (Duet)((m_flag >> 4) | (0 << 3) || (0 << 2));
-}
-
-void RectIntersectionFlag::SetMaxes(const Duet maxs)
-{
-	m_flag |= ((maxs >> 1) & 1) << 5 | (maxs & 1) << 4;
-}
-
-Duet RectIntersectionFlag::GetMaxMins() const
-{
-	return (Duet)((m_flag >> 2) | (0 << 5) | (0 << 4) | (0 << 3) | (0 << 2));
-}
-
-void RectIntersectionFlag::SetMaxMins(const Duet maxMins)
-{
-	m_flag |= ((maxMins >> 1) & 1) << 3 | (maxMins & 1) << 2;
-}
-
-Duet RectIntersectionFlag::GetSymmetry() const
-{
-	return (Duet)(m_flag | (0 << 7) | (0 << 6) | (0 << 5) | (0 << 4) | (0 << 3) | (0 << 2));
-}
-
-void RectIntersectionFlag::InitSymmetry(const RectIntersectionFlag otherDimensionFlag)
-{
-	// TODO: take into account symmetrical cases.
-
-	// Bases.
-	__int8 IOIO = 1 << 3 | 1 << 1;
-	__int8 IOII = 1 << 3 | 1 << 1 | 1;
-	__int8 IIIO = 1 << 3 | 1 << 2 | 1 << 1;
-	// Symmetries.
-	__int8 OIOI = 1 << 2 | 1;
-	__int8 IIOI = 1 << 3 | 1 << 2 | 1;
-	__int8 OIII = 1 << 2 | 1 << 1 | 1;
-	// Get flag components.
-	__int8 thisDimension_mins = (__int8)GetMins();
-	__int8 thisDimension_maxes = (__int8)GetMaxes();
-	__int8 otherDimension_mins = (__int8)otherDimensionFlag.GetMins();
-	__int8 otherDimension_maxes = (__int8)otherDimensionFlag.GetMaxes();
-	// Set up partial flag for analysis.
-	__int8 thisDimension_partialFlag = (thisDimension_mins >> 1) & 1 << 3 | (thisDimension_mins & 1) << 2 | (thisDimension_maxes >> 1) & 1 << 1 | (thisDimension_maxes & 1);
-	__int8 otherDimension_partialFlag = (otherDimension_mins >> 1) & 1 << 3 | (otherDimension_mins & 1) << 2 | (otherDimension_maxes >> 1) & 1 << 1 | (otherDimension_maxes & 1);
-	// Analyse flags.
-	if (thisDimension_partialFlag == OIOI || thisDimension_partialFlag == IIOI || thisDimension_partialFlag == OIII) // This intersection's D dimension's intersection case is a symmetry of a base case.
+	p2Vec2 myTopLeft(myPosition - (m_Size / 2.0f));
+	p2Vec2 otherTopLeft(otherPosition - (convertedOther.m_Size / 2.0f));
+	for (size_t i = 0; i < axes.size(); i++)
 	{
-		m_flag |= 1 << 7;
+		// Find projections of both shapes.
+		/*p2Mat22 myProjection(	 myTopLeft,		p2Vec2(myTopLeft	+ (axes[i] * ProjectSelfOnto(axes[i]))));
+		p2Mat22 otherProjection( otherTopLeft,	p2Vec2(otherTopLeft + (axes[i] * convertedOther.ProjectSelfOnto(axes[i]))));*/
+		/*
+		float myProjection[2]{};
+
+		float deltaAvgPos = */
 	}
-	if (otherDimension_partialFlag == OIOI || otherDimension_partialFlag == IIOI || otherDimension_partialFlag == OIII) // This intersection's D + 1 dimension's intersection case is a symmetry of a base case.
-	{
-		m_flag |= 1 << 6;
-	}
+
 }
-#pragma endregion
+float p2RectShape::ProjectSelfOnto(p2Vec2 axis) const
+{
+	std::array<p2Mat22,4> sides = GetSides();
+
+	p2Vec2 vectorSides[2];
+	vectorSides[0] = sides[0].rows[1] - sides[0].rows[0];
+	vectorSides[1] = sides[1].rows[1] - sides[1].rows[0];
+
+	// Find widest vector that fits inside the rect (bottomLeft to topRight).
+	float magnitude = _CMATH_::abs(p2Vec2::Dot(vectorSides[0], axis)) + _CMATH_::abs(p2Vec2::Dot(vectorSides[1], axis));
+
+	return magnitude;
+
+}

@@ -1,3 +1,4 @@
 http://paulbourke.net/geometry/circlesphere/
 https://stackoverflow.com/questions/3349125/circle-circle-intersection-points
 https://stackoverflow.com/questions/1073336/circle-line-segment-collision-detection-algorithm
+http://www.dyn4j.org/2010/01/sat/#sat-inter
