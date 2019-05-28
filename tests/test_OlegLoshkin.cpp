@@ -18,13 +18,13 @@ TEST(OlegLoshkin, p2Vec2_Testing)
 	json sceneJson = {
 			{ "name", "p2Vec2 Testing" }
 	};
-
+	/*
 	// Set up systems.
 	json systemJson = {
 			{"script_path", "scripts/test_vectors_system.py"}
 	};
 	sceneJson["systems"] = json::array({systemJson});
-
+	*/
 	// Start engine.
 	sceneManager->LoadSceneFromJson(sceneJson);
 	engine.Start();
@@ -352,27 +352,27 @@ TEST(OlegLoshkin, Collisions)
 	json entities[16];
 	for (int i = 0; i < 16; i++)
 	{
-		json rect;
-		rect["name"] = "Rect_" + std::to_string(i);
+		json circle;
+		circle["name"] = "Circle_" + std::to_string(i);
 		json transform;
 		transform["type"] = sfge::ComponentType::TRANSFORM2D;
 		transform["position"] = { rand() % screenSize.x, rand() % screenSize.y };
 		transform["scale"] = { 1.0,1.0 };
 		json shape;
 		shape["type"] = sfge::ComponentType::SHAPE2D;
-		shape["shape_type"] = sfge::ShapeType::RECTANGLE;
-		shape["size"] = { 100.0,100.0 };
+		shape["shape_type"] = sfge::ShapeType::CIRCLE;
+		shape["size"] = 100;
 		json body;
 		body["type"] = sfge::ComponentType::BODY2D;
 		body["body_type"] = p2BodyType::DYNAMIC;
 		json collider;
 		collider["type"] = sfge::ComponentType::COLLIDER2D;
-		collider["collider_type"] = sfge::ColliderType::BOX;
-		collider["size"] = { 100.0,100.0 };
+		collider["collider_type"] = sfge::ColliderType::CIRCLE;
+		collider["size"] = 100;
 		collider["sensor"] = false;
 
-		rect["components"] = { transform, shape, body, collider };
-		entities[i] = rect;
+		circle["components"] = { transform, shape, body, collider };
+		entities[i] = circle;
 	}
 
 	sceneJson["entities"] = entities;

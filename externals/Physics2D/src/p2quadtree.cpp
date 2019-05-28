@@ -113,7 +113,7 @@ void p2QuadTree::Insert(p2Body* obj)
 			{
 				if (m_NodeLevel + 1 <= MAX_LEVELS) // If we still can split quads.
 				{
-					Split();
+					Split(); // TODO: handle case where quand cannot split anymore.
 
 					// Fill out children with bodies aleready contained within this node.
 					std::vector<p2Body*> bodiesRefCopy = m_Bodies; // Copy ptrs for analysis.
@@ -182,7 +182,7 @@ std::vector<PotentialCollision> p2QuadTree::Retrieve()
 	std::vector<PotentialCollision> listToFill = std::vector<PotentialCollision>();
 
 	// Create new potential collision instance if there needs be one.
-	if (m_Bodies.size() > 0 || m_HasChildren)
+	if (m_Bodies.size() > 1 || m_HasChildren)
 	{
 		listToFill.push_back(PotentialCollision());
 	}
@@ -193,7 +193,7 @@ std::vector<PotentialCollision> p2QuadTree::Retrieve()
 		int iterator = 0;
 
 		// Create new potential collision for this quad.
-		if (m_Bodies.size() > 0)
+		if (m_Bodies.size() > 1)
 		{
 			listToFill[iterator].siblings = m_Bodies;
 			listToFill.push_back(PotentialCollision());

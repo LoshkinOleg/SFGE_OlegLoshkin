@@ -29,6 +29,7 @@ SOFTWARE.
 #include <vector>
 #include <p2vector.h>
 #include <string>
+#include <p2matrix.h>
 
 // Intersection related.
 
@@ -48,6 +49,7 @@ struct CircleIntersection : public Intersection
 struct SatIntersection : public Intersection
 {
 	// Constructors.
+	SatIntersection() {};
 	SatIntersection(const bool anyContact, const p2Vec2 mtv) : Intersection{ anyContact }, minimumTranslationVector(mtv){};
 	// Public attributes.
 	p2Vec2 minimumTranslationVector;

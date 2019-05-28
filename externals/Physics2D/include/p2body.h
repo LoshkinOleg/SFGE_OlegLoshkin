@@ -64,6 +64,8 @@ public:
 	float GetAngularVelocity();
 	bool IsInit() const;
 	float GetMass() const;
+	p2AABB GetAabb()const;
+	p2Collider* GetCollider();
 	void SetPosition(const p2Vec2 position);
 	void SetLinearVelocity(p2Vec2 velocity);
 
@@ -77,8 +79,6 @@ public:
 	p2Collider* CreateCollider(p2ColliderDef* colliderDef);
 	void UpdatePosition();
 	void ApplyForceToCenter(const p2Vec2& force);
-	p2AABB GetAabb()const;
-	p2Collider* GetCollider();
 
 private:
 	p2BodyType m_Type;

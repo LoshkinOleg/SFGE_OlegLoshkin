@@ -27,6 +27,7 @@ SOFTWARE.
 #include <p2body.h>
 #include <p2shape.h>
 #include <iostream>
+#include <p2aabb.h>
 
 void p2ContactManager::SetContactListener(p2ContactListener* listener)
 {
@@ -92,17 +93,17 @@ void p2ContactManager::SolveContacts(p2QuadTree* rootQuad)
 			p2Vec2 position_0 = contact.ColliderA->GetPosition();
 			p2Vec2 position_1 = contact.ColliderB->GetPosition();
 
-			Intersection intersect = circle_0.Intersects(circle_1, position_0, position_1);
+			CircleIntersection intersect = circle_0.FindIntersections(circle_1, position_0, position_1);
 
 			if (intersect.anyContact) // 2 intersections.
 			{
 				filteredContacts.push_back(contact); // Keep contact.
 
-				if (intersect.i0 != intersect.i1) // There's two separate contacts.
+				if (intersect.intersections.size() > 1)
 				{
 					// Correct positions.
-					float penetration_0 = circle_0.GetRadius() - (intersect.intersectionCenter - position_0).GetMagnitude();
-					float penetration_1 = circle_1.GetRadius() - (intersect.intersectionCenter - position_1).GetMagnitude();
+					float penetration_0 = circle_0.GetRadius() - (intersect.AverageIntersection() - position_0).GetMagnitude();
+					float penetration_1 = circle_1.GetRadius() - (intersect.AverageIntersection() - position_1).GetMagnitude();
 					p2Vec2 direction_0 = (position_1 - position_0).Normalized();
 					p2Vec2 direction_1 = (position_0 - position_1).Normalized();
 					body_0->SetPosition(position_0 - (direction_0 * penetration_0));

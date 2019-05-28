@@ -21,8 +21,6 @@
 [Bb]uild/
 .idea/
 .vs/
-[Dd]ocumentation/
-[Dd]oc/
 
 # Executables
 *.exe

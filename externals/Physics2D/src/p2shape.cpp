@@ -25,7 +25,6 @@ SOFTWARE.
 #include <p2shape.h>
 #include <cmath>
 #include <p2aabb.h>
-#include <p2matrix.h>
 
 // Intersection.
 
@@ -137,7 +136,7 @@ SatIntersection p2RectShape::FindIntersections(p2Shape& other, p2Vec2 myPosition
 
 		float deltaAvgPos = */
 	}
-
+	return SatIntersection();
 }
 float p2RectShape::ProjectSelfOnto(p2Vec2 axis) const
 {

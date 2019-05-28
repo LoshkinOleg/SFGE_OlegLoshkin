@@ -30,7 +30,8 @@ namespace sfge::ext
 			// Bit of code taken from: https://stackoverflow.com/questions/686353/random-float-number-generation
 			randomX = -1.0f + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (1 + 1)));
 			randomY = -1.0f + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (1 + 1)));
-			// m_Bodies[i]->ApplyForce(p2Vec2(randomX, randomY) * initialForceMultiplier); // Apply random force with components varying between -1 and 1.
+			m_Bodies[i]->ApplyForce(p2Vec2(randomX, randomY) * initialForceMultiplier); // Apply random force with components varying between -1 and 1.
+			std::cout << "Applied force of " << p2Vec2(randomX, randomY).ToString() << std::endl;
 		}
 	}
 	void TestCollisionsSystem::OnFixedUpdate()
