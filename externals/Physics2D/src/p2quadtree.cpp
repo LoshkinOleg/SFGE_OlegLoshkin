@@ -222,7 +222,10 @@ std::vector<PotentialCollision> p2QuadTree::Retrieve()
 	}
 	else // This is a leaf.
 	{
-		listToFill[0].siblings = m_Bodies;
+		if (m_Bodies.size() > 0)
+		{
+			listToFill[0].siblings = m_Bodies;
+		}
 	}
 
 	return listToFill;

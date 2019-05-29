@@ -55,6 +55,7 @@ class MouseManager : public System
 public:
 	using System::System;
 	sf::Vector2i GetPosition() const;
+	bool AnyButtonDown() const;
 	sf::Vector2i GetLocalPosition(sf::Window& window) const;
 	float GetWheelDelta();
 };

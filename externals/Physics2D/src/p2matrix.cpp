@@ -74,6 +74,11 @@ float p2Mat22::GetDeterminant()
 	return 0.0f;
 }
 
+p2Mat22 p2Mat22::ProjectSelfOnto(const p2Vec2 axis) const
+{
+	return p2Mat22{ rows[0].ProjectSelfOnto(axis), rows[1].ProjectSelfOnto(axis) };
+}
+
 std::string p2Mat22::To_String()
 {
 	std::string str = rows[0].ToString();

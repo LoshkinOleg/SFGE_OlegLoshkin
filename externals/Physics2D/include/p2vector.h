@@ -28,6 +28,7 @@ SOFTWARE.
 #include <string>
 #include <engine/vector.h>
 struct p2Vec3;
+struct p2Mat22;
 
 /**
 * \brief Vector class
@@ -70,6 +71,7 @@ struct p2Vec2
 	std::array<p2Vec2, 2> GetNormals();
 
 	p2Vec2 Rotate(const float angle) const;
+	p2Vec2 ProjectSelfOnto(const p2Vec2 axis) const;
 	static p2Vec2 Lerp(const p2Vec2& v1, const p2Vec2& v2, const float t);
 	static float AngleBetween(const p2Vec2& v1, const p2Vec2& v2);
 

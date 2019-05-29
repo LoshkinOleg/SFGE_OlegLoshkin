@@ -122,6 +122,12 @@ p2Vec2 p2Vec2::Rotate(const float angle) const
 					p2Vec2(_CMATH_::sin(angle*(PI / 180.0f)), _CMATH_::cos(angle*(PI / 180.0f))))		* (*this);
 }
 
+p2Vec2 p2Vec2::ProjectSelfOnto(const p2Vec2 axis) const
+{
+	float theta = (AngleBetween(p2Vec2{ 1,0 }, *this) - AngleBetween(p2Vec2{1,0}, axis)) * PI / 180.0f;
+	return axis.Normalized() * _CMATH_::cos(theta) * GetMagnitude();
+}
+
 p2Vec2 p2Vec2::Lerp(const p2Vec2& v1, const p2Vec2& v2, const float t)
 {
 	return p2Vec2( v2 * (1 - t) + v1 * t );
@@ -150,7 +156,7 @@ std::string p2Vec2::ToString() const
 
 sfge::Vec2f p2Vec2::ToGraphicSpace() const
 {
-	return sfge::Vec2f(x * 100.0f,y * 100.0f);
+	return sfge::Vec2f(x * 100, y * 100);
 }
 
 p2Vec3::p2Vec3()

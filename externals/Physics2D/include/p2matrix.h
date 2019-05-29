@@ -43,6 +43,7 @@ struct p2Mat22
 	*/
 	p2Mat22 Invert();
 	float GetDeterminant();
+	p2Mat22 ProjectSelfOnto(const p2Vec2 axis) const;
 	std::string To_String();
 
 	p2Vec2 rows[2] = {};

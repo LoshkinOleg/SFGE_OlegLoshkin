@@ -30,8 +30,12 @@ SOFTWARE.
 
 #include <extensions/python_extensions.h>
 #include <extensions/planet_system.h>
-#include <extensions/test_broad_phase_system.h>
-#include <extensions/test_collisions_system.h>
+
+// Oleg Loshkin's systems.
+#include <extensions/test_01_system.h>
+#include <extensions/test_02_system.h>
+#include <extensions/test_03_system.h>
+#include <extensions/test_04_system.h>
 
 #include <tools/tools_pch.h>
 
@@ -45,11 +49,17 @@ void ExtendPython(py::module& m)
 	py::class_<PlanetSystem, System> planetSystem(m, "PlanetSystem");
 	planetSystem
 		.def(py::init<Engine&>());
-	py::class_<TestBroadPhaseSystem, System> testBroadPhaseSystem(m, "TestBroadPhaseSystem");
-	testBroadPhaseSystem
+	py::class_<Test_01_System, System> test_01_system(m, "Test_01_System");
+	test_01_system
 		.def(py::init<Engine&>());
-	py::class_<TestCollisionsSystem, System> testCollisionsSystem(m, "TestCollisionsSystem");
-	testCollisionsSystem
+	py::class_<Test_02_System, System> test_02_system(m, "Test_02_System");
+	test_02_system
+		.def(py::init<Engine&>());
+	py::class_<Test_03_System, System> test_03_system(m, "Test_03_System");
+	test_03_system
+		.def(py::init<Engine&>());
+	py::class_<Test_04_System, System> test_04_system(m, "Test_04_System");
+	test_04_system
 		.def(py::init<Engine&>());
 	
 	tools::ExtendPythonTools(m);

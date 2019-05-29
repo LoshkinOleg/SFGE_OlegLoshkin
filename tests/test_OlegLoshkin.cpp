@@ -7,6 +7,82 @@
 #include <graphics\shape2d.h>
 #include <physics\collider2d.h>
 
+TEST(OlegLoshkin, test_01)
+{
+	sfge::Engine engine;
+	std::unique_ptr<sfge::Configuration> initConfig = std::make_unique<sfge::Configuration>();
+	engine.Init(std::move(initConfig));
+	auto* sceneManager = engine.GetSceneManager();
+
+	json sceneJson = {
+			{ "name", "Vector Addition" }
+	};
+
+	json systemJson = {
+			{"systemClassName", "Test_01_System"}
+	};
+	sceneJson["systems"] = json::array({ systemJson });
+	sceneManager->LoadSceneFromJson(sceneJson);
+	engine.Start();
+}
+
+TEST(OlegLoshkin, test_02)
+{
+	sfge::Engine engine;
+	std::unique_ptr<sfge::Configuration> initConfig = std::make_unique<sfge::Configuration>();
+	engine.Init(std::move(initConfig));
+	auto* sceneManager = engine.GetSceneManager();
+
+	json sceneJson = {
+			{ "name", "Vector Multiplication" }
+	};
+
+	json systemJson = {
+			{"systemClassName", "Test_02_System"}
+	};
+	sceneJson["systems"] = json::array({ systemJson });
+	sceneManager->LoadSceneFromJson(sceneJson);
+	engine.Start();
+}
+
+TEST(OlegLoshkin, test_03)
+{
+	sfge::Engine engine;
+	std::unique_ptr<sfge::Configuration> initConfig = std::make_unique<sfge::Configuration>();
+	engine.Init(std::move(initConfig));
+	auto* sceneManager = engine.GetSceneManager();
+
+	json sceneJson = {
+			{ "name", "Vector Projection" }
+	};
+
+	json systemJson = {
+			{"systemClassName", "Test_03_System"}
+	};
+	sceneJson["systems"] = json::array({ systemJson });
+	sceneManager->LoadSceneFromJson(sceneJson);
+	engine.Start();
+}
+
+TEST(OlegLoshkin, test_04)
+{
+	sfge::Engine engine;
+	std::unique_ptr<sfge::Configuration> initConfig = std::make_unique<sfge::Configuration>();
+	engine.Init(std::move(initConfig));
+	auto* sceneManager = engine.GetSceneManager();
+
+	json sceneJson = {
+			{ "name", "Lerping" }
+	};
+
+	json systemJson = {
+			{"systemClassName", "Test_04_System"}
+	};
+	sceneJson["systems"] = json::array({ systemJson });
+	sceneManager->LoadSceneFromJson(sceneJson);
+	engine.Start();
+}
+
 TEST(OlegLoshkin, p2Vec2_Testing)
 {
 	sfge::Engine engine;

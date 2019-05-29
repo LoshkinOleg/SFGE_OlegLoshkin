@@ -112,4 +112,8 @@ sf::Vector2i MouseManager::GetPosition() const
 	auto* windowPtr = m_Engine.GetGraphics2dManager()->GetWindow();
 	return sf::Mouse::getPosition(*windowPtr);
 }
+bool MouseManager::AnyButtonDown() const
+{
+	return sf::Mouse::isButtonPressed(sf::Mouse::Button::Left) || sf::Mouse::isButtonPressed(sf::Mouse::Button::Right);
+}
 }
