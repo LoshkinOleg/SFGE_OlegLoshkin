@@ -36,6 +36,7 @@ SOFTWARE.
 #include <extensions/test_02_system.h>
 #include <extensions/test_03_system.h>
 #include <extensions/test_04_system.h>
+#include <extensions/test_05_system.h>
 
 #include <tools/tools_pch.h>
 

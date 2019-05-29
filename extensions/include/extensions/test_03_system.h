@@ -13,8 +13,8 @@ namespace sfge::ext
 		Test_03_System(Engine& engine);
 
 		void OnEngineInit() override;
-		// void OnUpdate(float dt) override;
-		void OnFixedUpdate() override;
+		void OnUpdate(float dt) override;
+		// void OnFixedUpdate() override;
 		void OnDraw() override;
 		// void OnEditorDraw() override;
 		// void Destroy() override;

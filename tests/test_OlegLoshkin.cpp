@@ -83,25 +83,70 @@ TEST(OlegLoshkin, test_04)
 	engine.Start();
 }
 
-TEST(OlegLoshkin, p2Vec2_Testing)
+TEST(OlegLoshkin, test_05)
 {
 	sfge::Engine engine;
 	std::unique_ptr<sfge::Configuration> initConfig = std::make_unique<sfge::Configuration>();
+	auto screenSize = initConfig->screenResolution;
 	engine.Init(std::move(initConfig));
-
-	// Set up scene.
 	auto* sceneManager = engine.GetSceneManager();
+
 	json sceneJson = {
-			{ "name", "p2Vec2 Testing" }
+			{ "name", "Bodies and Forces" }
 	};
-	/*
-	// Set up systems.
+
+	// Set up Entitites.
+	json dynamic;
+	dynamic["name"] = "Dynamic";
+	json dynamic_transform;
+	dynamic_transform["type"] = sfge::ComponentType::TRANSFORM2D;
+	dynamic_transform["position"] = { screenSize.x / 3 , screenSize.y / 3 };
+	dynamic_transform["scale"] = { 1.0,1.0 };
+	json dynamic_shape;
+	dynamic_shape["type"] = sfge::ComponentType::SHAPE2D;
+	dynamic_shape["shape_type"] = sfge::ShapeType::CIRCLE;
+	dynamic_shape["size"] = 100;
+	json dynamic_body;
+	dynamic_body["type"] = sfge::ComponentType::BODY2D;
+	dynamic_body["body_type"] = p2BodyType::DYNAMIC;
+	dynamic["components"] = { dynamic_transform, dynamic_shape, dynamic_body };
+
+	json kinematic;
+	kinematic["name"] = "Kinematic";
+	json kinematic_transform;
+	kinematic_transform["type"] = sfge::ComponentType::TRANSFORM2D;
+	kinematic_transform["position"] = { 2 * screenSize.x / 3 , screenSize.y / 3 };
+	kinematic_transform["scale"] = { 1.0,1.0 };
+	json kinematic_shape;
+	kinematic_shape["type"] = sfge::ComponentType::SHAPE2D;
+	kinematic_shape["shape_type"] = sfge::ShapeType::CIRCLE;
+	kinematic_shape["size"] = 100;
+	json kinematic_body;
+	kinematic_body["type"] = sfge::ComponentType::BODY2D;
+	kinematic_body["body_type"] = p2BodyType::KINEMATIC;
+	kinematic["components"] = { kinematic_transform, kinematic_shape, kinematic_body };
+
+	json stat;
+	stat["name"] = "Kinematic";
+	json stat_transform;
+	stat_transform["type"] = sfge::ComponentType::TRANSFORM2D;
+	stat_transform["position"] = { screenSize.x / 2 , 2 * screenSize.y / 3 };
+	stat_transform["scale"] = { 1.0,1.0 };
+	json stat_shape;
+	stat_shape["type"] = sfge::ComponentType::SHAPE2D;
+	stat_shape["shape_type"] = sfge::ShapeType::CIRCLE;
+	stat_shape["size"] = 100;
+	json stat_body;
+	stat_body["type"] = sfge::ComponentType::BODY2D;
+	stat_body["body_type"] = p2BodyType::STATIC;
+	stat["components"] = { stat_transform, stat_shape, stat_body };
+
+	sceneJson["entities"] = { dynamic, kinematic, stat };
+
 	json systemJson = {
-			{"script_path", "scripts/test_vectors_system.py"}
+			{"systemClassName", "Test_05_System"}
 	};
-	sceneJson["systems"] = json::array({systemJson});
-	*/
-	// Start engine.
+	sceneJson["systems"] = json::array({ systemJson });
 	sceneManager->LoadSceneFromJson(sceneJson);
 	engine.Start();
 }

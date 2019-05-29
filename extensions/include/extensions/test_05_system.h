@@ -3,6 +3,7 @@
 
 #include <engine/system.h>
 #include <engine/engine.h>
+#include <p2body.h>
 
 namespace sfge::ext
 {
@@ -12,17 +13,18 @@ namespace sfge::ext
 		Test_05_System(Engine& engine);
 
 		void OnEngineInit() override;
-		void OnUpdate(float dt) override;
+		// void OnUpdate(float dt) override;
 		void OnFixedUpdate() override;
 		void OnDraw() override;
-		void OnEditorDraw() override;
-		void Destroy() override;
-		void OnBeforeSceneLoad() override;
-		void OnAfterSceneLoad() override;
-		void OnContact(ColliderData* c1, ColliderData* c2, bool enter) override;
+		// void OnEditorDraw() override;
+		// void Destroy() override;
+		// void OnBeforeSceneLoad() override;
+		// void OnAfterSceneLoad() override;
+		// void OnContact(ColliderData* c1, ColliderData* c2, bool enter) override;
 
 	private:
-
+		Body2dManager* bodyManager;
+		p2Body* dynamic, kinematic, stat;
 	};
 }
 

@@ -18,7 +18,7 @@ void sfge::ext::Test_03_System::OnEngineInit()
 	screenCenter = p2Vec2(screenSize.x * 0.01f, screenSize.y * 0.01f) * 0.5f;
 }
 
-void sfge::ext::Test_03_System::OnFixedUpdate()
+void sfge::ext::Test_03_System::OnUpdate(float dt)
 {
 	if (inputManager->GetKeyboardManager().IsKeyHeld(sf::Keyboard::Key::Right))
 	{
