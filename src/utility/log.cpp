@@ -34,6 +34,16 @@ void Log::Msg(const std::string & text)
 
 }
 
+void Log::Msg(const p2Vec2& vector)
+{
+	std::cout << vector.ToString() << std::endl;
+}
+
+void Log::Msg(const float& number)
+{
+	std::cout << number << std::endl;
+}
+
 void Log::Error(const std::string & text)
 {
 	std::cerr << text << "\n"<<std::flush;

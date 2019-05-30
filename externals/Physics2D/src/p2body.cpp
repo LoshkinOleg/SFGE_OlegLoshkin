@@ -22,6 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 #include <p2body.h>
+#include <iostream>
 
 void p2Body::Init(p2BodyDef* bodyDef)
 {
@@ -60,8 +61,8 @@ p2Vec2 p2Body::GetPosition()
 
 void p2Body::UpdatePosition()
 {
-	m_Position += m_LinearVelocity;
-	m_Colliders[0].UpdateAabb(m_Position);
+	m_Position += m_LinearVelocity * 0.02f;
+	m_Colliders[0].UpdateAabb(m_Position * 0.02f);
 }
 
 p2Collider * p2Body::CreateCollider(p2ColliderDef * colliderDef)

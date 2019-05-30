@@ -27,6 +27,7 @@
 
 #include <iostream>
 #include <string>
+#include <p2vector.h>
 
 #include <utility/singleton.h>
 
@@ -43,6 +44,8 @@ public:
 	* \param msgText The message to be written in cout
 	*/
 	void Msg(const std::string& msgText);
+	void Msg(const p2Vec2& vector);
+	void Msg(const float& number);
 	/**
 	* \brief takes the reference to a string and output it to cerr
 	* \param errorText The message to be written in cerr

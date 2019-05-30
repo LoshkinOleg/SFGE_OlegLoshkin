@@ -88,6 +88,7 @@ TEST(OlegLoshkin, test_05)
 	sfge::Engine engine;
 	std::unique_ptr<sfge::Configuration> initConfig = std::make_unique<sfge::Configuration>();
 	auto screenSize = initConfig->screenResolution;
+	initConfig->gravity = p2Vec2(0, 5);
 	engine.Init(std::move(initConfig));
 	auto* sceneManager = engine.GetSceneManager();
 
@@ -100,7 +101,7 @@ TEST(OlegLoshkin, test_05)
 	dynamic["name"] = "Dynamic";
 	json dynamic_transform;
 	dynamic_transform["type"] = sfge::ComponentType::TRANSFORM2D;
-	dynamic_transform["position"] = { screenSize.x / 3 , screenSize.y / 3 };
+	dynamic_transform["position"] = { screenSize.x / 4.0f , screenSize.y * 2.0f / 3.0f };
 	dynamic_transform["scale"] = { 1.0,1.0 };
 	json dynamic_shape;
 	dynamic_shape["type"] = sfge::ComponentType::SHAPE2D;
@@ -109,13 +110,14 @@ TEST(OlegLoshkin, test_05)
 	json dynamic_body;
 	dynamic_body["type"] = sfge::ComponentType::BODY2D;
 	dynamic_body["body_type"] = p2BodyType::DYNAMIC;
+	dynamic_body["mass"] = 1;
 	dynamic["components"] = { dynamic_transform, dynamic_shape, dynamic_body };
 
 	json kinematic;
 	kinematic["name"] = "Kinematic";
 	json kinematic_transform;
 	kinematic_transform["type"] = sfge::ComponentType::TRANSFORM2D;
-	kinematic_transform["position"] = { 2 * screenSize.x / 3 , screenSize.y / 3 };
+	kinematic_transform["position"] = { screenSize.x * 2.0f / 4.0f , screenSize.y * 2.0f / 3.0f };
 	kinematic_transform["scale"] = { 1.0,1.0 };
 	json kinematic_shape;
 	kinematic_shape["type"] = sfge::ComponentType::SHAPE2D;
@@ -124,13 +126,14 @@ TEST(OlegLoshkin, test_05)
 	json kinematic_body;
 	kinematic_body["type"] = sfge::ComponentType::BODY2D;
 	kinematic_body["body_type"] = p2BodyType::KINEMATIC;
+	kinematic_body["mass"] = 1;
 	kinematic["components"] = { kinematic_transform, kinematic_shape, kinematic_body };
 
 	json stat;
-	stat["name"] = "Kinematic";
+	stat["name"] = "Static";
 	json stat_transform;
 	stat_transform["type"] = sfge::ComponentType::TRANSFORM2D;
-	stat_transform["position"] = { screenSize.x / 2 , 2 * screenSize.y / 3 };
+	stat_transform["position"] = { screenSize.x * 3.0f / 4.0f , screenSize.y * 2.0f / 3.0f };
 	stat_transform["scale"] = { 1.0,1.0 };
 	json stat_shape;
 	stat_shape["type"] = sfge::ComponentType::SHAPE2D;
@@ -139,6 +142,7 @@ TEST(OlegLoshkin, test_05)
 	json stat_body;
 	stat_body["type"] = sfge::ComponentType::BODY2D;
 	stat_body["body_type"] = p2BodyType::STATIC;
+	stat_body["mass"] = 1;
 	stat["components"] = { stat_transform, stat_shape, stat_body };
 
 	sceneJson["entities"] = { dynamic, kinematic, stat };

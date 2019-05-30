@@ -62,6 +62,9 @@ void ExtendPython(py::module& m)
 	py::class_<Test_04_System, System> test_04_system(m, "Test_04_System");
 	test_04_system
 		.def(py::init<Engine&>());
+	py::class_<Test_05_System, System> test_05_system(m, "Test_05_System");
+	test_05_system
+		.def(py::init<Engine&>());
 	
 	tools::ExtendPythonTools(m);
 }

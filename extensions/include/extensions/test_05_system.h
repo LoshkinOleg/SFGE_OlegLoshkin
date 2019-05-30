@@ -3,6 +3,9 @@
 
 #include <engine/system.h>
 #include <engine/engine.h>
+#include <physics/physics2d.h>
+#include <graphics/graphics2d.h>
+#include <p2vector.h>
 #include <p2body.h>
 
 namespace sfge::ext
@@ -23,8 +26,13 @@ namespace sfge::ext
 		// void OnContact(ColliderData* c1, ColliderData* c2, bool enter) override;
 
 	private:
-		Body2dManager* bodyManager;
-		p2Body* dynamic, kinematic, stat;
+		float yPosTrigger[2]{ 7.2f / 3.0f, 7.2f * 2.0f / 3.0f };
+		float drawTimer[3];
+		float forceMagnitude = 3;
+		Graphics2dManager* graphicsManager;
+		Body2d* dynamic;
+		Body2d* kinematic;
+		Body2d* stat;
 	};
 }
 

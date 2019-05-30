@@ -43,7 +43,7 @@ void p2World::Step(float dt)
 			case p2BodyType::DYNAMIC:
 			{
 				// Apply gravity and update positions.
-				body.ApplyForceToCenter(m_Gravity * dt);
+				body.ApplyForceToCenter(m_Gravity * dt * body.GetMass());
 				body.UpdatePosition();
 			}break;
 			case p2BodyType::KINEMATIC:
@@ -67,7 +67,7 @@ void p2World::Step(float dt)
 	}
 
 	// Solve contacts.
-	m_ContactManager.SolveContacts(&m_RootQuad);
+	// m_ContactManager.SolveContacts(&m_RootQuad);
 }
 
 p2Body * p2World::CreateBody(p2BodyDef* bodyDef)
