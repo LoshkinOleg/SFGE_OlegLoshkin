@@ -32,6 +32,7 @@ void p2Body::Init(p2BodyDef* bodyDef)
 	m_GravityScale = bodyDef->gravityScale;
 	m_LinearVelocity = bodyDef->linearVelocity;
 	m_Mass = bodyDef->mass;
+	if (bodyDef->restitution >= 0 && bodyDef->restitution <= 1) m_Restitution = bodyDef->restitution;
 	m_IsInit = true;
 }
 
@@ -78,6 +79,15 @@ void p2Body::ApplyForceToCenter(const p2Vec2& force)
 	m_LinearVelocity += (force / m_Mass);
 }
 
+void p2Body::Collide(p2Body* other)
+{
+	p2Vec2 otherVelocity = other->GetLinearVelocity();
+	other->ApplyForceToCenter(m_LinearVelocity * m_Mass * ((m_Restitution + other->GetRestitution())* 0.5f)); // Apply force affected by average restitution of objects.
+	ApplyForceToCenter(m_LinearVelocity * -m_Mass); // Cancel out velocity since this object transfers velocity to other object.
+	ApplyForceToCenter(otherVelocity * other->GetMass() * ((other->GetRestitution() + m_Restitution) * 0.5f));
+	other->ApplyForceToCenter(otherVelocity * -other->GetMass());
+}
+
 p2BodyType p2Body::GetType() const
 {
 	return m_Type;
@@ -91,7 +101,12 @@ float p2Body::GetMass() const
 p2AABB p2Body::GetAabb() const
 {
 	if (m_ColliderIndex < 1) throw "Trying to get the aabb of an uninitialized collider!";
-	return m_Colliders[m_ColliderIndex - 1].GetAabb();
+	return m_Colliders[(size_t)m_ColliderIndex - 1].GetAabb();
+}
+
+float p2Body::GetRestitution() const
+{
+	return m_Restitution;
 }
 
 p2Collider* p2Body::GetCollider()

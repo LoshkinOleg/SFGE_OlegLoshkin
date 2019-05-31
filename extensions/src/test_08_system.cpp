@@ -1,29 +1,35 @@
-#ifndef TEST_06_SYSTEM_H
-#define TEST_06_SYSTEM_H
+#include <extensions/test_08_system.h>
 
-#include <engine/system.h>
-#include <engine/engine.h>
+sfge::ext::Test_08_System::Test_08_System(Engine& engine) : System(engine)
+{}
 
-namespace sfge::ext
+void sfge::ext::Test_08_System::OnEngineInit()
 {
-	class Test_06_System : public System
+	graphicsManager = m_Engine.GetGraphics2dManager();
+
+	auto bodiesEntities = m_Engine.GetEntityManager()->GetEntitiesWithType(sfge::ComponentType::BODY2D);
+	for (size_t i = 0; i < bodiesEntities.size(); i++)
 	{
-	public:
-		Test_06_System(Engine& engine);
-
-		void OnEngineInit() override;
-		void OnUpdate(float dt) override;
-		void OnFixedUpdate() override;
-		void OnDraw() override;
-		void OnEditorDraw() override;
-		void Destroy() override;
-		void OnBeforeSceneLoad() override;
-		void OnAfterSceneLoad() override;
-		void OnContact(ColliderData* c1, ColliderData* c2, bool enter) override;
-
-	private:
-
-	};
+		bodies.push_back(m_Engine.GetPhysicsManager()->GetBodyManager()->GetComponentPtr(bodiesEntities[i]));
+	}
 }
 
-#endif
+void sfge::ext::Test_08_System::OnFixedUpdate()
+{
+	p2Vec2 position, linearVelocity;
+	for (size_t i = 0; i < bodies.size(); i++)
+	{
+		position = bodies[i]->GetPosition();
+		linearVelocity = bodies[i]->GetLinearVelocity();
+
+		if (position.x < 0 || position.x > 12.8f)
+		{
+			bodies[i]->SetLinearVelocity(p2Vec2{-linearVelocity.x, linearVelocity.y});
+		}
+		if (position.y < 0 || position.y > 7.2f)
+		{
+			bodies[i]->SetLinearVelocity(p2Vec2{ linearVelocity.x, -linearVelocity.y });
+		}
+	}
+
+}

@@ -66,6 +66,7 @@ void sfge::ext::Test_07_System::OnDraw()
 	{
 		graphicsManager->DrawBox(bound.GetCenter().ToGraphicSpace(), bound.GetExtends().ToGraphicSpace() * 2);
 	}
+	/*
 	// Code found on https://stackoverflow.com/questions/15393102/go-through-map-c
 	for (const auto& element : collisions)
 	{
@@ -77,9 +78,9 @@ void sfge::ext::Test_07_System::OnDraw()
 		{
 			element.second.shape->SetFillColor(sf::Color::White);
 		}
-	}
+	}*/
 }
-
+/*
 void sfge::ext::Test_07_System::OnContact(ColliderData* c1, ColliderData* c2, bool enter)
 {
 	if (enter)
@@ -90,4 +91,4 @@ void sfge::ext::Test_07_System::OnContact(ColliderData* c1, ColliderData* c2, bo
 	{
 		collisions[c1->fixture].contactCount--;
 	}
-}
+}*/

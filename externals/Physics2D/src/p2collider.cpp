@@ -37,7 +37,7 @@ void p2Collider::Init(const p2ColliderDef* def)
 
 bool p2Collider::IsSensor()
 {
-	return false;
+	return m_IsSensor;
 }
 
 p2Collider::~p2Collider()
@@ -80,4 +80,23 @@ void p2Collider::UpdateAabb(const p2Vec2 center)
 	// std::cout << "UpdateAabb() called" << std::endl;
 
 	m_Aabb.SetCenter(center);
+}
+
+p2Vec2 p2Collider::FindMtv(p2Collider* other) const
+{
+	p2Vec2 axis[2]{ p2Vec2{1,0}, p2Vec2{0,1} };
+
+	p2Mat22 myProjectionX = m_Aabb.Sides()[0].ProjectSelfOnto(axis[0]);
+	p2Mat22 myProjectionY = m_Aabb.Sides()[1].ProjectSelfOnto(axis[1]);
+	p2Mat22 otherProjectionX = m_Aabb.Sides()[0].ProjectSelfOnto(axis[0]);
+	p2Mat22 otherProjectionY = m_Aabb.Sides()[1].ProjectSelfOnto(axis[1]);
+
+	float myProjectionXMagnitude = myProjectionX.rows[1].x - myProjectionX.rows[0].x;
+	float otherProjectionXMagnitude = otherProjectionX.rows[1].x - otherProjectionX.rows[0].x;
+
+	p2Mat22 xOverlap;
+	if (myProjectionX.rows[1].x > otherProjectionX.rows[1].x)
+	{
+		xOverlap.rows[0] = 
+	}
 }

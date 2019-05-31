@@ -63,6 +63,7 @@ public:
 	// Public methods.
 	void Init(const p2ColliderDef* def);
 	void UpdateAabb(const p2Vec2 center);
+	p2Vec2 FindMtv(p2Collider* other) const;
 private:
 	p2Body* m_Body;
 	void* m_UserData = nullptr;

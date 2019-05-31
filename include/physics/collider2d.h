@@ -28,7 +28,7 @@ SOFTWARE.
 
 #include <engine/entity.h>
 #include <physics/body2d.h>
-
+#include <p2quadtree.h>
 
 namespace sfge
 {

@@ -25,6 +25,7 @@ SOFTWARE.
 #include <p2shape.h>
 #include <cmath>
 #include <p2aabb.h>
+// #include <p2collider.h>
 
 // Intersection.
 
@@ -115,40 +116,5 @@ void p2RectShape::SetSize(p2Vec2 size)
 }
 SatIntersection p2RectShape::FindIntersections(p2Shape& other, p2Vec2 myPosition, p2Vec2 otherPosition)
 {
-	// Convert shape.
-	p2RectShape convertedOther = *static_cast<p2RectShape*>(&other);
-
-	// Get axes. Note: for now only bother with rectangular shapes.
-	std::array<p2Mat22,4> sides = GetSides();
-	std::array<p2Vec2, 2> axes;
-	axes[0] = (sides[0].rows[1] - sides[0].rows[0]).GetNormals()[0].Normalized();
-	axes[1] = (sides[1].rows[1] - sides[1].rows[0]).GetNormals()[0].Normalized();
-
-	p2Vec2 myTopLeft(myPosition - (m_Size / 2.0f));
-	p2Vec2 otherTopLeft(otherPosition - (convertedOther.m_Size / 2.0f));
-	for (size_t i = 0; i < axes.size(); i++)
-	{
-		// Find projections of both shapes.
-		/*p2Mat22 myProjection(	 myTopLeft,		p2Vec2(myTopLeft	+ (axes[i] * ProjectSelfOnto(axes[i]))));
-		p2Mat22 otherProjection( otherTopLeft,	p2Vec2(otherTopLeft + (axes[i] * convertedOther.ProjectSelfOnto(axes[i]))));*/
-		/*
-		float myProjection[2]{};
-
-		float deltaAvgPos = */
-	}
 	return SatIntersection();
-}
-float p2RectShape::ProjectSelfOnto(p2Vec2 axis) const
-{
-	std::array<p2Mat22,4> sides = GetSides();
-
-	p2Vec2 vectorSides[2];
-	vectorSides[0] = sides[0].rows[1] - sides[0].rows[0];
-	vectorSides[1] = sides[1].rows[1] - sides[1].rows[0];
-
-	// Find widest vector that fits inside the rect (bottomLeft to topRight).
-	float magnitude = _CMATH_::abs(p2Vec2::Dot(vectorSides[0], axis)) + _CMATH_::abs(p2Vec2::Dot(vectorSides[1], axis));
-
-	return magnitude;
-
 }

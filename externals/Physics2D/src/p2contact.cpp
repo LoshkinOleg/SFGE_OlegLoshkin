@@ -79,61 +79,96 @@ void p2ContactManager::SolveContacts(p2QuadTree* rootQuad)
 			firstSiblingToCheck++;
 		}
 	}
-	/*
+	
 	// Narrow phase.
 	std::vector<p2Contact> filteredContacts = std::vector<p2Contact>();
 	for (p2Contact& contact : m_CurrentContacts)
 	{
-		if (contact.ColliderA->GetShape()->GetType() == p2ShapeType::CIRCLE && contact.ColliderB->GetShape()->GetType() == p2ShapeType::CIRCLE) // Case circle vs circle.
-		{	
-			p2Body* body_0 = contact.ColliderA->GetBody();
-			p2Body* body_1 = contact.ColliderB->GetBody();
+		p2Body* body_0 = contact.ColliderA->GetBody();
+		p2Body* body_1 = contact.ColliderB->GetBody();
+		p2Vec2 position_0 = contact.ColliderA->GetPosition();
+		p2Vec2 position_1 = contact.ColliderB->GetPosition();
+		p2ShapeType shapeType_0 = contact.ColliderA->GetShape()->GetType();
+		p2ShapeType shapeType_1 = contact.ColliderB->GetShape()->GetType();
+		p2BodyType bodyType_0 = contact.ColliderA->GetBody()->GetType();
+		p2BodyType bodyType_1 = contact.ColliderB->GetBody()->GetType();
+
+		if (shapeType_0 == p2ShapeType::CIRCLE && shapeType_1 == p2ShapeType::CIRCLE) // Case circle vs circle.
+		{
 			p2CircleShape circle_0 = *static_cast<p2CircleShape*>(contact.ColliderA->GetShape());
 			p2CircleShape circle_1 = *static_cast<p2CircleShape*>(contact.ColliderB->GetShape());
-			p2Vec2 position_0 = contact.ColliderA->GetPosition();
-			p2Vec2 position_1 = contact.ColliderB->GetPosition();
-
 			CircleIntersection intersect = circle_0.FindIntersections(circle_1, position_0, position_1);
 
-			if (intersect.anyContact) // 2 intersections.
+			if (intersect.anyContact)
 			{
 				filteredContacts.push_back(contact); // Keep contact.
 
-				if (intersect.intersections.size() > 1)
+				if (intersect.intersections.size() > 1) // 2 intersections.
 				{
-					// Correct positions.
-					float penetration_0 = circle_0.GetRadius() - (intersect.AverageIntersection() - position_0).GetMagnitude();
-					float penetration_1 = circle_1.GetRadius() - (intersect.AverageIntersection() - position_1).GetMagnitude();
-					p2Vec2 direction_0 = (position_1 - position_0).Normalized();
-					p2Vec2 direction_1 = (position_0 - position_1).Normalized();
-					body_0->SetPosition(position_0 - (direction_0 * penetration_0));
-					body_1->SetPosition(position_1 - (direction_1 * penetration_1));
+					if (!(contact.ColliderA->IsSensor() || contact.ColliderB->IsSensor())) // If not a sensor type contact.
+					{
+						if (bodyType_0 == p2BodyType::DYNAMIC && bodyType_1 == p2BodyType::DYNAMIC) // If this is a dynamic vs dynamic contact.
+						{
+							// Correct positions.
+							float penetration_0 = circle_0.GetRadius() - (intersect.AverageIntersection() - position_0).GetMagnitude();
+							float penetration_1 = circle_1.GetRadius() - (intersect.AverageIntersection() - position_1).GetMagnitude();
+							p2Vec2 direction_0 = (position_1 - position_0).Normalized();
+							p2Vec2 direction_1 = (position_0 - position_1).Normalized();
+							body_0->SetPosition(position_0 - (direction_0 * penetration_0));
+							body_1->SetPosition(position_1 - (direction_1 * penetration_1));
 
-					// Modify velocities.
-					p2Vec2 momentum_0 = body_0->GetLinearVelocity() * body_0->GetMass();
-					p2Vec2 momentum_1 = body_1->GetLinearVelocity() * body_1->GetMass();
-					body_0->SetLinearVelocity(p2Vec2());
-					body_1->SetLinearVelocity(p2Vec2());
-					body_0->ApplyForceToCenter(momentum_1);
-					body_1->ApplyForceToCenter(momentum_0);
+							// Modify velocities.
+							body_0->Collide(body_1);
+						}
+						else if ((bodyType_0 == p2BodyType::DYNAMIC && bodyType_1 == p2BodyType::STATIC) || (bodyType_0 == p2BodyType::STATIC && bodyType_1 == p2BodyType::DYNAMIC)) // If this is a static vs dynamic contact.
+						{
+							// TODO:: handle static vs dynamic position correction.
+
+							body_0->Collide(body_1);
+						}
+					}
 				}
 				else // There's only one contact.
 				{
+					if (!(contact.ColliderA->IsSensor() || contact.ColliderB->IsSensor())) // If not a sensor type contact.
+					{
+						if (bodyType_0 == p2BodyType::DYNAMIC && bodyType_1 == p2BodyType::DYNAMIC) // If this is a dynamic vs dynamic contact.
+						{
+							// Modify velocities.
+							body_0->Collide(body_1);
+						}
+						else if ((bodyType_0 == p2BodyType::DYNAMIC && bodyType_1 == p2BodyType::STATIC) || (bodyType_0 == p2BodyType::STATIC && bodyType_1 == p2BodyType::DYNAMIC)) // If this is a static vs dynamic contact.
+						{
+							body_0->Collide(body_1);
+						}
+					}
+				}
+			}
+
+		}
+		if (shapeType_0 == p2ShapeType::RECTANGLE && shapeType_1 == p2ShapeType::RECTANGLE) // Case rect vs rect.
+		{
+			filteredContacts.push_back(contact); // Keep contact.
+
+			if (!(contact.ColliderA->IsSensor() || contact.ColliderB->IsSensor())) // If not a sensor type contact.
+			{
+				if (bodyType_0 == p2BodyType::DYNAMIC && bodyType_1 == p2BodyType::DYNAMIC) // If this is a dynamic vs dynamic contact.
+				{
+					// Find mtv
+					p2Vec2 mtv = contact.ColliderA.FindMtv(contact.ColliderB);
+
 					// Modify velocities.
-					p2Vec2 momentum_0 = body_0->GetLinearVelocity() * body_0->GetMass();
-					p2Vec2 momentum_1 = body_1->GetLinearVelocity() * body_1->GetMass();
-					body_0->SetLinearVelocity(p2Vec2());
-					body_1->SetLinearVelocity(p2Vec2());
-					body_0->ApplyForceToCenter(momentum_1);
-					body_1->ApplyForceToCenter(momentum_0);
+					body_0->Collide(body_1);
+				}
+				else if ((bodyType_0 == p2BodyType::DYNAMIC && bodyType_1 == p2BodyType::STATIC) || (bodyType_0 == p2BodyType::STATIC && bodyType_1 == p2BodyType::DYNAMIC)) // If this is a static vs dynamic contact.
+				{
+					// TODO:: handle static vs dynamic position correction.
+
+					body_0->Collide(body_1);
 				}
 			}
 		}
-		if (contact.ColliderA->GetShape()->GetType() == p2ShapeType::RECTANGLE && contact.ColliderB->GetShape()->GetType() == p2ShapeType::RECTANGLE) // Case circle vs circle.
-		{
-			
-		}
-	}*/
+	}
 
 	// Send contact messages.
 	for (p2Contact& contact : m_CurrentContacts)

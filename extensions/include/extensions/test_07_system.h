@@ -23,7 +23,7 @@ namespace sfge::ext
 		// void Destroy() override;
 		// void OnBeforeSceneLoad() override;
 		// void OnAfterSceneLoad() override;
-		void OnContact(ColliderData* c1, ColliderData* c2, bool enter) override;
+		// void OnContact(ColliderData* c1, ColliderData* c2, bool enter) override;
 
 	private:
 		struct CollisionCount

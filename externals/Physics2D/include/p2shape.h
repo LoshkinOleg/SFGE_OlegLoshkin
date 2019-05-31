@@ -105,7 +105,6 @@ public:
 	void SetSize(p2Vec2 size);
 	// Public methods.
 	SatIntersection FindIntersections(p2Shape& other, p2Vec2 myPosition, p2Vec2 otherPosition);
-	float ProjectSelfOnto(p2Vec2 axis) const;
 private:
 	p2Vec2 m_Size;
 };

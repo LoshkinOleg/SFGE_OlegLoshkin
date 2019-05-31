@@ -229,6 +229,7 @@ void ShapeManager::CreateComponent(json& componentJson, Entity entity)
 			auto rect = std::make_unique<sf::RectangleShape>();
 			rect->setSize (size);
 			rect->setOrigin (size.x/2.0f, size.y/2.0f);
+			rect->setFillColor(sf::Color(255, 255, 255, 150)); // Set color to see through.
             shape.SetShape (std::move (rect));
             shape.Update ();
 			
