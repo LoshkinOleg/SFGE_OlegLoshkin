@@ -184,8 +184,8 @@ void Graphics2dManager::DrawVector(Vec2f drawingVector, Vec2f originPos, sf::Col
 void Graphics2dManager::DrawCircle(const Vec2f position, const float radius)
 {
 	sf::CircleShape circle;
-	circle.setPosition(position - (Vec2f(radius, radius) * 100));
-	circle.setRadius(radius * 100);
+	circle.setPosition(position - Vec2f(radius, radius));
+	circle.setRadius(radius);
 	circle.setFillColor(sf::Color::Transparent);
 	circle.setOutlineColor(sf::Color::Red);
 	circle.setOutlineThickness(1);
@@ -195,8 +195,8 @@ void Graphics2dManager::DrawCircle(const Vec2f position, const float radius)
 void Graphics2dManager::DrawBox(const Vec2f center, const Vec2f size)
 {
 	sf::RectangleShape rect;
-	rect.setPosition(center - size * 50);
-	rect.setSize(size * 100);
+	rect.setPosition(center - (size * 0.5f));
+	rect.setSize(size);
 	rect.setFillColor(sf::Color::Transparent);
 	rect.setOutlineColor(sf::Color::Red);
 	rect.setOutlineThickness(1);

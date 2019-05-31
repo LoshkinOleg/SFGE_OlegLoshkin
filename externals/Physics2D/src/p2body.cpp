@@ -62,7 +62,7 @@ p2Vec2 p2Body::GetPosition()
 void p2Body::UpdatePosition()
 {
 	m_Position += m_LinearVelocity * 0.02f;
-	m_Colliders[0].UpdateAabb(m_Position * 0.02f);
+	m_Colliders[0].UpdateAabb(m_Position);
 }
 
 p2Collider * p2Body::CreateCollider(p2ColliderDef * colliderDef)

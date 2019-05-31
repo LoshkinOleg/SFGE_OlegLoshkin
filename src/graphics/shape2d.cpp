@@ -76,9 +76,9 @@ void Shape::SetShape (std::unique_ptr<sf::Shape> shape)
 {
 	m_Shape = std::move(shape);
 }
-sf::Shape *Shape::GetShape ()
+sf::Shape* Shape::GetShape ()
 {
-	return m_Shape.get ();
+	return m_Shape.get();
 }
 
 void editor::ShapeInfo::DrawOnInspector ()

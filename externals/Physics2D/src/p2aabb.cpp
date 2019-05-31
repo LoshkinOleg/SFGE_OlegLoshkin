@@ -73,22 +73,22 @@ std::array<p2Mat22, 4> p2AABB::Sides() const
 
 bool p2AABB::Overlaps(const p2AABB other) const
 {
+	float sumOfHalfWidths = (other.XMax() - other.XMin() + XMax() - XMin()) * 0.5f;
+	float sumOfHalfHeights = (other.YMax() - other.YMin() + YMax() - YMin()) * 0.5f;
+	float deltaAvgX = _CMATH_::abs((other.XMin() + other.XMax()) * 0.5f - (XMin() + XMax()) * 0.5f);
+	float deltaAvgY = _CMATH_::abs((other.YMin() + other.YMax()) * 0.5f - (YMin() + YMax()) * 0.5f);
 	__int8 flag = 0;
 
-	float averageX = ((XMin() + XMax()) * 0.5f) + (((other.XMin() + other.XMax())  * 0.5f)) * 0.5f;
-	float averageY = ((YMin() + YMax()) * 0.5f) + (((other.YMin() + other.YMax()) * 0.5f)) * 0.5f;
-
-	if (averageX >= XMin() && averageX <= XMax()) // If average X pos is within bounds.
+	if (sumOfHalfWidths > deltaAvgX) // If there's overlap on X.
 	{
-		flag |= 1 << 1; // We've got overlapping on X, set flag accordingly.
+		flag |= 1 << 1;
+	}
+	if (sumOfHalfHeights > deltaAvgY) // If there's overlap on Y.
+	{
+		flag |= 1;
 	}
 
-	if (averageY >= YMin() && averageY <= YMax()) // If average X pos is within bounds.
-	{
-		flag |= 1 << 0; // We've got overlapping on X, set flag accordingly.
-	}
-
-	return flag == (1 << 1 | 1 << 0); // Return true if there's both vertical and horizontal overlapping.
+	return flag == (1 << 1 | 1);
 }
 
 std::string p2AABB::ToString() const
