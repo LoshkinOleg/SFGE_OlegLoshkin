@@ -237,7 +237,7 @@ void Body2dManager::CreateComponent(json& componentJson, Entity entity)
 		bodyDef.position = pixel2meter(pos);
 		
 		auto* body = world->CreateBody(&bodyDef);
-		body->SetLinearVelocity(pixel2meter(velocity));
+		body->SetLinearVelocity(p2Vec2{ velocity.x, velocity.y });
 		m_Components[entity - 1] = Body2d(transform, offset);
 		m_Components[entity - 1].SetBody(body);
 

@@ -166,7 +166,12 @@ void ColliderManager::DestroyComponent(Entity entity)
 }
 ColliderData *ColliderManager::GetComponentPtr(Entity entity)
 {
-	(void)entity;
-	return nullptr;
+	if (entity == INVALID_ENTITY)
+	{
+		Log::GetInstance()->Error("Trying to get component from INVALID_ENTITY");
+	}
+	return &m_Components[entity - 1];
+	/*(void)entity;
+	return nullptr;*/
 }
 }

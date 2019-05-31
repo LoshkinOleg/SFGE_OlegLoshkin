@@ -67,7 +67,7 @@ void p2World::Step(float dt)
 	}
 
 	// Solve contacts.
-	// m_ContactManager.SolveContacts(&m_RootQuad);
+	m_ContactManager.SolveContacts(&m_RootQuad);
 }
 
 p2Body * p2World::CreateBody(p2BodyDef* bodyDef)

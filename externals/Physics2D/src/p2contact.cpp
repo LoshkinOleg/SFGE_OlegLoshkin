@@ -79,7 +79,7 @@ void p2ContactManager::SolveContacts(p2QuadTree* rootQuad)
 			firstSiblingToCheck++;
 		}
 	}
-
+	/*
 	// Narrow phase.
 	std::vector<p2Contact> filteredContacts = std::vector<p2Contact>();
 	for (p2Contact& contact : m_CurrentContacts)
@@ -133,7 +133,7 @@ void p2ContactManager::SolveContacts(p2QuadTree* rootQuad)
 		{
 			
 		}
-	}
+	}*/
 
 	// Send contact messages.
 	for (p2Contact& contact : m_CurrentContacts)

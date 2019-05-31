@@ -113,7 +113,7 @@ void p2QuadTree::Insert(p2Body* obj)
 			{
 				if (m_NodeLevel + 1 <= MAX_LEVELS) // If we still can split quads.
 				{
-					Split(); // TODO: handle case where quand cannot split anymore.
+					Split();
 
 					// Fill out children with bodies aleready contained within this node.
 					std::vector<p2Body*> bodiesRefCopy = m_Bodies; // Copy ptrs for analysis.
@@ -126,7 +126,7 @@ void p2QuadTree::Insert(p2Body* obj)
 						{
 							if (m_Children[i]->m_Bounds.Overlaps(body->GetAabb())) matchingChildren.push_back(m_Children[i].get());
 						}
-						if (matchingChildren.size() < 2 && matchingChildren.size() > 0) // If body only overlaps one quad.
+						if (matchingChildren.size() == 1) // If body only overlaps one quad.
 						{
 							matchingChildren[0]->Insert(body); // Insert body there.
 						}
@@ -142,7 +142,7 @@ void p2QuadTree::Insert(p2Body* obj)
 					{
 						if (m_Children[i]->m_Bounds.Overlaps(obj->GetAabb())) overlappingQuads.push_back(m_Children[i].get());
 					}
-					if (overlappingQuads.size() < 2 && overlappingQuads.size() > 0)
+					if (overlappingQuads.size() == 1)
 					{
 						overlappingQuads[0]->Insert(obj); // It doesn't, insert it there.
 					}
@@ -165,7 +165,7 @@ void p2QuadTree::Insert(p2Body* obj)
 			{
 				if (m_Children[i]->m_Bounds.Overlaps(obj->GetAabb())) overlappingQuads.push_back(m_Children[i].get());
 			}
-			if (overlappingQuads.size() < 2 && overlappingQuads.size() > 0)
+			if (overlappingQuads.size() == 1)
 			{
 				overlappingQuads[0]->Insert(obj); // It doesn't, insert it there.
 			}
