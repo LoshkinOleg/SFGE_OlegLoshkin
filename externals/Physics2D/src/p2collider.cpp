@@ -85,18 +85,39 @@ void p2Collider::UpdateAabb(const p2Vec2 center)
 p2Vec2 p2Collider::FindMtv(p2Collider* other) const
 {
 	p2Vec2 axis[2]{ p2Vec2{1,0}, p2Vec2{0,1} };
+	p2Mat22 projection;
+	float myProjectionX[2], otherProjectionX[2];
+	float myProjectionY[2], otherProjectionY[2];
 
-	p2Mat22 myProjectionX = m_Aabb.Sides()[0].ProjectSelfOnto(axis[0]);
-	p2Mat22 myProjectionY = m_Aabb.Sides()[1].ProjectSelfOnto(axis[1]);
-	p2Mat22 otherProjectionX = m_Aabb.Sides()[0].ProjectSelfOnto(axis[0]);
-	p2Mat22 otherProjectionY = m_Aabb.Sides()[1].ProjectSelfOnto(axis[1]);
+	projection = m_Aabb.Sides()[0].ProjectSelfOnto(axis[0]);
+	myProjectionX[0] = projection.rows[0].x;
+	myProjectionX[1] = projection.rows[1].x;
+	projection = other->m_Aabb.Sides()[0].ProjectSelfOnto(axis[0]);
+	otherProjectionX[0] = projection.rows[0].x;
+	otherProjectionX[1] = projection.rows[1].x;
 
-	float myProjectionXMagnitude = myProjectionX.rows[1].x - myProjectionX.rows[0].x;
-	float otherProjectionXMagnitude = otherProjectionX.rows[1].x - otherProjectionX.rows[0].x;
+	projection = m_Aabb.Sides()[1].ProjectSelfOnto(axis[1]);
+	myProjectionY[0] = projection.rows[0].y;
+	myProjectionY[1] = projection.rows[1].y;
+	projection = other->m_Aabb.Sides()[1].ProjectSelfOnto(axis[1]);
+	otherProjectionY[0] = projection.rows[0].y;
+	otherProjectionY[1] = projection.rows[1].y;
 
-	p2Mat22 xOverlap;
-	if (myProjectionX.rows[1].x > otherProjectionX.rows[1].x)
+	float overlapOnX[2]{	((myProjectionX[0] > otherProjectionX[0]) ? myProjectionX[0] : otherProjectionX[0]),	// Pick greatest minimum and smallest maximum.
+							((myProjectionX[1] < otherProjectionX[1]) ? myProjectionX[1] : otherProjectionX[1]) };
+	float overlapOnXMagnitude = overlapOnX[1] - overlapOnX[0];
+
+	float overlapOnY[2]{	((myProjectionY[0] > otherProjectionY[0]) ? myProjectionY[0] : otherProjectionY[0]),
+							((myProjectionY[1] < otherProjectionY[1]) ? myProjectionY[1] : otherProjectionY[1]) };
+	float overlapOnYMagnitude = overlapOnY[1] - overlapOnY[0];
+
+	// TODO: This doesn't make sense, it would pick an axis if the rects are overlapping diagonally and separate them either horizontally or vertically rather than diagonally...
+	if (overlapOnXMagnitude < overlapOnYMagnitude)
 	{
-		xOverlap.rows[0] = 
+		return axis[0] * overlapOnXMagnitude;
+	}
+	else
+	{
+		return axis[1] * overlapOnYMagnitude;
 	}
 }

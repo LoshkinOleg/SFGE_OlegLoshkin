@@ -155,7 +155,9 @@ void p2ContactManager::SolveContacts(p2QuadTree* rootQuad)
 				if (bodyType_0 == p2BodyType::DYNAMIC && bodyType_1 == p2BodyType::DYNAMIC) // If this is a dynamic vs dynamic contact.
 				{
 					// Find mtv
-					p2Vec2 mtv = contact.ColliderA.FindMtv(contact.ColliderB);
+					p2Vec2 mtv = contact.ColliderA->FindMtv(contact.ColliderB);
+					body_0->SetPosition(body_0->GetPosition() - (mtv * 0.5f));
+					body_1->SetPosition(body_1->GetPosition() + (mtv * 0.5f));
 
 					// Modify velocities.
 					body_0->Collide(body_1);
@@ -163,6 +165,9 @@ void p2ContactManager::SolveContacts(p2QuadTree* rootQuad)
 				else if ((bodyType_0 == p2BodyType::DYNAMIC && bodyType_1 == p2BodyType::STATIC) || (bodyType_0 == p2BodyType::STATIC && bodyType_1 == p2BodyType::DYNAMIC)) // If this is a static vs dynamic contact.
 				{
 					// TODO:: handle static vs dynamic position correction.
+
+					// Find mtv
+					p2Vec2 mtv = contact.ColliderA->FindMtv(contact.ColliderB);
 
 					body_0->Collide(body_1);
 				}

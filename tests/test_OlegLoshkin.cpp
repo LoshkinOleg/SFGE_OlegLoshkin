@@ -422,7 +422,7 @@ TEST(OlegLoshkin, test_09)
 	json collider;
 	collider["type"] = sfge::ComponentType::COLLIDER2D;
 	collider["collider_type"] = sfge::ColliderType::CIRCLE;
-	collider["radius"] = 10, 10;
+	collider["radius"] = 10;
 	collider["sensor"] = false;
 
 	// Set up entities.
@@ -557,6 +557,60 @@ TEST(OlegLoshkin, test_10)
 
 	json systemJson = {
 			{"systemClassName", "Test_10_System"}
+	};
+	sceneJson["systems"] = json::array({ systemJson });
+	sceneManager->LoadSceneFromJson(sceneJson);
+	engine.Start();
+}
+
+TEST(OlegLoshkin, test_11)
+{
+	sfge::Engine engine;
+	std::unique_ptr<sfge::Configuration> initConfig = std::make_unique<sfge::Configuration>();
+	auto screenSize = initConfig->screenResolution;
+	initConfig->gravity = p2Vec2(0, 0);
+	initConfig->quadTreeBodiesPerQuad = 2;
+	engine.Init(std::move(initConfig));
+	auto* sceneManager = engine.GetSceneManager();
+
+	json sceneJson = {
+			{ "name", "Many Rects" }
+	};
+
+	// Set up jsons.
+	json entities[256];
+	json rect;
+	json transform;
+	transform["type"] = sfge::ComponentType::TRANSFORM2D;
+	transform["scale"] = { 1.0,1.0 };
+	json body;
+	body["type"] = sfge::ComponentType::BODY2D;
+	body["body_type"] = p2BodyType::DYNAMIC;
+	body["mass"] = 1;
+	json shape;
+	shape["type"] = sfge::ComponentType::SHAPE2D;
+	shape["shape_type"] = sfge::ShapeType::RECTANGLE;
+	shape["size"] = {10,10};
+	json collider;
+	collider["type"] = sfge::ComponentType::COLLIDER2D;
+	collider["collider_type"] = sfge::ColliderType::BOX;
+	collider["size"] = { 10,10 };
+	collider["sensor"] = false;
+
+	// Set up entities.
+	for (size_t i = 0; i < 256; i++)
+	{
+		rect["name"] = "Rect_" + std::to_string(i);
+		transform["position"] = { rand() % screenSize.x , rand() % screenSize.y }; // Random position on screen.
+		// Code taken from https://stackoverflow.com/questions/686353/random-float-number-generation
+		body["velocity"] = { -1.0f + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (1.0f - (-1.0f)))), -1.0f + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (1.0f - (-1.0f)))) }; // Random velocity with X and Y components between -1 and 1;
+		rect["components"] = { transform, body, shape, collider };
+		entities[i] = rect;
+	}
+	sceneJson["entities"] = entities;
+
+	json systemJson = {
+			{"systemClassName", "Test_11_System"}
 	};
 	sceneJson["systems"] = json::array({ systemJson });
 	sceneManager->LoadSceneFromJson(sceneJson);

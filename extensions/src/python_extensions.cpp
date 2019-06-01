@@ -42,6 +42,7 @@ SOFTWARE.
 #include <extensions/test_08_system.h>
 #include <extensions/test_09_system.h>
 #include <extensions/test_10_system.h>
+#include <extensions/test_11_system.h>
 
 #include <tools/tools_pch.h>
 
@@ -84,6 +85,9 @@ void ExtendPython(py::module& m)
 		.def(py::init<Engine&>());
 	py::class_<Test_10_System, System> test_10_system(m, "Test_10_System");
 	test_10_system
+		.def(py::init<Engine&>());
+	py::class_<Test_11_System, System> test_11_system(m, "Test_11_System");
+	test_11_system
 		.def(py::init<Engine&>());
 	
 	tools::ExtendPythonTools(m);
