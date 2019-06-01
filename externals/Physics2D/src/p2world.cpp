@@ -28,8 +28,8 @@ SOFTWARE.
 p2World::p2World(p2Vec2 gravity, p2Vec2 aabbSize, int bodiesPerQuad): m_Gravity(gravity)
 {
 	m_Bodies.resize(MAX_BODY_LEN);
-	m_RootQuad = p2QuadTree(0, p2AABB(p2Vec2(0, aabbSize.y), p2Vec2(aabbSize.x, 0)));
-	p2QuadTree::Max_Objects = bodiesPerQuad;
+	m_RootQuad = p2Quad(0, p2AABB(p2Vec2(0, aabbSize.y), p2Vec2(aabbSize.x, 0)));
+	p2Quad::Max_Objects = bodiesPerQuad;
 	m_ContactManager = p2ContactManager();
 }
 
@@ -60,7 +60,7 @@ void p2World::Step(float dt)
 
 	// Update QuadTree.
 	m_RootQuad.Clear(); // Clear it.
-	// Refill it.
+	// Rebuild it.
 	for (p2Body& body : m_Bodies)
 	{
 		m_RootQuad.Insert(&body);
@@ -70,7 +70,7 @@ void p2World::Step(float dt)
 	m_ContactManager.SolveContacts(&m_RootQuad);
 }
 
-p2Body * p2World::CreateBody(p2BodyDef* bodyDef)
+p2Body* p2World::CreateBody(p2BodyDef* bodyDef)
 {
 	p2Body& body = m_Bodies[m_BodyIndex];
 	body.Init(bodyDef);

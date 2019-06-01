@@ -25,41 +25,47 @@ SOFTWARE.
 #ifndef SFGE_P2WORLD_H
 #define SFGE_P2WORLD_H
 
-#include <p2aabb.h>
-#include <p2body.h>
-#include <p2contact.h>
-#include <p2quadtree.h>
+#include <p2physics.h>
 
 const size_t MAX_BODY_LEN = 256;
 
-/**
-* \brief Representation of the physical world in meter
-*/
 class p2World
 {
 public:
-	p2World(p2Vec2 gravity, p2Vec2 aabbSize, int bodiesPerQuad = 5);
+	// Constructors.
 	/**
-	* \brief Simulate a new step of the physical world, simplify the resolution with a QuadTree, generate the new contacts
+	@param p2Vec2 gravity: self explanatory, just keep in mind that Y axis goes from top to down.
+	@param p2Vec2 aabbSize: defines bounds of the root Quad of the QuadTree.
+	@param int bodiesPerQuad: defines Quad capacity before it needs to Split().
+	*/
+	p2World(p2Vec2 gravity, p2Vec2 aabbSize, int bodiesPerQuad = 5);
+
+	// Public methods.
+	/**
+	@Brief: Called every fixed update. Applies forces to bodies, modifies their positions, rebuilds QuadTree, solves contacts and sends contact messages.
 	*/
 	void Step(float dt);
 	/**
-	* \brief Factory method to create a new p2Body attached to the p2World
+	@Brief: Factory method creating p2Bodies.
 	*/
 	p2Body* CreateBody(p2BodyDef* bodyDef);
 	/**
-	* \brief Set the contact listener
+	@Brief: Relays SetContactListener instruction to this world's contact manager.
 	*/
 	void SetContactListener(p2ContactListener* contactListener);
 
+	// Debugging methods.
+	/**
+	@Brief: Returns a list of every Quad's bounds in this QuadTree for debugging.
+	*/
 	std::vector<p2AABB> GetQuadTreeBounds() const;
 	/**
-	@Brief: Fills up passed vector with the number of bodies stored in each quad for debugging.
+	@Brief: Instructs all Quads in QuadTree to cout it's node level followed by number of bodies it holds.
 	 */
 	void LogQuadsBodyCount() const;
 
 private:
-	p2QuadTree m_RootQuad;
+	p2Quad m_RootQuad;
 	p2Vec2 m_Gravity;
 	std::vector<p2Body> m_Bodies;
 	int m_BodyIndex = 0;

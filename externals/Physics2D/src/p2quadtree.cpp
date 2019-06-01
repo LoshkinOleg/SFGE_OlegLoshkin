@@ -2,9 +2,9 @@
 #include <p2quadtree.h>
 #include <p2body.h>
 
-int p2QuadTree::Max_Objects = 5;
+int p2Quad::Max_Objects = 5;
 
-p2QuadTree::p2QuadTree()
+p2Quad::p2Quad()
 {
 	m_NodeLevel = -1;
 	m_Bounds = p2AABB();
@@ -17,7 +17,7 @@ p2QuadTree::p2QuadTree()
 
 }
 
-p2QuadTree::p2QuadTree(int nodeLevel, p2AABB bounds)
+p2Quad::p2Quad(int nodeLevel, p2AABB bounds)
 {
 	m_NodeLevel = nodeLevel;
 	m_Bounds = bounds;
@@ -29,12 +29,12 @@ p2QuadTree::p2QuadTree(int nodeLevel, p2AABB bounds)
 	m_HasChildren = false;
 }
 
-p2QuadTree::~p2QuadTree()
+p2Quad::~p2Quad()
 {
 	// Clear();
 }
 
-p2QuadTree& p2QuadTree::operator=(p2QuadTree & other)
+p2Quad& p2Quad::operator=(p2Quad & other)
 {
 	m_NodeLevel = other.m_NodeLevel;
 	m_Bounds = other.m_Bounds;
@@ -47,7 +47,7 @@ p2QuadTree& p2QuadTree::operator=(p2QuadTree & other)
 	return *this;
 }
 
-void p2QuadTree::Clear()
+void p2Quad::Clear()
 {
 	// Clear children.
 	if (m_HasChildren)
@@ -69,7 +69,7 @@ void p2QuadTree::Clear()
 	m_HasChildren = false;
 }
 
-void p2QuadTree::Split()
+void p2Quad::Split()
 {	
 	m_HasChildren = true;
 
@@ -77,7 +77,7 @@ void p2QuadTree::Split()
 	p2AABB newAabb = p2AABB();
 	for (int i = 0; i < CHILD_TREE_NMB; i++)
 	{
-		m_Children[i] = std::make_unique<p2QuadTree>();
+		m_Children[i] = std::make_unique<p2Quad>();
 		m_Children[i]->m_NodeLevel = m_NodeLevel + 1;
 		m_Children[i]->m_Parent = this;
 	}
@@ -99,7 +99,7 @@ void p2QuadTree::Split()
 	m_Children[3]->m_Bounds	= newAabb;
 }
 
-void p2QuadTree::Insert(p2Body* obj)
+void p2Quad::Insert(p2Body* obj)
 {
 	if (obj->IsInit()) // Ignore all bodies that aren't used.
 	{
@@ -121,7 +121,7 @@ void p2QuadTree::Insert(p2Body* obj)
 					for (p2Body* body : bodiesRefCopy) // For each body.
 					{
 						// Find all children that overlap current body.
-						std::vector<p2QuadTree*> matchingChildren = std::vector<p2QuadTree*>();
+						std::vector<p2Quad*> matchingChildren = std::vector<p2Quad*>();
 						for (int i = 0; i < CHILD_TREE_NMB; i++)
 						{
 							if (m_Children[i]->m_Bounds.Overlaps(body->GetAabb())) matchingChildren.push_back(m_Children[i].get());
@@ -137,7 +137,7 @@ void p2QuadTree::Insert(p2Body* obj)
 					}
 
 					// Check the body isn't overlapping two children quads.
-					std::vector<p2QuadTree*> overlappingQuads = std::vector<p2QuadTree*>();
+					std::vector<p2Quad*> overlappingQuads = std::vector<p2Quad*>();
 					for (int i = 0; i < 4; i++)
 					{
 						if (m_Children[i]->m_Bounds.Overlaps(obj->GetAabb())) overlappingQuads.push_back(m_Children[i].get());
@@ -160,7 +160,7 @@ void p2QuadTree::Insert(p2Body* obj)
 		else // If the quad does have children.
 		{
 			// Check the body isn't overlapping two children quads.
-			std::vector<p2QuadTree*> overlappingQuads = std::vector<p2QuadTree*>();
+			std::vector<p2Quad*> overlappingQuads = std::vector<p2Quad*>();
 			for (int i = 0; i < 4; i++)
 			{
 				if (m_Children[i]->m_Bounds.Overlaps(obj->GetAabb())) overlappingQuads.push_back(m_Children[i].get());
@@ -177,7 +177,7 @@ void p2QuadTree::Insert(p2Body* obj)
 	}
 }
 
-std::vector<PotentialCollision> p2QuadTree::Retrieve()
+std::vector<PotentialCollision> p2Quad::Retrieve()
 {
 	std::vector<PotentialCollision> listToFill = std::vector<PotentialCollision>();
 
@@ -231,7 +231,7 @@ std::vector<PotentialCollision> p2QuadTree::Retrieve()
 	return listToFill;
 }
 
-void p2QuadTree::RetrieveRecursively(std::vector<PotentialCollision>& listToFill, int& currentIndex)
+void p2Quad::RetrieveRecursively(std::vector<PotentialCollision>& listToFill, int& currentIndex)
 {
 	if (m_HasChildren)
 	{
@@ -273,7 +273,7 @@ void p2QuadTree::RetrieveRecursively(std::vector<PotentialCollision>& listToFill
 	}
 }
 
-void p2QuadTree::GetQuadTreesAabbs(std::vector<p2AABB>& listToFill) const
+void p2Quad::GetQuadTreesAabbs(std::vector<p2AABB>& listToFill) const
 {
 	listToFill.push_back(m_Bounds);
 	if (m_HasChildren)
@@ -285,7 +285,7 @@ void p2QuadTree::GetQuadTreesAabbs(std::vector<p2AABB>& listToFill) const
 	}
 }
 
-void p2QuadTree::LogQuadsBodyCount() const
+void p2Quad::LogQuadsBodyCount() const
 {
 	std::cout << "Quad at level: " << m_NodeLevel << " : " << m_Bodies.size() << " bodies." << std::endl;
 	if (m_HasChildren)

@@ -1,6 +1,4 @@
 #include <p2collider.h>
-#include <p2shape.h>
-#include <p2body.h>
 
 void p2Collider::Init(const p2ColliderDef* def)
 {
@@ -77,25 +75,27 @@ p2Body* p2Collider::GetBody() const
 
 void p2Collider::UpdateAabb(const p2Vec2 center)
 {
-	// std::cout << "UpdateAabb() called" << std::endl;
-
 	m_Aabb.SetCenter(center);
 }
 
-p2Vec2 p2Collider::FindMtv(p2Collider* other) const
+p2Vec2 p2Collider::FindRectRectMtv(p2Collider* other) const
 {
+	// Since we're not dealing with rotations, we've only got to check projections on X and Y axis.
+
+	// Initialize variables.
 	p2Vec2 axis[2]{ p2Vec2{1,0}, p2Vec2{0,1} };
 	p2Mat22 projection;
 	float myProjectionX[2], otherProjectionX[2];
 	float myProjectionY[2], otherProjectionY[2];
 
+	// Find projections on X.
 	projection = m_Aabb.Sides()[0].ProjectSelfOnto(axis[0]);
 	myProjectionX[0] = projection.rows[0].x;
 	myProjectionX[1] = projection.rows[1].x;
 	projection = other->m_Aabb.Sides()[0].ProjectSelfOnto(axis[0]);
 	otherProjectionX[0] = projection.rows[0].x;
 	otherProjectionX[1] = projection.rows[1].x;
-
+	// Find projections on Y.
 	projection = m_Aabb.Sides()[1].ProjectSelfOnto(axis[1]);
 	myProjectionY[0] = projection.rows[0].y;
 	myProjectionY[1] = projection.rows[1].y;
@@ -120,4 +120,44 @@ p2Vec2 p2Collider::FindMtv(p2Collider* other) const
 	{
 		return axis[1] * overlapOnYMagnitude;
 	}
+}
+
+CircleIntersection p2Collider::FindCircleCircleIntersection(p2Collider* other) const
+{
+	// TODO: actually understand what's going on...
+
+	p2CircleShape c = *static_cast<p2CircleShape*>(&other); // Cast other shape.
+	p2Vec2 directionBetweenCenters = otherPosition - myPosition;
+	float distanceBetweenCenters = directionBetweenCenters.Magnitude();
+
+	if (distanceBetweenCenters < m_Radius + c.m_Radius) // Case 2 intersections.
+	{
+		// Code taken from: https://stackoverflow.com/questions/3349125/circle-circle-intersection-points
+		p2Vec2 P0(myPosition.x, myPosition.y);
+		p2Vec2 P1(otherPosition.x, otherPosition.y);
+		float d, a, h;
+		d = (P1 - P0).Magnitude();
+		a = ((m_Radius * m_Radius) - (c.m_Radius * c.m_Radius) + (d * d)) / (2 * d);
+		h = _CMATH_::sqrt((m_Radius * m_Radius) - (a * a));
+		p2Vec2 P2 = ((P1 - P0) * (a / d)) + P0;
+
+		float deltaY = h * (P1.y - P0.y) / d;
+		float deltaX = h * (P1.x - P0.x) / d;
+
+		return CircleIntersection{ true, std::vector<p2Vec2>{p2Vec2(P2.x + deltaY, P2.y - deltaX), p2Vec2(P2.x - deltaY, P2.y + deltaX)} };
+	}
+	else if (distanceBetweenCenters == m_Radius + c.m_Radius ||
+			 distanceBetweenCenters == _CMATH_::abs(m_Radius - c.m_Radius)) // Case 1 intersection.
+	{
+		return CircleIntersection{ true, std::vector<p2Vec2>{p2Vec2(myPosition + (directionBetweenCenters).Normalized() * m_Radius)} };
+	}
+	else // Case no intersections.
+	{
+		return CircleIntersection{ false, std::vector<p2Vec2>() };
+	}
+}
+
+p2Vec2 p2Collider::FindCircleCircleMtv(p2Collider* other) const
+{
+	return p2Vec2();
 }

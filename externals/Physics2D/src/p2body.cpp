@@ -21,8 +21,8 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
-#include <p2body.h>
 #include <iostream>
+#include <p2body.h>
 
 void p2Body::Init(p2BodyDef* bodyDef)
 {
@@ -40,24 +40,24 @@ p2Vec2 p2Body::GetLinearVelocity() const
 {
 	return m_LinearVelocity;
 }
-
 void p2Body::SetLinearVelocity(p2Vec2 velocity)
 {
 	m_LinearVelocity = velocity;
+}
+
+p2Vec2 p2Body::GetPosition()
+{
+	return m_Position;
 }
 void p2Body::SetPosition(const p2Vec2 position)
 {
 	this->m_Position = position;
 	m_Colliders[0].UpdateAabb(position);
 }
-float p2Body::GetAngularVelocity()
+
+float p2Body::GetAngularVelocity() // NOTE: Not used.
 {
 	return m_AngularVelocity;
-}
-
-p2Vec2 p2Body::GetPosition()
-{
-	return m_Position;
 }
 
 void p2Body::UpdatePosition()
@@ -79,13 +79,18 @@ void p2Body::ApplyForceToCenter(const p2Vec2& force)
 	m_LinearVelocity += (force / m_Mass);
 }
 
-void p2Body::Collide(p2Body* other)
+void p2Body::ApplyCollisionForces(p2Body* other)
 {
 	p2Vec2 otherVelocity = other->GetLinearVelocity();
-	other->ApplyForceToCenter(m_LinearVelocity * m_Mass * ((m_Restitution + other->GetRestitution())* 0.5f)); // Apply force affected by average restitution of objects.
+	float otherMass = other->GetMass();
+	float otherRestitution = other->GetRestitution();
+
+	// Apply forces to this.
+	other->ApplyForceToCenter(m_LinearVelocity * m_Mass * ((m_Restitution + otherRestitution)* 0.5f)); // Apply force affected by average restitution of objects.
 	ApplyForceToCenter(m_LinearVelocity * -m_Mass); // Cancel out velocity since this object transfers velocity to other object.
-	ApplyForceToCenter(otherVelocity * other->GetMass() * ((other->GetRestitution() + m_Restitution) * 0.5f));
-	other->ApplyForceToCenter(otherVelocity * -other->GetMass());
+	// Apply forces to other.
+	ApplyForceToCenter(otherVelocity * otherMass * ((otherRestitution + m_Restitution) * 0.5f));
+	other->ApplyForceToCenter(otherVelocity * -otherMass);
 }
 
 p2BodyType p2Body::GetType() const

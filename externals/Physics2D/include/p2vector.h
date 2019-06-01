@@ -27,17 +27,15 @@ SOFTWARE.
 
 #include <string>
 #include <engine/vector.h>
-struct p2Vec3;
-struct p2Mat22;
+#include <p2physics.h>
 
-/**
-* \brief Vector class
-*/
 struct p2Vec2
 {
+	// Constructors.
 	p2Vec2();
 	p2Vec2(float x, float y);
 
+	// Overloads.
 	p2Vec2 operator+(const p2Vec2 v)const;
 	p2Vec2 operator-(const p2Vec2 v)const;
 	p2Vec2 operator*(const float f)const;
@@ -48,43 +46,28 @@ struct p2Vec2
 	void operator/=(const float f);
 	bool operator==(const p2Vec2 other) const;
 	bool operator!=(const p2Vec2 other) const;
-	/**
-	* \brief Dot product of two vectors
-	*/
-	static float Dot(p2Vec2 v1, p2Vec2 v2);
-	/**
-	* \brief Cross product of two vectors
-	*/
-	static p2Vec3 Cross(p2Vec2 v1, p2Vec2 v2);
-	/**
-	* \brief Calculate the magnitude of the p2Vec2
-	*/
-	float GetMagnitude()const;
-	/**
-	* \brief Calculate a normalized version of the p2Vec2
-	*/
-	p2Vec2 Normalized()const;
-	/**
-	* \brief Normalize the p2Vec2
-	*/
-	void NormalizeSelf();
-	std::array<p2Vec2, 2> GetNormals();
 
-	p2Vec2 Rotate(const float angle) const;
-	p2Vec2 ProjectSelfOnto(const p2Vec2 axis) const;
+	// Static members.
+	static float Dot(p2Vec2 v1, p2Vec2 v2);
+	static p2Vec3 Cross(p2Vec2 v1, p2Vec2 v2);
 	static p2Vec2 Lerp(const p2Vec2& v1, const p2Vec2& v2, const float t);
 	static float AngleBetween(const p2Vec2& v1, const p2Vec2& v2);
 
-	/**
-	* \brief 
-	*/
-	p2Vec3 to3()const;
-	std::string ToString() const;
+	// Public methods.
+	float Magnitude()const;
+	p2Vec2 Normalized()const;
+	std::array<p2Vec2, 2> Normals();
+	void NormalizeSelf();
+	p2Vec2 Rotate(const float angle) const;
+	p2Vec2 ProjectSelfOnto(const p2Vec2 axis) const;
 	sfge::Vec2f ToGraphicSpace() const;
 
+	// Debugging methods.
+	std::string ToString() const;
+
+	// Attributes.
 	float x = 0.0f;
 	float y = 0.0f;
-
 };
 
 struct p2Vec3
@@ -99,29 +82,17 @@ struct p2Vec3
 	p2Vec3 operator*=(float f);
 	p2Vec3 operator /(float f);
 	p2Vec3 operator *(float f);
-	/**
-	* \brief Dot product of two vectors
-	*/
+
 	static float Dot(p2Vec3 v1, p2Vec3 v2);
-	/**
-	* \brief Cross product of two vectors
-	*/
 	static p2Vec3 Cross(p2Vec3 v1, p2Vec3 v2);
-	p2Vec3 Rotate(float angle) const;
 	static p2Vec3 Lerp(const p2Vec3& v1, const p2Vec3& v2, float t);
 	static float AngleBetween(const p2Vec3& v1, const p2Vec3& v2);
-	/**
-	* \brief Calculate the magnitude of the p2Vec2
-	*/
-	float GetMagnitude();
-	/**
-	* \brief Calculate a normalized version of the p2Vec2
-	*/
+
+	float Magnitude();
 	p2Vec3 Normalized();
-	/**
-	* \brief Normalize the p2Vec2
-	*/
 	void NormalizeSelf();
+	p2Vec3 Rotate(float angle) const;
+
 	float x = 0.0f;
 	float y = 0.0f;
 	float z = 0.0f;

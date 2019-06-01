@@ -25,27 +25,34 @@ SOFTWARE.
 #ifndef SFGE_P2MATRIX_H
 #define SFGE_P2MATRIX_H
 
-#include <p2vector.h>
+#include <p2physics.h>
 
 struct p2Mat22
 {
+	// Constructors.
 	p2Mat22();
 	p2Mat22(p2Vec2 r1, p2Vec2 r2) ;
 
+	// Overloads.
 	p2Mat22 operator+(p2Mat22 m1);
 	p2Mat22 operator-(p2Mat22 m1);
 	p2Mat22 operator*(p2Mat22 m1);
 	p2Vec2 operator*(p2Vec2 v);
 	p2Mat22 operator*(float f);
 	p2Mat22 operator/(float f);
-	/**
-	* \brief Calculate the invert of the 2x2 matrix
-	*/
+
+	// Public methods.
 	p2Mat22 Invert();
 	float GetDeterminant();
+	/**
+	@Brief: Returns a segment resulting from the projection of segment defined by this matrix onto a given axis.
+	*/
 	p2Mat22 ProjectSelfOnto(const p2Vec2 axis) const;
+
+	// Debugging methods.
 	std::string To_String();
 
+	// Public attributes.
 	p2Vec2 rows[2] = {};
 };
 

@@ -27,35 +27,8 @@ SOFTWARE.
 
 #include <array>
 #include <vector>
-#include <p2vector.h>
 #include <string>
-#include <p2matrix.h>
-
-// Intersection related.
-
-struct Intersection
-{
-	bool anyContact;
-};
-struct CircleIntersection : public Intersection
-{
-	// Constructors.
-	CircleIntersection(const bool anyContact, const std::vector<p2Vec2> intersections) : Intersection{anyContact}, intersections(intersections){};
-	// Public methods.
-	p2Vec2 AverageIntersection() const;
-	// Public attributes.
-	std::vector<p2Vec2> intersections;
-};
-struct SatIntersection : public Intersection
-{
-	// Constructors.
-	SatIntersection() {};
-	SatIntersection(const bool anyContact, const p2Vec2 mtv) : Intersection{ anyContact }, minimumTranslationVector(mtv){};
-	// Public attributes.
-	p2Vec2 minimumTranslationVector;
-};
-
-// Shape related.
+#include <p2physics.h>
 
 enum p2ShapeType
 {
@@ -87,8 +60,6 @@ public:
 	p2Vec2 GetSize() override;
 	float GetRadius() const;
 	void SetRadius(float radius);
-	// Public methods.
-	CircleIntersection FindIntersections(p2Shape& other, p2Vec2 myPosition, p2Vec2 otherPosition);
 private:
 	float m_Radius = 0.0f;
 };
@@ -101,16 +72,14 @@ public:
 	p2RectShape(const p2Vec2 size) : p2Shape(p2ShapeType::RECTANGLE), m_Size(size) {};
 	// Properties.
 	p2Vec2 GetSize() override;
-	std::array<p2Mat22,4> GetSides() const;
+	// std::array<p2Mat22,4> GetSides() const;
 	void SetSize(p2Vec2 size);
-	// Public methods.
-	SatIntersection FindIntersections(p2Shape& other, p2Vec2 myPosition, p2Vec2 otherPosition);
 private:
 	p2Vec2 m_Size;
 };
 
-class p2PolygonShape : public p2Shape
+/*class p2PolygonShape : public p2Shape
 {
 	
-};
+};*/
 #endif

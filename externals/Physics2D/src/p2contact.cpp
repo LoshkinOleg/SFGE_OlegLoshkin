@@ -23,18 +23,38 @@ SOFTWARE.
 */
 
 #include <p2contact.h>
-#include <p2quadtree.h>
-#include <p2body.h>
-#include <p2shape.h>
-#include <iostream>
-#include <p2aabb.h>
 
+// Intersections.
+p2Vec2 CircleIntersection::AverageIntersection() const
+{
+	p2Vec2 returnValue;
+	for (size_t i = 0; i < intersections.size(); i++)
+	{
+		returnValue += intersections[i];
+	}
+	return returnValue / intersections.size();
+}
+
+// p2Contact.
+p2Collider* p2Contact::GetColliderA()
+{
+	return ColliderA;
+}
+p2Collider* p2Contact::GetColliderB()
+{
+	return ColliderB;
+}
+std::string p2Contact::ToString() const
+{
+	return "Contact between: " + ColliderA->GetAabb().ToString() + "and \n" + ColliderB->GetAabb().ToString() + "\n";
+}
+
+// p2ContactManager.
 void p2ContactManager::SetContactListener(p2ContactListener* listener)
 {
 	m_ContactListener = listener;
 }
-
-void p2ContactManager::SolveContacts(p2QuadTree* rootQuad)
+void p2ContactManager::SolveContacts(p2Quad* rootQuad)
 {
 	// Send contact messages.
 	for (p2Contact& contact : m_CurrentContacts)
@@ -46,6 +66,7 @@ void p2ContactManager::SolveContacts(p2QuadTree* rootQuad)
 	std::vector<PotentialCollision> potentialCollisions = rootQuad->Retrieve();
 	m_CurrentContacts = std::vector<p2Contact>();
 
+	// Filter off potential collisions using aabb's.
 	for each (PotentialCollision potentialCol in potentialCollisions)
 	{
 		// Check against bodies above.
@@ -75,7 +96,6 @@ void p2ContactManager::SolveContacts(p2QuadTree* rootQuad)
 					m_CurrentContacts.back().ColliderB = potentialCol.siblings[otherSibling]->GetCollider();
 				}
 			}
-
 			firstSiblingToCheck++;
 		}
 	}
@@ -84,8 +104,11 @@ void p2ContactManager::SolveContacts(p2QuadTree* rootQuad)
 	std::vector<p2Contact> filteredContacts = std::vector<p2Contact>();
 	for (p2Contact& contact : m_CurrentContacts)
 	{
+		// Initialize variables.
 		p2Body* body_0 = contact.ColliderA->GetBody();
 		p2Body* body_1 = contact.ColliderB->GetBody();
+		p2Collider* collider_0 = contact.ColliderA;
+		p2Collider* collider_1 = contact.ColliderB;
 		p2Vec2 position_0 = contact.ColliderA->GetPosition();
 		p2Vec2 position_1 = contact.ColliderB->GetPosition();
 		p2ShapeType shapeType_0 = contact.ColliderA->GetShape()->GetType();
@@ -95,9 +118,10 @@ void p2ContactManager::SolveContacts(p2QuadTree* rootQuad)
 
 		if (shapeType_0 == p2ShapeType::CIRCLE && shapeType_1 == p2ShapeType::CIRCLE) // Case circle vs circle.
 		{
-			p2CircleShape circle_0 = *static_cast<p2CircleShape*>(contact.ColliderA->GetShape());
-			p2CircleShape circle_1 = *static_cast<p2CircleShape*>(contact.ColliderB->GetShape());
-			CircleIntersection intersect = circle_0.FindIntersections(circle_1, position_0, position_1);
+			// p2CircleShape circle_0 = *static_cast<p2CircleShape*>(contact.ColliderA->GetShape());
+			// p2CircleShape circle_1 = *static_cast<p2CircleShape*>(contact.ColliderB->GetShape());
+			CircleIntersection intersect = contact.ColliderA->FindCircleCircleIntersection(contact.ColliderB);
+			auto penetrations = collider_0->FindCircleCircleMtv(collider_1);
 
 			if (intersect.anyContact)
 			{
@@ -110,21 +134,19 @@ void p2ContactManager::SolveContacts(p2QuadTree* rootQuad)
 						if (bodyType_0 == p2BodyType::DYNAMIC && bodyType_1 == p2BodyType::DYNAMIC) // If this is a dynamic vs dynamic contact.
 						{
 							// Correct positions.
-							float penetration_0 = circle_0.GetRadius() - (intersect.AverageIntersection() - position_0).GetMagnitude();
-							float penetration_1 = circle_1.GetRadius() - (intersect.AverageIntersection() - position_1).GetMagnitude();
 							p2Vec2 direction_0 = (position_1 - position_0).Normalized();
 							p2Vec2 direction_1 = (position_0 - position_1).Normalized();
-							body_0->SetPosition(position_0 - (direction_0 * penetration_0));
-							body_1->SetPosition(position_1 - (direction_1 * penetration_1));
+							body_0->SetPosition(position_0 - (direction_0 * penetrations[0].Magnitude()));
+							body_1->SetPosition(position_1 - (direction_1 * penetrations[1].Magnitude()));
 
 							// Modify velocities.
-							body_0->Collide(body_1);
+							body_0->ApplyCollisionForces(body_1);
 						}
 						else if ((bodyType_0 == p2BodyType::DYNAMIC && bodyType_1 == p2BodyType::STATIC) || (bodyType_0 == p2BodyType::STATIC && bodyType_1 == p2BodyType::DYNAMIC)) // If this is a static vs dynamic contact.
 						{
 							// TODO:: handle static vs dynamic position correction.
 
-							body_0->Collide(body_1);
+							body_0->ApplyCollisionForces(body_1);
 						}
 					}
 				}
@@ -135,11 +157,11 @@ void p2ContactManager::SolveContacts(p2QuadTree* rootQuad)
 						if (bodyType_0 == p2BodyType::DYNAMIC && bodyType_1 == p2BodyType::DYNAMIC) // If this is a dynamic vs dynamic contact.
 						{
 							// Modify velocities.
-							body_0->Collide(body_1);
+							body_0->ApplyCollisionForces(body_1);
 						}
 						else if ((bodyType_0 == p2BodyType::DYNAMIC && bodyType_1 == p2BodyType::STATIC) || (bodyType_0 == p2BodyType::STATIC && bodyType_1 == p2BodyType::DYNAMIC)) // If this is a static vs dynamic contact.
 						{
-							body_0->Collide(body_1);
+							body_0->ApplyCollisionForces(body_1);
 						}
 					}
 				}
@@ -155,21 +177,21 @@ void p2ContactManager::SolveContacts(p2QuadTree* rootQuad)
 				if (bodyType_0 == p2BodyType::DYNAMIC && bodyType_1 == p2BodyType::DYNAMIC) // If this is a dynamic vs dynamic contact.
 				{
 					// Find mtv
-					p2Vec2 mtv = contact.ColliderA->FindMtv(contact.ColliderB);
+					p2Vec2 mtv = contact.ColliderA->FindRectRectMtv(contact.ColliderB);
 					body_0->SetPosition(body_0->GetPosition() - (mtv * 0.5f));
 					body_1->SetPosition(body_1->GetPosition() + (mtv * 0.5f));
 
 					// Modify velocities.
-					body_0->Collide(body_1);
+					body_0->ApplyCollisionForces(body_1);
 				}
 				else if ((bodyType_0 == p2BodyType::DYNAMIC && bodyType_1 == p2BodyType::STATIC) || (bodyType_0 == p2BodyType::STATIC && bodyType_1 == p2BodyType::DYNAMIC)) // If this is a static vs dynamic contact.
 				{
 					// TODO:: handle static vs dynamic position correction.
 
 					// Find mtv
-					p2Vec2 mtv = contact.ColliderA->FindMtv(contact.ColliderB);
+					p2Vec2 mtv = contact.ColliderA->FindRectRectMtv(contact.ColliderB);
 
-					body_0->Collide(body_1);
+					body_0->ApplyCollisionForces(body_1);
 				}
 			}
 		}
@@ -180,20 +202,4 @@ void p2ContactManager::SolveContacts(p2QuadTree* rootQuad)
 	{
 		m_ContactListener->BeginContact(&contact);
 	}
-}
-
-p2Collider* p2Contact::GetColliderA()
-{
-	return ColliderA;
-}
-
-p2Collider* p2Contact::GetColliderB()
-{
-	return ColliderB;
-}
-
-void p2Contact::ToString() const
-{
-	std::cout << "--------------" << std::endl;
-	std::cout << "Contact between: " << ColliderA->GetAabb().ToString() << "and \n" << ColliderB->GetAabb().ToString() << std::endl;
 }

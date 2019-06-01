@@ -26,23 +26,50 @@ SOFTWARE.
 #define SFGE_P2CONTACT_H
 
 #include <vector>
-class p2Collider;
-class p2QuadTree;
+#include <p2physics.h>
+
+struct PotentialCollision
+{
+	std::vector<p2Body*> siblings;
+	std::vector<p2Body*> potentialCollideesAbove;
+};
+
+struct Intersection
+{
+	bool anyContact;
+};
+struct CircleIntersection : public Intersection
+{
+	// Constructors.
+	CircleIntersection(const bool anyContact, const std::vector<p2Vec2> intersections) : Intersection{ anyContact }, intersections(intersections){};
+	// Public methods.
+	p2Vec2 AverageIntersection() const;
+	// Public attributes.
+	std::vector<p2Vec2> intersections;
+};
+struct SatIntersection : public Intersection
+{
+	// Constructors.
+	SatIntersection() {};
+	SatIntersection(const bool anyContact, const p2Vec2 mtv) : Intersection{ anyContact }, minimumTranslationVector(mtv){};
+	// Public attributes.
+	p2Vec2 minimumTranslationVector;
+};
 
 /**
 * \brief Representation of a contact given as argument in a p2ContactListener
 */
 struct p2Contact
 {
-	p2Collider* GetColliderA();
+	p2Collider* GetColliderA(); // Used by SFGE.
 	p2Collider* GetColliderB();
-	p2Collider* ColliderA;
+	p2Collider* ColliderA; // Used in physics engine.
 	p2Collider* ColliderB;
-	void ToString() const;
+	std::string ToString() const;
 };
 
 /**
-* \brief Listener of contacts happening in an attached p2World
+@Brief: Base class to derive from when creating a contact listener.
 */
 class p2ContactListener
 {
@@ -65,7 +92,7 @@ public:
 	void SetContactListener(p2ContactListener* listener);
 	
 	// Public methods.
-	void SolveContacts(p2QuadTree* rootQuad);
+	void SolveContacts(p2Quad* rootQuad);
 
 private:
 	// Private attributes.

@@ -26,14 +26,8 @@ SOFTWARE.
 #ifndef SFGE_P2COLLIDER_H
 #define SFGE_P2COLLIDER_H
 
-#include <p2vector.h>
-#include <p2aabb.h>
-#include <p2shape.h>
-class p2Body;
+#include <p2physics.h>
 
-/**
-* \brief Struct defining a p2Collider when creating one
-*/
 struct p2ColliderDef
 {
 	void* userData;
@@ -42,10 +36,6 @@ struct p2ColliderDef
 	bool isSensor;
 	p2Body* body;
 };
-
-/**
-* \brief Representation of a Collider attached to a p2Body
-*/
 
 class p2Collider
 {
@@ -60,10 +50,14 @@ public:
 	p2Vec2 GetPosition() const;
 	p2Body* GetBody() const;
 	void SetUserData(void* colliderData);
+
 	// Public methods.
 	void Init(const p2ColliderDef* def);
 	void UpdateAabb(const p2Vec2 center);
-	p2Vec2 FindMtv(p2Collider* other) const;
+	p2Vec2 FindRectRectMtv(p2Collider* other) const;
+	CircleIntersection FindCircleCircleIntersection(p2Collider* other) const;
+	std::array<p2Vec2,2> FindCircleCircleMtv(p2Collider* other)const;
+
 private:
 	p2Body* m_Body;
 	void* m_UserData = nullptr;

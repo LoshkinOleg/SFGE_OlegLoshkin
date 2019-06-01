@@ -27,69 +27,72 @@ SOFTWARE.
 
 #include <memory>
 #include <vector>
-#include <p2aabb.h>
-class p2Body;
-
-struct PotentialCollision
-{
-	std::vector<p2Body*> siblings;
-	std::vector<p2Body*> potentialCollideesAbove;
-};
+#include <p2physics.h>
 
 /**
-* \brief Representation of a tree with 4 branches containing p2Body defined by their p2AABB
+@Brief: Single node of a QuadTree.
 */
-class p2QuadTree
+class p2Quad
 {
 public:
-	p2QuadTree();
-	p2QuadTree(int nodeLevel, p2AABB bounds);
-	~p2QuadTree();
-	p2QuadTree& operator=(p2QuadTree& other);
+	// Constructors.
+	p2Quad();
+	p2Quad(int nodeLevel, p2AABB bounds);
+	~p2Quad();
 
-	static int Max_Objects;
+	// Overloads.
+	p2Quad& operator=(p2Quad& other); // Necessary due to usage of smart pointers as attributes.
 
+	// Public methods.
 	/**
-	* Remove all objects leafs and quadtrees children
+	@Brief: Clears the QuadTree and deallocates heap attributed to children. Called in Step() before rebuilding QuadTree.
 	*/
 	void Clear();
 	/**
-	* Called when node have too much objects and split the current node into four
-	*/
-	void Split();
-	/**
-	* Insert a new p2Body in the tree
+	@Brief: Inserts a p2Body in Quad. Called from Step() during QuadTree rebuilding.
 	*/
 	void Insert(p2Body* obj);
 	/**
-	@Brief: Return a list of all bodies recursively from this quad down and ptrs to quads containing them.
+	@Brief: Returns a list of all potential collisions.
 	*/
 	std::vector<PotentialCollision> Retrieve();
+
+	// Debugging methods.
 	/**
-	 * @Brief: Fills up passed vector with the aabb's of all quads for debugging.
-	 */
+	@Brief: Fills up passed vector with the aabb's of all quads for debugging.
+	*/
 	void GetQuadTreesAabbs(std::vector<p2AABB>& listToFill) const;
 	/**
-	@Brief: Fills up passed vector with the number of bodies stored in each quad for debugging.
-	 */
+	@Brief: Instructs each Quad recursively to cout it's depth level followed by the number of objects it contains.
+	*/
 	void LogQuadsBodyCount() const;
 	
+	// Public attributes.
+	/**
+	@Brief: Defines how many objects a Quad can contain before splitting if it doesn't have any children.
+	*/
+	static int Max_Objects;
+
 private:
 	// Private methods.
 	/**
-	@Brief: Called by Retrieve().
+	@Brief: Called when Quad reaches maximum capacity for the first time.
+	*/
+	void Split();
+	/**
+	@Brief: Called by Retrieve(). Simplified recursive variation of Retrieve().
 	*/
 	void RetrieveRecursively(std::vector<PotentialCollision>& listToFill, int& currentIndex);
 
-	// Attributes.
+	// Private attributes.
 	static const int MAX_LEVELS = 5;
 	static const int CHILD_TREE_NMB = 4;
 	int m_NodeLevel;
-	bool m_HasChildren;
-	p2QuadTree* m_Parent = nullptr;
-	std::unique_ptr<p2QuadTree> m_Children[CHILD_TREE_NMB];
-	std::vector<p2Body*> m_Bodies;
 	p2AABB m_Bounds;
+	std::vector<p2Body*> m_Bodies;
+	bool m_HasChildren;
+	std::unique_ptr<p2Quad> m_Children[CHILD_TREE_NMB];
+	p2Quad* m_Parent = nullptr;
 };
 
 #endif

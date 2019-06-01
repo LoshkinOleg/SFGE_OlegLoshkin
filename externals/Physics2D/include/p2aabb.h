@@ -25,8 +25,8 @@ SOFTWARE.
 #ifndef SFGE_P2AABB_H
 #define SFGE_P2AABB_H
 
-#include <p2vector.h>
-#include <p2matrix.h>
+#include <array>
+#include <p2physics.h>
 
 struct p2AABB
 {

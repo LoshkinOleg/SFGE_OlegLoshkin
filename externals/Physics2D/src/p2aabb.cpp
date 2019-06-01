@@ -22,7 +22,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include <array>
 #include <p2aabb.h>
 
 p2Vec2 p2AABB::GetCenter() const
@@ -37,27 +36,23 @@ p2Vec2 p2AABB::GetExtends() const
 
 void p2AABB::SetCenter(const p2Vec2 center)
 {
-	p2Vec2 temp_bottomLeft = center + p2Vec2(- GetExtends().x, GetExtends().y);
-	p2Vec2 temp_topRight = center + p2Vec2(GetExtends().x, - GetExtends().y);
-	bottomLeft = temp_bottomLeft;
-	topRight = temp_topRight;
+	p2Vec2 currentExtends = GetExtends();
+	bottomLeft = center + p2Vec2(-currentExtends.x, currentExtends.y);
+	topRight = center + p2Vec2(currentExtends.x, -currentExtends.y);
 }
 
 float p2AABB::XMin() const
 {
 	return bottomLeft.x;
 }
-
 float p2AABB::XMax() const
 {
 	return topRight.x;
 }
-
 float p2AABB::YMin() const
 {
 	return topRight.y;
 }
-
 float p2AABB::YMax() const
 {
 	return bottomLeft.y;
@@ -73,6 +68,8 @@ std::array<p2Mat22, 4> p2AABB::Sides() const
 
 bool p2AABB::Overlaps(const p2AABB other) const
 {
+	// General rule to check for overlapping of 2 segments in 1D: SumOf(len) / 2 > DeltaOf(avg). See Fig. 1 in technical document.
+
 	float sumOfHalfWidths = (other.XMax() - other.XMin() + XMax() - XMin()) * 0.5f;
 	float sumOfHalfHeights = (other.YMax() - other.YMin() + YMax() - YMin()) * 0.5f;
 	float deltaAvgX = _CMATH_::abs((other.XMin() + other.XMax()) * 0.5f - (XMin() + XMax()) * 0.5f);
