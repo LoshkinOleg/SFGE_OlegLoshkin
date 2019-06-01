@@ -23,6 +23,7 @@ namespace sfge::ext
 		// void OnContact(ColliderData* c1, ColliderData* c2, bool enter) override;
 
 	private:
+		const int MULTIPLIER = 5;
 		p2Vec2 axis{1.0f,0.5f};
 		p2Vec2 physicalVectors[2]{ p2Vec2(1,0), p2Vec2(0,1) };
 		p2Vec2 vectToDraw = p2Vec2(1.0f,1.0f);

@@ -27,7 +27,9 @@ SOFTWARE.
 
 #include <memory>
 #include <vector>
-#include <p2physics.h>
+#include <p2aabb.h>
+class p2Body;
+struct PotentialCollision;
 
 /**
 @Brief: Single node of a QuadTree.

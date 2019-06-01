@@ -25,8 +25,12 @@ SOFTWARE.
 #ifndef SFGE_P2CONTACT_H
 #define SFGE_P2CONTACT_H
 
+#include <array>
 #include <vector>
-#include <p2physics.h>
+class p2Collider;
+class p2Quad;
+class p2Body;
+#include <p2vector.h>
 
 struct PotentialCollision
 {
@@ -41,11 +45,12 @@ struct Intersection
 struct CircleIntersection : public Intersection
 {
 	// Constructors.
-	CircleIntersection(const bool anyContact, const std::vector<p2Vec2> intersections) : Intersection{ anyContact }, intersections(intersections){};
+	CircleIntersection(const bool anyContact, const std::vector<p2Vec2> intersections, const std::array<p2Vec2,2> mtv) : Intersection{ anyContact }, intersections(intersections), mtv(mtv){};
 	// Public methods.
 	p2Vec2 AverageIntersection() const;
 	// Public attributes.
 	std::vector<p2Vec2> intersections;
+	std::array<p2Vec2,2> mtv;
 };
 struct SatIntersection : public Intersection
 {

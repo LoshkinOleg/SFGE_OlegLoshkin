@@ -25,7 +25,10 @@ SOFTWARE.
 #ifndef SFGE_P2WORLD_H
 #define SFGE_P2WORLD_H
 
-#include <p2physics.h>
+#include <p2aabb.h>
+#include <p2body.h>
+#include <p2contact.h>
+#include <p2quadtree.h>
 
 const size_t MAX_BODY_LEN = 256;
 

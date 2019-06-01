@@ -24,7 +24,7 @@ SOFTWARE.
 
 #ifndef SFGE_P2PHYSICS_H
 #define SFGE_P2PHYSICS_H
-
+/*
 #include <p2aabb.h>
 #include <p2body.h>
 #include <p2collider.h>
@@ -34,6 +34,6 @@ SOFTWARE.
 #include <p2vector.h>
 #include <p2matrix.h>
 #include <p2world.h>
-
+*/
 
 #endif

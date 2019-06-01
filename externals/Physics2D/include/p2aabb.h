@@ -26,12 +26,13 @@ SOFTWARE.
 #define SFGE_P2AABB_H
 
 #include <array>
-#include <p2physics.h>
+#include <p2vector.h>
+#include <p2matrix.h>
 
 struct p2AABB
 {
 	// Constructors.
-	p2AABB(): bottomLeft(p2Vec2()), topRight(p2Vec2()){};
+	p2AABB();
 	p2AABB(const p2Vec2 bottomLeft, const p2Vec2 topRight) : bottomLeft(bottomLeft), topRight(topRight) {};
 
 	// Properties.

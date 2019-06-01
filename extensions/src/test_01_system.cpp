@@ -21,19 +21,19 @@ void sfge::ext::Test_01_System::OnFixedUpdate()
 {
 	if (inputManager->GetKeyboardManager().IsKeyHeld(sf::Keyboard::Key::Right))
 	{
-		vectToDraw += physicalVectors[0];
+		vectToDraw += physicalVectors[0] * MULTIPLIER;
 	}
 	else if (inputManager->GetKeyboardManager().IsKeyHeld(sf::Keyboard::Key::Left))
 	{
-		vectToDraw -= physicalVectors[0];
+		vectToDraw -= physicalVectors[0] * MULTIPLIER;
 	}
 	if (inputManager->GetKeyboardManager().IsKeyHeld(sf::Keyboard::Key::Up))
 	{
-		vectToDraw -= physicalVectors[1];
+		vectToDraw -= physicalVectors[1] * MULTIPLIER;
 	}
 	else if (inputManager->GetKeyboardManager().IsKeyHeld(sf::Keyboard::Key::Down))
 	{
-		vectToDraw += physicalVectors[1];
+		vectToDraw += physicalVectors[1] * MULTIPLIER;
 	}
 }
 

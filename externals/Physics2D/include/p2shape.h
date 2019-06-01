@@ -28,7 +28,8 @@ SOFTWARE.
 #include <array>
 #include <vector>
 #include <string>
-#include <p2physics.h>
+#include <p2vector.h>
+#include <p2matrix.h>
 
 enum p2ShapeType
 {

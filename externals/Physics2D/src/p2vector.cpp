@@ -24,9 +24,9 @@ SOFTWARE.
 
 #include <cmath>
 #include <array>
+#include <engine/globals.h>
 #include <p2vector.h>
 #include <p2matrix.h>
-#include <engine/globals.h>
 
 p2Vec2::p2Vec2()
 {
@@ -96,22 +96,22 @@ p2Vec3 p2Vec2::Cross(const p2Vec2 v1, const p2Vec2 v2)
 {
 	return p2Vec3(0,0, (v1.x * v2.y) - (v1.y * v2.x) );
 }
-float p2Vec2::GetMagnitude()const
+float p2Vec2::Magnitude()const
 {
 	return _CMATH_::sqrt((x*x + y*y));
 }
 
 p2Vec2 p2Vec2::Normalized()const
 {
-	return p2Vec2(x,y) / GetMagnitude();
+	return p2Vec2(x,y) / Magnitude();
 }
 
 void p2Vec2::NormalizeSelf()
 {
-	*this = *this / GetMagnitude();
+	*this = *this / Magnitude();
 }
 
-std::array<p2Vec2, 2> p2Vec2::GetNormals()
+std::array<p2Vec2, 2> p2Vec2::Normals()
 {
 	return std::array<p2Vec2, 2>{ p2Vec2(-y,x), p2Vec2(y,-x) };
 }
@@ -125,7 +125,7 @@ p2Vec2 p2Vec2::Rotate(const float angle) const
 p2Vec2 p2Vec2::ProjectSelfOnto(const p2Vec2 axis) const
 {
 	float theta = (AngleBetween(p2Vec2{ 1,0 }, *this) - AngleBetween(p2Vec2{1,0}, axis)) * PI / 180.0f;
-	return axis.Normalized() * _CMATH_::cos(theta) * GetMagnitude();
+	return axis.Normalized() * _CMATH_::cos(theta) * Magnitude();
 }
 
 p2Vec2 p2Vec2::Lerp(const p2Vec2& v1, const p2Vec2& v2, const float t)
@@ -135,12 +135,7 @@ p2Vec2 p2Vec2::Lerp(const p2Vec2& v1, const p2Vec2& v2, const float t)
 
 float p2Vec2::AngleBetween(const p2Vec2& v1, const p2Vec2& v2)
 {
-	return (_CMATH_::acos(p2Vec2::Dot(v1,v2) / (v1.GetMagnitude() * v2.GetMagnitude()))) * (180.0f/ PI);
-}
-
-p2Vec3 p2Vec2::to3()const
-{
-	return p2Vec3(x, y, 0.0f);
+	return (_CMATH_::acos(p2Vec2::Dot(v1,v2) / (v1.Magnitude() * v2.Magnitude()))) * (180.0f/ PI);
 }
 
 std::string p2Vec2::ToString() const
@@ -232,7 +227,7 @@ float p2Vec3::AngleBetween(const p2Vec3& v1, const p2Vec3& v2)
 	return 0.0f;
 }
 
-float p2Vec3::GetMagnitude()
+float p2Vec3::Magnitude()
 {
 	return 0.0f;
 }

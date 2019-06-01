@@ -25,7 +25,7 @@ SOFTWARE.
 #ifndef SFGE_P2MATRIX_H
 #define SFGE_P2MATRIX_H
 
-#include <p2physics.h>
+#include <p2vector.h>
 
 struct p2Mat22
 {

@@ -111,7 +111,12 @@ TEST(OlegLoshkin, test_05)
 	dynamic_body["type"] = sfge::ComponentType::BODY2D;
 	dynamic_body["body_type"] = p2BodyType::DYNAMIC;
 	dynamic_body["mass"] = 1;
-	dynamic["components"] = { dynamic_transform, dynamic_shape, dynamic_body };
+	json dynamic_collider;
+	dynamic_collider["type"] = sfge::ComponentType::COLLIDER2D;
+	dynamic_collider["collider_type"] = sfge::ColliderType::CIRCLE;
+	dynamic_collider["radius"] = 10;
+	dynamic_collider["sensor"] = false;
+	dynamic["components"] = { dynamic_transform, dynamic_shape, dynamic_body, dynamic_collider };
 
 	json kinematic;
 	kinematic["name"] = "Kinematic";
@@ -127,7 +132,12 @@ TEST(OlegLoshkin, test_05)
 	kinematic_body["type"] = sfge::ComponentType::BODY2D;
 	kinematic_body["body_type"] = p2BodyType::KINEMATIC;
 	kinematic_body["mass"] = 1;
-	kinematic["components"] = { kinematic_transform, kinematic_shape, kinematic_body };
+	json kinematic_collider;
+	kinematic_collider["type"] = sfge::ComponentType::COLLIDER2D;
+	kinematic_collider["collider_type"] = sfge::ColliderType::CIRCLE;
+	kinematic_collider["radius"] = 10;
+	kinematic_collider["sensor"] = false;
+	kinematic["components"] = { kinematic_transform, kinematic_shape, kinematic_body, kinematic_collider };
 
 	json stat;
 	stat["name"] = "Static";
@@ -143,7 +153,12 @@ TEST(OlegLoshkin, test_05)
 	stat_body["type"] = sfge::ComponentType::BODY2D;
 	stat_body["body_type"] = p2BodyType::STATIC;
 	stat_body["mass"] = 1;
-	stat["components"] = { stat_transform, stat_shape, stat_body };
+	json stat_collider;
+	stat_collider["type"] = sfge::ComponentType::COLLIDER2D;
+	stat_collider["collider_type"] = sfge::ColliderType::CIRCLE;
+	stat_collider["radius"] = 10;
+	stat_collider["sensor"] = false;
+	stat["components"] = { stat_transform, stat_shape, stat_body, stat_collider };
 
 	sceneJson["entities"] = { dynamic, kinematic, stat };
 

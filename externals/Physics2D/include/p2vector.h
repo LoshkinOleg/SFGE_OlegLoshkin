@@ -27,7 +27,8 @@ SOFTWARE.
 
 #include <string>
 #include <engine/vector.h>
-#include <p2physics.h>
+struct p2Vec3;
+struct p2Mat22;
 
 struct p2Vec2
 {

@@ -22,6 +22,7 @@ namespace sfge::ext
 		Vec2f screenSize;
 		Graphics2dManager* graphicsManager;
 		InputManager* inputManager;
+		const int MULTIPLIER = 5;
 	};
 }
 

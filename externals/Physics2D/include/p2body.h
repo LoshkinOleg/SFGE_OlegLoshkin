@@ -26,7 +26,9 @@ SOFTWARE.
 #define SFGE_P2BODY_H
 
 #include <vector>
-#include <p2physics.h>
+#include <p2vector.h>
+#include <p2aabb.h>
+#include <p2collider.h>
 
 const size_t MAX_COLLIDER_LEN = 1;
 
@@ -57,7 +59,7 @@ public:
 	float GetAngularVelocity();
 	bool IsInit() const;
 	float GetMass() const;
-	p2AABB GetAabb()const;
+	p2AABB& GetAabb();
 	float GetRestitution() const;
 	p2Collider* GetCollider();
 	void SetPosition(const p2Vec2 position);

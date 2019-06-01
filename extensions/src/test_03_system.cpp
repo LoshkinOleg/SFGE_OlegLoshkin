@@ -22,22 +22,22 @@ void sfge::ext::Test_03_System::OnUpdate(float dt)
 {
 	if (inputManager->GetKeyboardManager().IsKeyHeld(sf::Keyboard::Key::Right))
 	{
-		vectToDraw += physicalVectors[0];
+		vectToDraw += physicalVectors[0] * dt * MULTIPLIER;
 		projection = p2Mat22(screenCenter, screenCenter + vectToDraw).ProjectSelfOnto(axis);
 	}
 	else if (inputManager->GetKeyboardManager().IsKeyHeld(sf::Keyboard::Key::Left))
 	{
-		vectToDraw -= physicalVectors[0];
+		vectToDraw -= physicalVectors[0] * dt * MULTIPLIER;
 		projection = p2Mat22(screenCenter, screenCenter + vectToDraw).ProjectSelfOnto(axis);
 	}
 	if (inputManager->GetKeyboardManager().IsKeyHeld(sf::Keyboard::Key::Up))
 	{
-		vectToDraw -= physicalVectors[1];
+		vectToDraw -= physicalVectors[1] * dt * MULTIPLIER;
 		projection = p2Mat22(screenCenter, screenCenter + vectToDraw).ProjectSelfOnto(axis);
 	}
 	else if (inputManager->GetKeyboardManager().IsKeyHeld(sf::Keyboard::Key::Down))
 	{
-		vectToDraw += physicalVectors[1];
+		vectToDraw += physicalVectors[1] * dt * MULTIPLIER;
 		projection = p2Mat22(screenCenter, screenCenter + vectToDraw).ProjectSelfOnto(axis);
 	}
 }

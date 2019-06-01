@@ -24,6 +24,12 @@ SOFTWARE.
 
 #include <p2aabb.h>
 
+p2AABB::p2AABB()
+{
+	bottomLeft = p2Vec2();
+	topRight = p2Vec2();
+}
+
 p2Vec2 p2AABB::GetCenter() const
 {
 	return (bottomLeft + topRight)/2.0f;

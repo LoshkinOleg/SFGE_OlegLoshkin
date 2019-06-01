@@ -103,9 +103,13 @@ float p2Body::GetMass() const
 	return m_Mass;
 }
 
-p2AABB p2Body::GetAabb() const
+p2AABB& p2Body::GetAabb()
 {
-	if (m_ColliderIndex < 1) throw "Trying to get the aabb of an uninitialized collider!";
+	if (m_ColliderIndex < 1)
+	{
+		std::cout << "Trying to get the aabb of an uninitialized collider!" << std::endl;
+		throw;
+	}
 	return m_Colliders[(size_t)m_ColliderIndex - 1].GetAabb();
 }
 
