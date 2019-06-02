@@ -239,7 +239,7 @@ TEST(OlegLoshkin, test_07)
 	sfge::Engine engine;
 	std::unique_ptr<sfge::Configuration> initConfig = std::make_unique<sfge::Configuration>();
 	auto screenSize = initConfig->screenResolution;
-	initConfig->gravity = p2Vec2(0, 0);
+	// initConfig->gravity = p2Vec2(0, 0);
 	initConfig->quadTreeBodiesPerQuad = 2;
 	engine.Init(std::move(initConfig));
 	auto* sceneManager = engine.GetSceneManager();
@@ -256,7 +256,7 @@ TEST(OlegLoshkin, test_07)
 	transform["scale"] = { 1.0,1.0 };
 	json body;
 	body["type"] = sfge::ComponentType::BODY2D;
-	body["body_type"] = p2BodyType::DYNAMIC;
+	body["body_type"] = p2BodyType::KINEMATIC;
 	body["mass"] = 1;
 	json shape;
 	shape["type"] = sfge::ComponentType::SHAPE2D;

@@ -86,7 +86,7 @@ private:
 	p2Vec2 m_LinearVelocity;
 	float m_AngularVelocity; // NOTE: Not used.
 	float m_Restitution = 1;
-	float m_GravityScale;
+	float m_GravityScale; // NOTE: Not used.
 	float m_Mass = 1;
 	bool m_IsInit;
 	int m_ColliderIndex = 0;

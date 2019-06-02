@@ -45,6 +45,6 @@ void sfge::ext::Test_03_System::OnUpdate(float dt)
 void sfge::ext::Test_03_System::OnDraw()
 {
 	graphicsManager->DrawVector(vectToDraw.ToGraphicSpace(), screenCenter.ToGraphicSpace(), sf::Color::Red); // Modifiable vector.
-	graphicsManager->DrawLine(Vec2f(0,0), axis.ToGraphicSpace() * 1000, sf::Color::Green); // Axis to project onto.
+	graphicsManager->DrawLine(Vec2f(0,0), axis.ToGraphicSpace() * 100, sf::Color::Green); // Axis to project onto.
 	graphicsManager->DrawLine(projection.rows[0].ToGraphicSpace(), projection.rows[1].ToGraphicSpace(), sf::Color::Red); // Projection.
 }

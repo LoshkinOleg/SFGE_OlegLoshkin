@@ -5,7 +5,6 @@ void p2Collider::Init(const p2ColliderDef* def)
 {
 	m_UserData = def->userData;
 	m_IsSensor = def->isSensor;
-	m_Restitution = def->restitution;
 	m_Body = def->body;
 	p2AABB myAabb = p2AABB();
 

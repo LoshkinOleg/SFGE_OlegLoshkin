@@ -36,7 +36,6 @@ struct p2ColliderDef
 {
 	void* userData;
 	p2Shape* shape;
-	float restitution;
 	bool isSensor;
 	p2Body* body;
 };
@@ -65,7 +64,7 @@ private:
 	p2Body* m_Body;
 	void* m_UserData = nullptr;
 	p2Shape* m_Shape;
-	float m_Restitution = 1.0f;
+	// float m_Restitution = 1.0f;
 	bool m_IsSensor = false;
 	p2AABB m_Aabb;
 };
