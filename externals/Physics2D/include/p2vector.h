@@ -53,11 +53,12 @@ struct p2Vec2
 	static p2Vec3 Cross(p2Vec2 v1, p2Vec2 v2);
 	static p2Vec2 Lerp(const p2Vec2& v1, const p2Vec2& v2, const float t);
 	static float AngleBetween(const p2Vec2& v1, const p2Vec2& v2);
+	static p2Vec2 Reflect(p2Vec2 v, p2Vec2 axis);
 
 	// Public methods.
 	float Magnitude()const;
 	p2Vec2 Normalized()const;
-	std::array<p2Vec2, 2> Normals();
+	std::array<p2Vec2, 2> Normals() const;
 	void NormalizeSelf();
 	p2Vec2 Rotate(const float angle) const;
 	p2Vec2 ProjectSelfOnto(const p2Vec2 axis) const;

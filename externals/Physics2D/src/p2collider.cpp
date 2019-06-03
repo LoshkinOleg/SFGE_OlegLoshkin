@@ -130,7 +130,7 @@ CircleIntersection p2Collider::FindCircleCircleIntersection(p2Collider* other) c
 	p2Vec2 myPosition = GetPosition();
 	p2Vec2 otherPosition = other->GetPosition();
 	p2Vec2 directionBetweenCenters = (otherPosition - myPosition).Normalized();
-	float distanceBetweenCenters = directionBetweenCenters.Magnitude();
+	float distanceBetweenCenters = (otherPosition - myPosition).Magnitude();
 	float myRadius = myCircle.GetRadius();
 	float otherRadius = otherCircle.GetRadius();
 
@@ -143,16 +143,19 @@ CircleIntersection p2Collider::FindCircleCircleIntersection(p2Collider* other) c
 		p2Vec2 P1(otherPosition.x, otherPosition.y);
 		float d, a, h;
 		d = (P1 - P0).Magnitude();
-		a = ((myRadius * myRadius) - (otherRadius * otherRadius) + (d * d)) / (2 * d);
+		a = ((myRadius * myRadius) - (otherRadius * otherRadius) + (d * d)) / (2.0f * d);
 		h = _CMATH_::sqrt((myRadius * myRadius) - (a * a));
 		p2Vec2 P2 = ((P1 - P0) * (a / d)) + P0;
 
 		float deltaY = h * (P1.y - P0.y) / d;
 		float deltaX = h * (P1.x - P0.x) / d;
 
+		p2Vec2 mtv_0 = p2Vec2(directionBetweenCenters * (myRadius - a));
+		p2Vec2 mtv_1 = p2Vec2(directionBetweenCenters * -(otherRadius - (distanceBetweenCenters - a)));
+
 		return CircleIntersection{	true,
 									std::vector<p2Vec2>{	p2Vec2(P2.x + deltaY, P2.y - deltaX),	p2Vec2(P2.x - deltaY, P2.y + deltaX)	},
-									std::array<p2Vec2,2>{	directionBetweenCenters * (myRadius - a),	directionBetweenCenters	* -(otherRadius - (distanceBetweenCenters - a))	}};
+									std::array<p2Vec2,2>{	directionBetweenCenters * (myRadius - a),	directionBetweenCenters	* (otherRadius - (distanceBetweenCenters - a)) * -1	}};
 	}
 	else if (distanceBetweenCenters == myRadius + otherRadius ||
 			 distanceBetweenCenters == _CMATH_::abs(myRadius - otherRadius)) // Case 1 intersection.

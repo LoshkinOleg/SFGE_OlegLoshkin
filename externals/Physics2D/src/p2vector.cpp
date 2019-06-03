@@ -111,7 +111,7 @@ void p2Vec2::NormalizeSelf()
 	*this = *this / Magnitude();
 }
 
-std::array<p2Vec2, 2> p2Vec2::Normals()
+std::array<p2Vec2, 2> p2Vec2::Normals() const
 {
 	return std::array<p2Vec2, 2>{ p2Vec2(-y,x), p2Vec2(y,-x) };
 }
@@ -136,6 +136,12 @@ p2Vec2 p2Vec2::Lerp(const p2Vec2& v1, const p2Vec2& v2, const float t)
 float p2Vec2::AngleBetween(const p2Vec2& v1, const p2Vec2& v2)
 {
 	return (_CMATH_::acos(p2Vec2::Dot(v1,v2) / (v1.Magnitude() * v2.Magnitude()))) * (180.0f/ PI);
+}
+
+p2Vec2 p2Vec2::Reflect(p2Vec2 v, p2Vec2 axis)
+{
+	p2Vec2 n = axis.Normals()[0].Normalized();
+	return v - (n * p2Vec2::Dot(v, n) * 2);
 }
 
 std::string p2Vec2::ToString() const
