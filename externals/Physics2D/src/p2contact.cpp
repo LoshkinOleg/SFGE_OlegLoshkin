@@ -181,9 +181,8 @@ void p2ContactManager::SolveContacts(p2Quad* rootQuad)
 					}
 				}
 			}
-
 		}
-		if (shapeType_0 == p2ShapeType::RECTANGLE && shapeType_1 == p2ShapeType::RECTANGLE) // Case rect vs rect.
+		else if (shapeType_0 == p2ShapeType::RECTANGLE && shapeType_1 == p2ShapeType::RECTANGLE) // Case rect vs rect.
 		{
 			filteredContacts.push_back(contact); // Keep contact.
 

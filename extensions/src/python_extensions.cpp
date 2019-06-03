@@ -44,6 +44,7 @@ SOFTWARE.
 #include <extensions/test_10_system.h>
 #include <extensions/test_11_system.h>
 #include <extensions/stay_on_screen_cpp.h>
+#include <extensions/draw_quadtree.h>
 
 #include <tools/tools_pch.h>
 
@@ -92,6 +93,9 @@ void ExtendPython(py::module& m)
 		.def(py::init<Engine&>());
 	py::class_<StayOnScreenCpp, System> stay_on_screen_cpp(m, "Stay_On_Screen_Cpp");
 	stay_on_screen_cpp
+		.def(py::init<Engine&>());
+	py::class_<DrawQuadTree, System> draw_quad_tree(m, "Draw_Quad_Tree");
+	draw_quad_tree
 		.def(py::init<Engine&>());
 	
 	tools::ExtendPythonTools(m);

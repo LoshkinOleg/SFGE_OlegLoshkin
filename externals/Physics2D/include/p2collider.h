@@ -43,6 +43,8 @@ struct p2ColliderDef
 class p2Collider
 {
 public:
+	p2Collider() {};
+	p2Collider(p2Body* body, p2CircleShape shape, p2AABB aabb) : m_Body(body), m_Shape(&shape), m_Aabb(aabb) {};
 	~p2Collider();
 
 	// Properties.

@@ -45,6 +45,7 @@ struct Intersection
 struct CircleIntersection : public Intersection
 {
 	// Constructors.
+	CircleIntersection(): intersections(std::vector<p2Vec2>()), mtv(std::array<p2Vec2,2>()) {};
 	CircleIntersection(const bool anyContact, const std::vector<p2Vec2> intersections, const std::array<p2Vec2,2> mtv) : Intersection{ anyContact }, intersections(intersections), mtv(mtv){};
 	// Public methods.
 	p2Vec2 AverageIntersection() const;

@@ -266,9 +266,12 @@ void p2Quad::RetrieveRecursively(std::vector<PotentialCollision>& listToFill, in
 	{
 		if (m_Bodies.size() > 0) // This leaf has bodies in it.
 		{
-			listToFill[currentIndex].siblings = m_Bodies;
-			listToFill.push_back(PotentialCollision());
-			currentIndex++;
+			if (listToFill[currentIndex].potentialCollideesAbove.size() > 0 || m_Bodies.size() > 1)
+			{
+				listToFill[currentIndex].siblings = m_Bodies;
+				listToFill.push_back(PotentialCollision());
+				currentIndex++;
+			}
 		}
 	}
 }
