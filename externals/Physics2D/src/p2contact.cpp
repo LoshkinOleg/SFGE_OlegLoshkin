@@ -153,8 +153,14 @@ void p2ContactManager::SolveContacts(p2Quad* rootQuad)
 						}
 						else if ((bodyType_0 == p2BodyType::DYNAMIC && bodyType_1 == p2BodyType::STATIC) || (bodyType_0 == p2BodyType::STATIC && bodyType_1 == p2BodyType::DYNAMIC)) // If this is a static vs dynamic contact.
 						{
-							// TODO:: handle static vs dynamic position correction.
-
+							if (bodyType_0 == p2BodyType::DYNAMIC)
+							{
+								body_0->SetPosition(position_0 - (intersect.mtv[0] - intersect.mtv[1]));
+							}
+							else
+							{
+								body_1->SetPosition(position_1 - (intersect.mtv[0] - intersect.mtv[1]));
+							}
 							body_0->ApplyCollisionForces(body_1);
 						}
 					}
@@ -170,8 +176,6 @@ void p2ContactManager::SolveContacts(p2Quad* rootQuad)
 						}
 						else if ((bodyType_0 == p2BodyType::DYNAMIC && bodyType_1 == p2BodyType::STATIC) || (bodyType_0 == p2BodyType::STATIC && bodyType_1 == p2BodyType::DYNAMIC)) // If this is a static vs dynamic contact.
 						{
-							// TODO:: handle static vs dynamic position correction.
-
 							body_0->ApplyCollisionForces(body_1);
 						}
 					}
@@ -185,20 +189,26 @@ void p2ContactManager::SolveContacts(p2Quad* rootQuad)
 
 			if (!(contact.ColliderA->IsSensor() || contact.ColliderB->IsSensor())) // If not a sensor type contact.
 			{
+				p2Vec2 mtv = contact.ColliderA->FindRectRectMtv(contact.ColliderB);
 				if (bodyType_0 == p2BodyType::DYNAMIC && bodyType_1 == p2BodyType::DYNAMIC) // If this is a dynamic vs dynamic contact.
 				{
 					// Correct positions.
-					p2Vec2 mtv = contact.ColliderA->FindRectRectMtv(contact.ColliderB);
-					body_0->SetPosition(body_0->GetPosition() - (mtv * 0.5f));
-					body_1->SetPosition(body_1->GetPosition() + (mtv * 0.5f));
+					body_0->SetPosition(position_0 - (mtv * 0.5f));
+					body_1->SetPosition(position_1 + (mtv * 0.5f));
 
 					// Modify velocities.
 					body_0->ApplyCollisionForces(body_1);
 				}
 				else if ((bodyType_0 == p2BodyType::DYNAMIC && bodyType_1 == p2BodyType::STATIC) || (bodyType_0 == p2BodyType::STATIC && bodyType_1 == p2BodyType::DYNAMIC)) // If this is a static vs dynamic contact.
 				{
-					// TODO:: handle static vs dynamic position correction.
-
+					if (bodyType_0 == p2BodyType::DYNAMIC)
+					{
+						body_0->SetPosition(position_0 - mtv);
+					}
+					else
+					{
+						body_1->SetPosition(position_1 - mtv);
+					}
 					body_0->ApplyCollisionForces(body_1);
 				}
 			}

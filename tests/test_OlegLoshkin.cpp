@@ -639,7 +639,7 @@ TEST(OlegLoshkin, testing)
 	sfge::Engine engine;
 	std::unique_ptr<sfge::Configuration> initConfig = std::make_unique<sfge::Configuration>();
 	auto screenSize = initConfig->screenResolution;
-	initConfig->gravity = p2Vec2(0, 0);
+	initConfig->gravity = p2Vec2(0, 9.81f);
 	engine.Init(std::move(initConfig));
 	auto* sceneManager = engine.GetSceneManager();
 
@@ -656,13 +656,13 @@ TEST(OlegLoshkin, testing)
 	// Set up Entitites.
 	json entities[3];
 
-	p2Vec2 pos_0{ half.x - fourths[0].x, half.y };
+	p2Vec2 pos_0{ half.x , half.y - thirds[0].y };
 	p2Vec2 pos_1{ half.x, half.y };
 	p2Vec2 pos_2{ half.x + fourths[0].x, half.y };
 	p2Vec2 direction = pos_1 - pos_0;
 	const float MULTIPLIER = 4.0f * 0.01f;
 
-	/*
+	
 	json rect0;
 	rect0["name"] = "Rect_0";
 	json rect0_transform;
@@ -673,8 +673,8 @@ TEST(OlegLoshkin, testing)
 	rect0_body["type"] = sfge::ComponentType::BODY2D;
 	rect0_body["body_type"] = p2BodyType::DYNAMIC;
 	rect0_body["mass"] = 1;
-	rect0_body["velocity"] = { direction.x * MULTIPLIER, direction.y * MULTIPLIER };
-	rect0_body["restitution"] = 0.5f;
+	// rect0_body["velocity"] = { direction.x * MULTIPLIER, direction.y * MULTIPLIER };
+	rect0_body["restitution"] = 1;
 	json rect0_shape;
 	rect0_shape["type"] = sfge::ComponentType::SHAPE2D;
 	rect0_shape["shape_type"] = sfge::ShapeType::RECTANGLE;
@@ -695,9 +695,9 @@ TEST(OlegLoshkin, testing)
 	rect1_transform["scale"] = { 1.0,1.0 };
 	json rect1_body;
 	rect1_body["type"] = sfge::ComponentType::BODY2D;
-	rect1_body["body_type"] = p2BodyType::DYNAMIC;
+	rect1_body["body_type"] = p2BodyType::STATIC;
 	rect1_body["mass"] = 1;
-	rect1_body["restitution"] = 0.5f;
+	rect1_body["restitution"] = 1;
 	json rect1_shape;
 	rect1_shape["type"] = sfge::ComponentType::SHAPE2D;
 	rect1_shape["shape_type"] = sfge::ShapeType::RECTANGLE;
@@ -709,8 +709,9 @@ TEST(OlegLoshkin, testing)
 	rect1_collider["sensor"] = false;
 	rect1["components"] = { rect1_transform, rect1_body, rect1_shape, rect1_collider };
 	entities[1] = rect1;
-	*/
+	
 
+	/*
 	json circle0;
 	circle0["name"] = "Circle_0";
 	json circle0_transform;
@@ -721,7 +722,7 @@ TEST(OlegLoshkin, testing)
 	circle0_body["type"] = sfge::ComponentType::BODY2D;
 	circle0_body["body_type"] = p2BodyType::DYNAMIC;
 	circle0_body["mass"] = 1;
-	circle0_body["velocity"] = { direction.x * MULTIPLIER, direction.y * MULTIPLIER };
+	// circle0_body["velocity"] = { direction.x * MULTIPLIER, direction.y * MULTIPLIER };
 	json circle0_shape;
 	circle0_shape["type"] = sfge::ComponentType::SHAPE2D;
 	circle0_shape["shape_type"] = sfge::ShapeType::CIRCLE;
@@ -742,7 +743,7 @@ TEST(OlegLoshkin, testing)
 	circle1_transform["scale"] = { 1.0,1.0 };
 	json circle1_body;
 	circle1_body["type"] = sfge::ComponentType::BODY2D;
-	circle1_body["body_type"] = p2BodyType::DYNAMIC;
+	circle1_body["body_type"] = p2BodyType::STATIC;
 	circle1_body["mass"] = 1;
 	json circle1_shape;
 	circle1_shape["type"] = sfge::ComponentType::SHAPE2D;
@@ -777,6 +778,7 @@ TEST(OlegLoshkin, testing)
 	circle2_collider["sensor"] = false;
 	circle2["components"] = { circle2_transform, circle2_body, circle2_shape, circle2_collider };
 	entities[2] = circle2;
+	*/
 
 	sceneJson["entities"] = entities;
 

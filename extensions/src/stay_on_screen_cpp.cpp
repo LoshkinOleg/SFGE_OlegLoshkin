@@ -29,10 +29,12 @@ namespace sfge::ext
 		{
 			if (body->GetPosition().x < 0 || body->GetPosition().x > 12.8f)
 			{
+				body->SetPosition(body->GetPosition() + p2Vec2(-0.01f,0) * body->GetLinearVelocity().Normalized().x);
 				body->SetLinearVelocity(p2Vec2{ -body->GetLinearVelocity().x, body->GetLinearVelocity().y });
 			}
 			if (body->GetPosition().y < 0 || body->GetPosition().y > 7.2f)
 			{
+				body->SetPosition(body->GetPosition() + p2Vec2(0, -0.01f) * body->GetLinearVelocity().Normalized().y);
 				body->SetLinearVelocity(p2Vec2{ body->GetLinearVelocity().x, -body->GetLinearVelocity().y });
 			}
 		}

@@ -42,7 +42,11 @@ p2Vec2 p2Body::GetLinearVelocity() const
 }
 void p2Body::SetLinearVelocity(p2Vec2 velocity)
 {
-	m_LinearVelocity = velocity;
+	if (m_Type != p2BodyType::STATIC)
+	{
+		m_LinearVelocity = velocity;
+	}
+
 }
 
 p2Vec2 p2Body::GetPosition()
@@ -76,7 +80,10 @@ p2Collider * p2Body::CreateCollider(p2ColliderDef * colliderDef)
 
 void p2Body::ApplyForceToCenter(const p2Vec2& force)
 {
-	m_LinearVelocity += (force / m_Mass);
+	if (m_Type != p2BodyType::STATIC)
+	{
+		m_LinearVelocity += (force / m_Mass);
+	}
 }
 
 void p2Body::ApplyCollisionForces(p2Body* other)
@@ -84,47 +91,53 @@ void p2Body::ApplyCollisionForces(p2Body* other)
 	// https://en.wikipedia.org/wiki/Coefficient_of_restitution
 	// https://en.wikipedia.org/wiki/Inelastic_collision
 
-	float m0 = m_Mass;
-	float m1 = other->m_Mass;
-	float v0_x = m_LinearVelocity.x;
-	float v0_y = m_LinearVelocity.y;
-	float v1_x = other->m_LinearVelocity.x;
-	float v1_y = other->m_LinearVelocity.y;
-	float r0 = m_Restitution;
-	float r1 = other->m_Restitution;
-
-	float e_x;
-	float Ecin_beforeCollision_x = (m0 * v0_x * v0_x * 0.5f) + (m1 * v1_x * v1_x * 0.5f);
-	float Ecin_afterCollision_x = (m0 * v0_x * v0_x * 0.5f * r0) + (m1 * v1_x * v1_x * 0.5f * r1);
-	if (Ecin_beforeCollision_x != 0)
+	if (m_Type == p2BodyType::DYNAMIC)
 	{
-		e_x = _CMATH_::sqrt((Ecin_afterCollision_x)/(Ecin_beforeCollision_x));
-	}
-	else
-	{
-		e_x = 1;
-	}
+		float m0 = m_Mass;
+		float m1 = other->GetType() == p2BodyType::STATIC ? 0 : other->m_Mass;
+		float v0_x = m_LinearVelocity.x;
+		float v0_y = m_LinearVelocity.y;
+		float v1_x = other->m_LinearVelocity.x;
+		float v1_y = other->m_LinearVelocity.y;
+		float r0 = m_Restitution;
+		float r1 = other->m_Restitution;
 
-	float e_y;
-	float Ecin_beforeCollision_y = (m0 * v0_y * v0_y * 0.5f) + (m1 * v1_y * v1_y * 0.5f);
-	float Ecin_afterCollision_y = (m0 * v0_y * v0_y * 0.5f * r0) + (m1 * v1_y * v1_y * 0.5f * r1);
-	if (Ecin_beforeCollision_y != 0)
-	{
-		e_y = _CMATH_::sqrt((Ecin_afterCollision_y) / (Ecin_beforeCollision_y));
-	}
-	else
-	{
-		e_y = 1;
-	}
+		float e_x;
+		float Ecin_beforeCollision_x = (m0 * v0_x * v0_x * 0.5f) + (m1 * v1_x * v1_x * 0.5f);
+		float Ecin_afterCollision_x = (m0 * v0_x * v0_x * 0.5f * r0) + (m1 * v1_x * v1_x * 0.5f * r1);
+		if (Ecin_beforeCollision_x != 0)
+		{
+			e_x = _CMATH_::sqrt((Ecin_afterCollision_x) / (Ecin_beforeCollision_x));
+		}
+		else
+		{
+			e_x = 1;
+		}
 
-	p2Vec2 u0, u1;
-	u0.x = (((v1_x - v0_x) * e_x * m1) + (v0_x * m0) + (v1_x * m1)) / (m0 + m1);
-	u1.x = (((v0_x - v1_x) * e_x * m0) + (v0_x * m0) + (v1_x * m1)) / (m0 + m1);
-	u0.y = (((v1_y - v0_y) * e_y * m1) + (v0_y * m0) + (v1_y * m1)) / (m0 + m1);
-	u1.y = (((v0_y - v1_y) * e_y * m0) + (v0_y * m0) + (v1_y * m1)) / (m0 + m1);
+		float e_y;
+		float Ecin_beforeCollision_y = (m0 * v0_y * v0_y * 0.5f) + (m1 * v1_y * v1_y * 0.5f);
+		float Ecin_afterCollision_y = (m0 * v0_y * v0_y * 0.5f * r0) + (m1 * v1_y * v1_y * 0.5f * r1);
+		if (Ecin_beforeCollision_y != 0)
+		{
+			e_y = _CMATH_::sqrt((Ecin_afterCollision_y) / (Ecin_beforeCollision_y));
+		}
+		else
+		{
+			e_y = 1;
+		}
 
-	SetLinearVelocity(u0);
-	other->SetLinearVelocity(u1);
+		p2Vec2 u0, u1;
+		if (other->GetType() != p2BodyType::STATIC)
+		{
+			u0.x = (((v1_x - v0_x) * e_x * m1) + (v0_x * m0) + (v1_x * m1)) / (m0 + m1);
+			u1.x = (((v0_x - v1_x) * e_x * m0) + (v0_x * m0) + (v1_x * m1)) / (m0 + m1);
+			u0.y = (((v1_y - v0_y) * e_y * m1) + (v0_y * m0) + (v1_y * m1)) / (m0 + m1);
+			u1.y = (((v0_y - v1_y) * e_y * m0) + (v0_y * m0) + (v1_y * m1)) / (m0 + m1);
+		}
+
+		SetLinearVelocity(u0);
+		other->SetLinearVelocity(u1);
+	}
 }
 
 p2BodyType p2Body::GetType() const
