@@ -17,7 +17,7 @@ namespace sfge::ext
 		void OnFixedUpdate() override;
 
 	private:
-		std::vector<Body2d*> bodies;
+		std::vector<Body2d*> bodies = std::vector<Body2d*>();
 	};
 }
 

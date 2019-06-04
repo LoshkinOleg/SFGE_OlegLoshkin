@@ -20,12 +20,12 @@ namespace sfge::ext
 
 	private:
 		float yPosTrigger[2]{ 7.2f / 3.0f, 7.2f * 2.0f / 3.0f };
-		float drawTimer[3];
+		float drawTimer[3]{0,0,0};
 		float forceMagnitude = 3;
-		Graphics2dManager* graphicsManager;
-		Body2d* dynamic;
-		Body2d* kinematic;
-		Body2d* stat;
+		Graphics2dManager* graphicsManager = nullptr;
+		Body2d* dynamic = nullptr;
+		Body2d* kinematic = nullptr;
+		Body2d* stat = nullptr;
 	};
 }
 

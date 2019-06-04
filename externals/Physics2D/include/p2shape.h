@@ -48,7 +48,7 @@ public:
 	p2ShapeType GetType()const;
 	virtual p2Vec2 GetSize() = 0;
 private:
-	p2ShapeType m_Type;
+	p2ShapeType m_Type = NONE;
 };
 
 class p2CircleShape : public p2Shape
@@ -76,7 +76,7 @@ public:
 	// std::array<p2Mat22,4> GetSides() const;
 	void SetSize(p2Vec2 size);
 private:
-	p2Vec2 m_Size;
+	p2Vec2 m_Size = p2Vec2();
 };
 
 /*class p2PolygonShape : public p2Shape

@@ -89,11 +89,11 @@ private:
 	// Private attributes.
 	static const int MAX_LEVELS = 5;
 	static const int CHILD_TREE_NMB = 4;
-	int m_NodeLevel;
-	p2AABB m_Bounds;
-	std::vector<p2Body*> m_Bodies;
-	bool m_HasChildren;
-	std::unique_ptr<p2Quad> m_Children[CHILD_TREE_NMB];
+	int m_NodeLevel = 0;
+	p2AABB m_Bounds = p2AABB();
+	std::vector<p2Body*> m_Bodies = std::vector<p2Body*>();
+	bool m_HasChildren = false;
+	std::unique_ptr<p2Quad> m_Children[CHILD_TREE_NMB]{nullptr, nullptr, nullptr, nullptr};
 	p2Quad* m_Parent = nullptr;
 };
 

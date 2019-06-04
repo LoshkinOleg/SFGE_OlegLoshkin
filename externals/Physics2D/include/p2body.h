@@ -41,12 +41,12 @@ enum class p2BodyType
 
 struct p2BodyDef
 {
-	p2BodyType type;
-	p2Vec2 position;
-	p2Vec2 linearVelocity;
-	float gravityScale;
-	float mass;
-	float restitution;
+	p2BodyType type = p2BodyType::DYNAMIC;
+	p2Vec2 position = p2Vec2();
+	p2Vec2 linearVelocity = p2Vec2();
+	float gravityScale = 1;
+	float mass = 1;
+	float restitution = 1;
 };
 
 class p2Body
@@ -81,16 +81,16 @@ public:
 	void ApplyCollisionForces(p2Body* other);
 
 private:
-	p2BodyType m_Type;
-	p2Vec2 m_Position;
-	p2Vec2 m_LinearVelocity;
-	float m_AngularVelocity; // NOTE: Not used.
+	p2BodyType m_Type = p2BodyType::DYNAMIC;
+	p2Vec2 m_Position = p2Vec2();
+	p2Vec2 m_LinearVelocity = p2Vec2();
+	float m_AngularVelocity = 0; // NOTE: Not used.
 	float m_Restitution = 1;
-	float m_GravityScale; // NOTE: Not used.
+	float m_GravityScale = 1; // NOTE: Not used.
 	float m_Mass = 1;
-	bool m_IsInit;
+	bool m_IsInit = false;
 	int m_ColliderIndex = 0;
-	std::vector<p2Collider> m_Colliders;
+	std::vector<p2Collider> m_Colliders = std::vector<p2Collider>();
 };
 
 #endif

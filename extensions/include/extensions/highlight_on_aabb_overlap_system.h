@@ -21,13 +21,13 @@ namespace sfge::ext
 	private:
 		struct CollisionCount
 		{
-			Shape* shape;
-			int contactCount;
+			Shape* shape = nullptr;
+			int contactCount = 0;
 		};
 
-		Graphics2dManager* graphicsManager;
-		ShapeManager* shapeManager;
-		std::map<p2Collider*, CollisionCount> collisions;
+		Graphics2dManager* graphicsManager = nullptr;
+		ShapeManager* shapeManager = nullptr;
+		std::map<p2Collider*, CollisionCount> collisions = std::map<p2Collider*, CollisionCount>();
 	};
 }
 

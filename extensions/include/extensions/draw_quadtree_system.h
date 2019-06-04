@@ -21,9 +21,9 @@ namespace sfge::ext
 		void OnDraw() override;
 
 	private:
-		Graphics2dManager* graphicsManager;
-		p2World* world;
-		std::vector<p2AABB> bounds;
+		Graphics2dManager* graphicsManager = nullptr;
+		p2World* world = nullptr;
+		std::vector<p2AABB> bounds = std::vector<p2AABB>();
 	};
 }
 

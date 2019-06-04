@@ -18,8 +18,8 @@ namespace sfge::ext
 		void OnUpdate(float dt) override;
 
 	private:
-		InputManager* inputManager;
-		std::vector<Body2d*> bodies;
+		InputManager* inputManager = nullptr;
+		std::vector<Body2d*> bodies = std::vector<Body2d*>();
 		const float EXPLOSION_MULTIPLIER = 10;
 	};
 }

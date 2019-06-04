@@ -38,23 +38,26 @@ void p2World::Step(float dt)
 	// Update bodies' forces and positions.
 	for (p2Body& body : m_Bodies)
 	{
-		switch (body.GetType())
+		if (body.IsInit())
 		{
-			case p2BodyType::DYNAMIC:
+			switch (body.GetType())
 			{
-				// Apply gravity and update positions.
-				body.ApplyForceToCenter(m_Gravity * dt * body.GetMass());
-				body.UpdatePosition();
-			}break;
-			case p2BodyType::KINEMATIC:
-			{
-				// Update positions only.
-				body.UpdatePosition();
-			}break;
-			case p2BodyType::STATIC:
-			{
-				// Don't apply gravity and don't bother updating position.
-			}break;
+				case p2BodyType::DYNAMIC:
+				{
+					// Apply gravity and update positions.
+					body.ApplyForceToCenter(m_Gravity * dt * body.GetMass());
+					body.UpdatePosition();
+				}break;
+				case p2BodyType::KINEMATIC:
+				{
+					// Update positions only.
+					body.UpdatePosition();
+				}break;
+				case p2BodyType::STATIC:
+				{
+					// Don't apply gravity and don't bother updating position.
+				}break;
+			}
 		}
 	}
 

@@ -19,12 +19,12 @@ namespace sfge::ext
 		void OnUpdate(float dt) override;
 
 	private:
-		InputManager* inputManager;
-		std::vector<p2Vec2> initialVelocities;
-		std::vector<p2Vec2> initialPositions;
-		std::vector<sf::Color> initialColors;
-		std::vector<Body2d*> bodies;
-		std::vector<Shape*> shapes;
+		InputManager* inputManager = nullptr;
+		std::vector<p2Vec2> initialVelocities = std::vector<p2Vec2>();
+		std::vector<p2Vec2> initialPositions = std::vector<p2Vec2>();
+		std::vector<sf::Color> initialColors = std::vector<sf::Color>();
+		std::vector<Body2d*> bodies = std::vector<Body2d*>();
+		std::vector<Shape*> shapes = std::vector<Shape*>();
 	};
 }
 

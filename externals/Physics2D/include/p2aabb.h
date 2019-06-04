@@ -53,7 +53,7 @@ struct p2AABB
 	std::string ToString() const;
 
 	// Attributes.
-	p2Vec2 bottomLeft;
-	p2Vec2 topRight;
+	p2Vec2 bottomLeft = p2Vec2();
+	p2Vec2 topRight = p2Vec2();
 };
 #endif

@@ -21,13 +21,13 @@ namespace sfge::ext
 		void OnDraw() override;
 
 	private:
-		Graphics2dManager* graphicsManager;
-		InputManager* inputManager;
+		Graphics2dManager* graphicsManager = nullptr;
+		InputManager* inputManager = nullptr;
 		p2Vec2 unitaryVectors[2]{ p2Vec2(1,0), p2Vec2(0,1) };
 		p2Vec2 vectorToDraw = p2Vec2{1,1};
 		p2Vec2 axis = p2Vec2(1280,720).Normalized();
-		p2Mat22 projectionToDraw;
-		__int8 input; // Last bit = down, last bit - 1 = up, last bit - 2 = right, last bit - 3 = left, last bit - 4 = LShift, last bit - 5 = LCtrl.
+		p2Mat22 projectionToDraw = p2Mat22();
+		__int8 input = 0; // Last bit = down, last bit - 1 = up, last bit - 2 = right, last bit - 3 = left, last bit - 4 = LShift, last bit - 5 = LCtrl.
 		const p2Vec2 SCREEN_CENTER{12.8 * 0.5f, 7.2 * 0.5f};
 		const Vec2f AXIS_LINE[2]{ Vec2f{0,0}, Vec2f{1280,720} };
 	};

@@ -34,10 +34,10 @@ class p2Body;
 
 struct p2ColliderDef
 {
-	void* userData;
-	p2Shape* shape;
+	void* userData = nullptr;
+	p2Shape* shape = nullptr;
 	bool isSensor = false;
-	p2Body* body;
+	p2Body* body = nullptr;
 };
 
 class p2Collider
@@ -63,12 +63,12 @@ public:
 	CircleIntersection FindCircleCircleIntersection(p2Collider* other) const;
 
 private:
-	p2Body* m_Body;
+	p2Body* m_Body = nullptr;
 	void* m_UserData = nullptr;
-	p2Shape* m_Shape;
+	p2Shape* m_Shape = nullptr;
 	// float m_Restitution = 1.0f;
 	bool m_IsSensor = false;
-	p2AABB m_Aabb;
+	p2AABB m_Aabb = p2AABB();
 };
 
 

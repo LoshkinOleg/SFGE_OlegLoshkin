@@ -68,11 +68,11 @@ public:
 	void LogQuadsBodyCount() const;
 
 private:
-	p2Quad m_RootQuad;
-	p2Vec2 m_Gravity;
-	std::vector<p2Body> m_Bodies;
+	p2Quad m_RootQuad{};
+	p2Vec2 m_Gravity = p2Vec2();
+	std::vector<p2Body> m_Bodies = std::vector<p2Body>();
 	int m_BodyIndex = 0;
-	p2ContactManager m_ContactManager;
+	p2ContactManager m_ContactManager = p2ContactManager();
 };
 
 #endif

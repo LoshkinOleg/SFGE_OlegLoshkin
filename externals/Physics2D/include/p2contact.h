@@ -34,13 +34,13 @@ class p2Body;
 
 struct PotentialCollision
 {
-	std::vector<p2Body*> siblings;
-	std::vector<p2Body*> potentialCollideesAbove;
+	std::vector<p2Body*> siblings = std::vector<p2Body*>();
+	std::vector<p2Body*> potentialCollideesAbove = std::vector<p2Body*>();
 };
 
 struct Intersection
 {
-	bool anyContact;
+	bool anyContact = false;
 };
 struct CircleIntersection : public Intersection
 {
@@ -50,8 +50,8 @@ struct CircleIntersection : public Intersection
 	// Public methods.
 	p2Vec2 AverageIntersection() const;
 	// Public attributes.
-	std::vector<p2Vec2> intersections;
-	std::array<p2Vec2,2> mtv;
+	std::vector<p2Vec2> intersections = std::vector<p2Vec2>();
+	std::array<p2Vec2,2> mtv = std::array<p2Vec2, 2>();
 };
 struct SatIntersection : public Intersection
 {
@@ -59,7 +59,7 @@ struct SatIntersection : public Intersection
 	SatIntersection() {};
 	SatIntersection(const bool anyContact, const p2Vec2 mtv) : Intersection{ anyContact }, minimumTranslationVector(mtv){};
 	// Public attributes.
-	p2Vec2 minimumTranslationVector;
+	p2Vec2 minimumTranslationVector = p2Vec2();
 };
 
 /**
@@ -69,8 +69,8 @@ struct p2Contact
 {
 	p2Collider* GetColliderA(); // Used by SFGE.
 	p2Collider* GetColliderB();
-	p2Collider* ColliderA; // Used in physics engine.
-	p2Collider* ColliderB;
+	p2Collider* ColliderA = nullptr; // Used in physics engine.
+	p2Collider* ColliderB = nullptr;
 	std::string ToString() const;
 };
 

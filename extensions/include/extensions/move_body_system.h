@@ -19,8 +19,8 @@ namespace sfge::ext
 
 	private:
 		__int8 input = 0; // Last bit = down, last bit - 1 = up, last bit - 2 = right, last bit - 3 = left.
-		InputManager* inputManager;
-		Body2d* bodyToMove;
+		InputManager* inputManager = nullptr;
+		Body2d* bodyToMove = nullptr;
 		const float DELTA_TIME = 1.00f;
 	};
 }
