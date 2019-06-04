@@ -1,13 +1,6 @@
-#include <extensions/test_11_system.h>
-#include <p2aabb.h>
-#include <input/input.h>
+#include <extensions/highlight_on_aabb_overlap_system.h>
 
-sfge::ext::Test_11_System::Test_11_System(Engine& engine) : System(engine)
-{
-
-}
-
-void sfge::ext::Test_11_System::OnEngineInit()
+void sfge::ext::HighlightOnAabbOverlapSystem::OnEngineInit()
 {
 	graphicsManager = m_Engine.GetGraphics2dManager();
 	shapeManager = graphicsManager->GetShapeManager();
@@ -15,14 +8,9 @@ void sfge::ext::Test_11_System::OnEngineInit()
 	auto* entityManager = m_Engine.GetEntityManager();
 	auto* bodyManager = m_Engine.GetPhysicsManager()->GetBodyManager();
 	auto* colliderManager = m_Engine.GetPhysicsManager()->GetColliderManager();
-	auto bodiesEntities = entityManager->GetEntitiesWithType(sfge::ComponentType::BODY2D);
 	auto colliderEntities = entityManager->GetEntitiesWithType(sfge::ComponentType::COLLIDER2D);
 	auto shapeEntities = entityManager->GetEntitiesWithType(sfge::ComponentType::SHAPE2D);
 
-	for (size_t i = 0; i < bodiesEntities.size(); i++)
-	{
-		bodies.push_back(bodyManager->GetComponentPtr(bodiesEntities[i]));
-	}
 	std::vector<p2Collider*> colliders;
 	for (size_t i = 0; i < colliderEntities.size(); i++)
 	{
@@ -37,39 +25,17 @@ void sfge::ext::Test_11_System::OnEngineInit()
 	{
 		collisions.insert({ colliders[i], CollisionCount{shapes[i], 0} });
 	}
-
-	world = m_Engine.GetPhysicsManager()->GetWorld_RawPtr();
 }
 
-void sfge::ext::Test_11_System::OnFixedUpdate()
+void sfge::ext::HighlightOnAabbOverlapSystem::OnDraw()
 {
-	quadAabbs = world->GetQuadTreeBounds();
-
-	p2Vec2 position;
-	for (Body2d* body : bodies)
-	{
-		position = body->GetPosition();
-		if (position.x > 12.8f || position.x < 0)
-		{
-			body->SetLinearVelocity(p2Vec2{ -body->GetLinearVelocity().x, body->GetLinearVelocity().y });
-		}
-		if (position.y > 7.2f || position.y < 0)
-		{
-			body->SetLinearVelocity(p2Vec2{ body->GetLinearVelocity().x, -body->GetLinearVelocity().y });
-		}
-	}
-}
-
-void sfge::ext::Test_11_System::OnDraw()
-{
-	for (p2AABB& bound : quadAabbs)
-	{
-		graphicsManager->DrawBox(bound.GetCenter().ToGraphicSpace(), bound.GetExtends().ToGraphicSpace() * 2);
-	}
-
 	// Code found on https://stackoverflow.com/questions/15393102/go-through-map-c
+	p2Vec2 extends;
+	p2Vec2 center;
 	for (const auto& element : collisions)
 	{
+		graphicsManager->DrawBox(element.first->GetAabb());
+
 		if (element.second.contactCount > 0)
 		{
 			element.second.shape->SetFillColor(sf::Color::Green);
@@ -81,14 +47,16 @@ void sfge::ext::Test_11_System::OnDraw()
 	}
 }
 
-void sfge::ext::Test_11_System::OnContact(ColliderData * c1, ColliderData * c2, bool enter)
+void sfge::ext::HighlightOnAabbOverlapSystem::OnContact(ColliderData* c1, ColliderData* c2, bool enter)
 {
 	if (enter)
 	{
 		collisions[c1->fixture].contactCount++;
+		collisions[c2->fixture].contactCount++;
 	}
 	else
 	{
 		collisions[c1->fixture].contactCount--;
+		collisions[c2->fixture].contactCount--;
 	}
 }

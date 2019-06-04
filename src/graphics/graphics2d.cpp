@@ -202,5 +202,18 @@ void Graphics2dManager::DrawBox(const Vec2f center, const Vec2f size)
 	rect.setOutlineThickness(1);
 	m_Window->draw(rect);
 }
+void Graphics2dManager::DrawBox(const p2AABB aabb)
+{
+	Vec2f center = Vec2f(aabb.GetCenter().x, aabb.GetCenter().y) * 100;
+	Vec2f size = Vec2f(aabb.GetExtends().x, aabb.GetExtends().y) * 100 * 2;
+
+	sf::RectangleShape rect;
+	rect.setPosition(center - (size * 0.5f));
+	rect.setSize(size);
+	rect.setFillColor(sf::Color::Transparent);
+	rect.setOutlineColor(sf::Color::Red);
+	rect.setOutlineThickness(1);
+	m_Window->draw(rect);
+}
 
 }

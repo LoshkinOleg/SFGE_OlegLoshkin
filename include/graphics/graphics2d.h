@@ -29,6 +29,7 @@ SOFTWARE.
 #include <graphics/shape2d.h>
 #include <graphics/texture.h>
 #include <graphics/sprite2d.h>
+#include <p2aabb.h>
 
 namespace sfge
 {
@@ -67,6 +68,7 @@ public:
     void DrawVector(Vec2f drawingVector, Vec2f originPos, sf::Color color=sf::Color::Red);
 	void DrawCircle(const Vec2f position, const float radius);
 	void DrawBox(const Vec2f center, const Vec2f size);
+	void DrawBox(const p2AABB aabb);
 	/**
 	* \brief Getter of the window created in GraphicsManager
 	* \return The SFML window

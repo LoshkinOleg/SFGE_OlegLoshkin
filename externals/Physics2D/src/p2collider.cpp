@@ -14,8 +14,8 @@ void p2Collider::Init(const p2ColliderDef* def)
 		{
 			m_Shape = new p2RectShape(*static_cast<p2RectShape*>(def->shape));
 			p2Vec2 rectSize = static_cast<p2RectShape*>(m_Shape)->GetSize();
-			myAabb.bottomLeft = p2Vec2(m_Body->GetPosition().x - (rectSize.x / 2.0f), m_Body->GetPosition().y + (rectSize.x / 2.0f));
-			myAabb.topRight = p2Vec2(m_Body->GetPosition().x + (rectSize.x / 2.0f), m_Body->GetPosition().y - (rectSize.x / 2.0f));
+			myAabb.bottomLeft = p2Vec2(m_Body->GetPosition().x - (rectSize.x / 2.0f), m_Body->GetPosition().y + (rectSize.y / 2.0f));
+			myAabb.topRight = p2Vec2(m_Body->GetPosition().x + (rectSize.x / 2.0f), m_Body->GetPosition().y - (rectSize.y / 2.0f));
 		}break;
 		case p2ShapeType::CIRCLE:
 		{

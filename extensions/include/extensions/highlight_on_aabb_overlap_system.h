@@ -1,28 +1,21 @@
-#ifndef TEST_09_SYSTEM_H
-#define TEST_09_SYSTEM_H
+#ifndef HIGHLIGHT_ON_AABB_OVERLAP_SYSTEM_H
+#define HIGHLIGHT_ON_AABB_OVERLAP_SYSTEM_H
 
 #include <vector>
 #include <engine/system.h>
 #include <engine/engine.h>
 #include <physics/physics2d.h>
 #include <graphics/graphics2d.h>
-#include <p2aabb.h>
 
 namespace sfge::ext
 {
-	class Test_09_System : public System
+	class HighlightOnAabbOverlapSystem : public System
 	{
 	public:
-		Test_09_System(Engine& engine);
+		HighlightOnAabbOverlapSystem(Engine& engine) : System(engine) {};
 
 		void OnEngineInit() override;
-		// void OnUpdate(float dt) override;
-		void OnFixedUpdate() override;
 		void OnDraw() override;
-		// void OnEditorDraw() override;
-		// void Destroy() override;
-		// void OnBeforeSceneLoad() override;
-		// void OnAfterSceneLoad() override;
 		void OnContact(ColliderData* c1, ColliderData* c2, bool enter) override;
 
 	private:
@@ -34,10 +27,7 @@ namespace sfge::ext
 
 		Graphics2dManager* graphicsManager;
 		ShapeManager* shapeManager;
-		std::vector<Body2d*> bodies;
-		std::vector<p2AABB> quadAabbs;
 		std::map<p2Collider*, CollisionCount> collisions;
-		p2World* world;
 	};
 }
 

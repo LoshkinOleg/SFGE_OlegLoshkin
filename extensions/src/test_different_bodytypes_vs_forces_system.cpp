@@ -1,28 +1,23 @@
-#include <extensions/test_05_system.h>
-#include <physics/body2d.h>
+#include <extensions/test_different_bodytypes_vs_forces_system.h>
 
-sfge::ext::Test_05_System::Test_05_System(Engine& engine): System(engine)
-{
-}
-
-void sfge::ext::Test_05_System::OnEngineInit()
+void sfge::ext::TestDifferentBodytypesVsForcesSystem::OnEngineInit()
 {
 	graphicsManager = m_Engine.GetGraphics2dManager();
 
-	auto dynamicEntity = m_Engine.GetEntityManager()->GetEntityByName("Dynamic");
-	auto kinematicEntity = m_Engine.GetEntityManager()->GetEntityByName("Kinematic");
-	auto staticEntity = m_Engine.GetEntityManager()->GetEntityByName("Static");
+	auto dynamicEntity = m_Engine.GetEntityManager()->GetEntityByName("Circle_0");
+	auto kinematicEntity = m_Engine.GetEntityManager()->GetEntityByName("Circle_1");
+	auto staticEntity = m_Engine.GetEntityManager()->GetEntityByName("Circle_2");
 	dynamic = m_Engine.GetPhysicsManager()->GetBodyManager()->GetComponentPtr(dynamicEntity);
 	kinematic = m_Engine.GetPhysicsManager()->GetBodyManager()->GetComponentPtr(kinematicEntity);
 	stat = m_Engine.GetPhysicsManager()->GetBodyManager()->GetComponentPtr(staticEntity);
 }
 
-void sfge::ext::Test_05_System::OnFixedUpdate()
+void sfge::ext::TestDifferentBodytypesVsForcesSystem::OnFixedUpdate()
 {
 	if (dynamic->GetPosition().y >= yPosTrigger[1])
 	{
 		dynamic->SetLinearVelocity(p2Vec2());
-		dynamic->ApplyForce(p2Vec2(0,-1) * forceMagnitude);
+		dynamic->ApplyForce(p2Vec2(0, -1) * forceMagnitude);
 		drawTimer[0] = 0.25f;
 	}
 	if (kinematic->GetPosition().y >= yPosTrigger[1])
@@ -48,11 +43,11 @@ void sfge::ext::Test_05_System::OnFixedUpdate()
 	drawTimer[2] -= 0.02f;
 }
 
-void sfge::ext::Test_05_System::OnDraw()
+void sfge::ext::TestDifferentBodytypesVsForcesSystem::OnDraw()
 {
 	if (drawTimer[0] > 0)
 	{
-		graphicsManager->DrawVector((p2Vec2(0,-1) * forceMagnitude).ToGraphicSpace(), dynamic->GetPosition().ToGraphicSpace(), sf::Color::Red);
+		graphicsManager->DrawVector((p2Vec2(0, -1) * forceMagnitude).ToGraphicSpace(), dynamic->GetPosition().ToGraphicSpace(), sf::Color::Red);
 	}
 	if (drawTimer[1] > 0)
 	{

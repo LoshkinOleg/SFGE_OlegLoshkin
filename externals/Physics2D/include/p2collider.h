@@ -36,7 +36,7 @@ struct p2ColliderDef
 {
 	void* userData;
 	p2Shape* shape;
-	bool isSensor;
+	bool isSensor = false;
 	p2Body* body;
 };
 

@@ -32,19 +32,14 @@ SOFTWARE.
 #include <extensions/planet_system.h>
 
 // Oleg Loshkin's systems.
-#include <extensions/test_01_system.h>
-#include <extensions/test_02_system.h>
-#include <extensions/test_03_system.h>
-#include <extensions/test_04_system.h>
-#include <extensions/test_05_system.h>
-#include <extensions/test_06_system.h>
-#include <extensions/test_07_system.h>
-#include <extensions/test_08_system.h>
-#include <extensions/test_09_system.h>
-#include <extensions/test_10_system.h>
-#include <extensions/test_11_system.h>
-#include <extensions/stay_on_screen_cpp.h>
-#include <extensions/draw_quadtree.h>
+#include <extensions/draw_quadtree_system.h>
+#include <extensions/explosion_system.h>
+#include <extensions/highlight_on_aabb_overlap_system.h>
+#include <extensions/move_body_system.h>
+#include <extensions/reset_scene_system.h>
+#include <extensions/stay_on_screen_cpp_system.h>
+#include <extensions/test_different_bodytypes_vs_forces_system.h>
+#include <extensions/test_p2Vec2_system.h>
 
 #include <tools/tools_pch.h>
 
@@ -58,44 +53,29 @@ void ExtendPython(py::module& m)
 	py::class_<PlanetSystem, System> planetSystem(m, "PlanetSystem");
 	planetSystem
 		.def(py::init<Engine&>());
-	py::class_<Test_01_System, System> test_01_system(m, "Test_01_System");
-	test_01_system
+	py::class_<DrawQuadTreeSystem, System> drawQuadTreeSystem(m, "DrawQuadTreeSystem");
+	drawQuadTreeSystem
 		.def(py::init<Engine&>());
-	py::class_<Test_02_System, System> test_02_system(m, "Test_02_System");
-	test_02_system
+	py::class_<ExplosionSystem, System> explosionSystem(m, "ExplosionSystem");
+	explosionSystem
 		.def(py::init<Engine&>());
-	py::class_<Test_03_System, System> test_03_system(m, "Test_03_System");
-	test_03_system
+	py::class_<HighlightOnAabbOverlapSystem, System> highlightOnAabbOverlapSystem(m, "HighlightOnAabbOverlapSystem");
+	highlightOnAabbOverlapSystem
 		.def(py::init<Engine&>());
-	py::class_<Test_04_System, System> test_04_system(m, "Test_04_System");
-	test_04_system
+	py::class_<MoveBodySystem, System> moveBodySystem(m, "MoveBodySystem");
+	moveBodySystem
 		.def(py::init<Engine&>());
-	py::class_<Test_05_System, System> test_05_system(m, "Test_05_System");
-	test_05_system
+	py::class_<ResetSceneSystem, System> resetSceneSystem(m, "ResetSceneSystem");
+	resetSceneSystem
 		.def(py::init<Engine&>());
-	py::class_<Test_06_System, System> test_06_system(m, "Test_06_System");
-	test_06_system
+	py::class_<StayOnScreenCppSystem, System> stayOnScreenCppSystem(m, "StayOnScreenCppSystem");
+	stayOnScreenCppSystem
 		.def(py::init<Engine&>());
-	py::class_<Test_07_System, System> test_07_system(m, "Test_07_System");
-	test_07_system
+	py::class_<TestDifferentBodytypesVsForcesSystem, System> testDifferentBodytypesVsForcesSystem(m, "TestDifferentBodytypesVsForcesSystem");
+	testDifferentBodytypesVsForcesSystem
 		.def(py::init<Engine&>());
-	py::class_<Test_08_System, System> test_08_system(m, "Test_08_System");
-	test_08_system
-		.def(py::init<Engine&>());
-	py::class_<Test_09_System, System> test_09_system(m, "Test_09_System");
-	test_09_system
-		.def(py::init<Engine&>());
-	py::class_<Test_10_System, System> test_10_system(m, "Test_10_System");
-	test_10_system
-		.def(py::init<Engine&>());
-	py::class_<Test_11_System, System> test_11_system(m, "Test_11_System");
-	test_11_system
-		.def(py::init<Engine&>());
-	py::class_<StayOnScreenCpp, System> stay_on_screen_cpp(m, "Stay_On_Screen_Cpp");
-	stay_on_screen_cpp
-		.def(py::init<Engine&>());
-	py::class_<DrawQuadTree, System> draw_quad_tree(m, "Draw_Quad_Tree");
-	draw_quad_tree
+	py::class_<TestP2Vec2System, System> testP2Vec2System(m, "TestP2Vec2System");
+	testP2Vec2System
 		.def(py::init<Engine&>());
 	
 	tools::ExtendPythonTools(m);
