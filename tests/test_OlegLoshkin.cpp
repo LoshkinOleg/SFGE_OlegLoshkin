@@ -642,7 +642,7 @@ TEST(OlegLoshkin, Explosion)
 	engine.Start();
 }
 
-TEST(OlegLoshkin, Many_Rects)
+TEST(OlegLoshkin, Many_Circles)
 {
 	// Set up config and scene base.
 	sfge::Engine engine;
@@ -655,7 +655,7 @@ TEST(OlegLoshkin, Many_Rects)
 	engine.Init(std::move(initConfig));
 	auto* sceneManager = engine.GetSceneManager();
 	json sceneJson = {
-		{ "name", "Many Rects" }
+		{ "name", "Many Circles" }
 	};
 
 	// Create entities.
